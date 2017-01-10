@@ -1,0 +1,3 @@
+% TIES411 Konenäkö ja kuva-analyysi
+% Matti Eskelinen; Ville Tirronen; Tuomo Rossi
+% 18. Maaliskuuta 2014
