@@ -335,25 +335,6 @@ Kuvaile ja selitä tuloksia.
 
 ![K-means klusterit harmaasävykuvalle](images/gclusters-rect.png)
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- image to load
--- TODO: try different images
-imageFile = "nut.png"
-
--- Number of clusters to find
--- TODO: try different values for k
-k = 5
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  displayGrayImage("K-means klusterit arvoille",
-    clusterGrayValue(k,img))
-~~~
-
 ### Tehtävä 8.2 {-}
 
 Seuraavassa koodiesimerkissä esitetään tila-avaruudella lisätyn piirreavaruuden
@@ -364,27 +345,6 @@ lopputulokseen?
 
 ![K-means klusterit tila-avaruudella varustetulle harmaasävykuvalle](
 images/gsclusters-rect.png)
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- image to load
--- TODO: try different images
-imageFile = "nut.png"
-
--- Number of clusters to find
--- 
-k = 5
--- Scaling factor for spatial components
-f = 0.1
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  displayGrayImage("K-means klusterit tila-avaruudelle ja arvoille",
-    clusterGraySpatial(k,f,img))
-~~~
 
 ![K-means klusterit värikuvalle](images/kmeans-klusterit.png)
 
@@ -576,19 +536,6 @@ joukon keskiarvosta suhteessa joukon keskihajontaan.
 Seuraavassa koodiesimerkissä havainnollistetaan yhtenäisten kappaleiden
 etsintää.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-imageFile = "nut.png"
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  displayGrayImage("Yhtenäiset kappaleet",
-    findConnectedComponents(threshold((1,0),0.5,img)))
-~~~
-
 ## Alueiden kasvatus
 
 Eräs perinteinen segmentointimenetelmä on alueiden kasvatus. Siinä valitaan
@@ -666,25 +613,6 @@ tärkeä lopputuloksen kannalta.
 Seuraavassa koodiesimerkissä havainnollistetaan segmentointituloksia pienimmän
 virittävän puun avulla. Kokeile eri kuvilla ja eri kynnysarvoilla - huomaa, että
 pikseliarvot ovat väliltä $[0,1]$. Kuvaile ja selitä havaintoja.
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- image to load
--- TODO: try different images
-imageFile = "nut.png"
-
--- threshold value for difference between neighboring pixels
--- TODO: try different values
-t = 0.05
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  displayGrayImage("Pienin virittävä puu",
-    findSpanningForest(t,img))
-~~~
 
 Pienimmän virittävän puun muodostaminen saadaan rinnakkaistettua tehokkaasti
 Wassenbergin mukaan. Suurin merkitys suoritusaikaan on kaarien lajitteluun

@@ -212,33 +212,6 @@ jokaiselle pikseliympäristölle. Kurssisivulla pääsee kokeilemaan eri kuvilla
 vaihtamaan ympäristön kokoa. Kokeile eri kuvia ja erikokoisia ympäristöjä.
 Kuvaile tuloksia. Millä tavoin operaatioita voisi hyödyntää?
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- image to load
--- TODO: try different images
-imageFile :: String
-imageFile = "park.png"
-
--- size of the region used for collecting the statistical moments
--- TODO: try different region sizes
-regionSize :: Int
-regionSize = 5
-
-test = do
-  img1 <- readGrayImage(imageFile)
-  let
-    size = (regionSize,regionSize)
-    img2 = imMul(img1,img1)
-    mu1 = imGaussian(size,img1)
-    sigma2 = imSub(imGaussian(size,img2),imMul(mu1,mu1))
-    sigma1 = imSqrt(sigma2)
-  displayGrayImage("Keskiarvo", unitNormalize(mu1))
-  displayGrayImage("Varianssi", unitNormalize(sigma2))
-  displayGrayImage("Keskihajonta", unitNormalize(sigma1))
-~~~
-
 ### Tehtävä 5.2 {-}
 
 Seuraavassa koodiesimerkissä esitetään kuva-alueiden kovarianssin ja
@@ -249,87 +222,6 @@ versioita, sekä saman kuvan Gabor-suodatettuja versioita eri suuntaisilla
 maskeilla. Kokeile eri kokoisia alueita ja sekä kovarianssia että korrelaatiota.
 kuvaile tuloksia ja yritä selittää, mitä kovarianssi ja korrelaatio näissä
 esimerkeissä mittaavat. Mitä eroa niillä on?
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- image to load
-imageFile :: String
-imageFile = "nut.png"
-
--- size of the region used for calculating covariance and correlation
--- TODO: try different region sizes
-regionSize :: Int
-regionSize = 5
-
--- either covariance or correlation will be calculated for images
--- TODO: try both operations
-operation = covariance
---operation = correlation
-
-gSize = 7
-gCenter = getMaskCenter2D gSize
-gMasks = [gabor1,gabor2,gabor3,gabor4,gabor5,gabor6,gabor7,gabor8]
-
-test = do
-  img00 <- readGrayImage(imageFile)
-  let
-    size = (regionSize,regionSize)
-    img10 = shift((1,0),img00)
-    img01 = shift((0,1),img00)
-    img11 = shift((1,1),img00)
-    gabors = forEach(gMasks,getGaborAmp(gSize,gCenter,img00))
-  displayGrayImage("Siirrot", combineImages((2,2),2,
-    ([img00] ++ operation(size,img00,[img10,img01,img11]))))
-  displayGrayImage("Gaborit", combineImages((4,4),2,
-    (gabors ++ operation(size,head(gabors),gabors))))
-
--- | Calculate the covariance of image regions between an image and a list of
---   other images. The size of considered image regions can be given.
-covariance :: ((Int,Int), Image GrayScale Float, [Image GrayScale Float])
-    -> [Image GrayScale Float]
-covariance (s, x, ys) = forEach(ys,cov(x,ex))
-  where
-    ex = imGaussian(s,x)
-    cov(x, ex) y = unitNormalize(imSub(exy, imMul(ex,ey)))
-      where
-        xy = imMul(x,y)
-        exy = imGaussian(s,xy)
-        ey = imGaussian(s,y)
-
--- | Calculates the Pearson correlation of image regions between an image and a
---   list of other images. The size of considered image regions can be given.
-correlation :: ((Int,Int), Image GrayScale Float, [Image GrayScale Float])
-    -> [Image GrayScale Float]
-correlation (s, x, ys) = forEach(ys, corr(x,ex,sx))
-  where
-    ex = imGaussian(s,x)
-    sx = imSub(imGaussian(s, imMul(x,x)), imMul(ex,ex))
-    corr(x, ex, sx) y =
-        unitNormalize(imDiv(imSub(exy, imMul(ex,ey)),
-                            imMaxS(0.001, imSqrt(imMul(sx,sy)))))
-      where
-        xy = imMul(x,y)
-        exy = imGaussian(s,xy)
-        ey = imGaussian(s,y)
-        sy = imSub(imGaussian(s, imMul(y,y)), imMul(ey,ey))
-
--- | Gets the normalized amplitude of Gabor filter response from an image.
-getGaborAmp(size,center,image) mask =
-  stretchNormalize(gamp)
-  where
-    (gre,gim) = filterGabor(mask, size, center, image)
-    (gamp,_) = dftToPolar2D(gre,gim)
-
--- | Shifts an image by the given amount of pixels.
-shift :: ((Int,Int), Image GrayScale Float) -> Image GrayScale Float
-shift((sx,sy), image) = imageFromFunction((w,h), f)
-  where
-    (w,h) = getSize image
-    f(x,y) | x < sx || y < sy = getPixel(x, y, image)
-           | otherwise        = getPixel(x-sx, y-sy, image)
-~~~
 
 ## Integraalikuva
 
@@ -413,49 +305,6 @@ Seuraavassa koodiesimerkissä lasketaan histogrammeja kuville ja erilaisten
 suotimien vasteille. Kokeile eri kuvilla ja suotimilla ja tutki jakaumia.
 Kuvaile ja yritä selittää havaintoja.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- plot width in pixels
-width = 400
--- plot height in pixels
-height = 300
--- plot margin
-margin = 10
-
--- number of bins in histogram
-nbins = 300
-
--- parameters for gabor mask
-gSize = 7
-gCenter = getMaskCenter2D(gSize)
-gMask = gabor1
-
--- parameters for manual mask
-mSize = 3
-mCenter = getMaskCenter2D(mSize)
-mMask = listToMask2D((mSize,mSize),
-  [ -1, 0, 1,
-    -1, 0, 1,
-    -1, 0, 1 ])
-
-test = do
-  img <- readGrayImage("park.png")
-  let
-    mimg = convolve2D(mMask, mCenter, img)
-    (gimg,_) = filterGabor(gMask, gSize, gCenter, img)
-    mhist = accHistogram(nbins, getValues(unitNormalize(mimg)))
-    ghist = accHistogram(nbins, getValues(logNormalize(gimg)))
-    hist = accHistogram(nbins, getValues(imGaussian((5,5), img)))
-  displayImage("Kuvan histogrammi",
-    plotHistogram(black, margin, hist, emptyColorImage((width,height),white)))
-  displayImage("Konvoluution histogrammi",
-    plotHistogram(black, margin, mhist, emptyColorImage((width,height),white)))
-  displayImage("Gaborin histogrammi",
-    plotHistogram(black, margin, ghist, emptyColorImage((width,height),white)))
-~~~
-
 ## Otsun kynnysarvo
 
 Esimerkkinä histogrammien käyttämisestä tutustumme Otsun menetelmänä tunnettuun
@@ -503,24 +352,6 @@ hyviä kynnysarvoja, jos kuva todella jakaantuu kahteen selkeään luokkaan, ja 
 yleisesti käytetty edelleen.
 
 Seuraavassa koodiesimerkissä esitetään kynnystäminen Otsun menetelmällä.
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- number of bins in histogram
-nbins :: Int
-nbins = 300
-
-test = do
-  img <- readGrayImage("bolt.png")
-  let
-    gimg = imGaussian((5,5),img)
-    hist = accHistogram(nbins, getValues(img))
-    t = tOtsu hist
-  displayGrayImage("Kuva", gimg)
-  displayGrayImage("Kynnystetty", threshold((1,0),t,gimg))
-~~~
 
 ## Histogrammien vertailu
 

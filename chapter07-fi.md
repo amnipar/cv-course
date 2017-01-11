@@ -106,43 +106,6 @@ ja y-akselin positiivinen suunta on ylös.
 Seuraavassa koodiesimerkissä esitetään kuvan konvolvointi keskeisdifferenssin ja
 Sobelin operaattorin avulla.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-imageFile :: String
-imageFile = "park.png"
-
-mSize = 3
-mCenter = getMaskCenter2D(mSize)
-mDiffX = listToMask2D((mSize,mSize),
-  [ 0, 0, 0,
-   -1, 0, 1,
-    0, 0, 0 ])
-mDiffY = listToMask2D((mSize,mSize),
-  [ 0, 1, 0,
-    0, 0, 0,
-    0,-1, 0 ])
-mSobelX = listToMask2D((mSize,mSize),
-  [-1, 0, 1,
-   -2, 0, 2,
-   -1, 0, 1 ])
-mSobelY = listToMask2D((mSize,mSize),
-  [ 1, 2, 1,
-    0, 0, 0,
-   -1,-2,-1 ])
-
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    diffx = convolve2D(mDiffX, mCenter, img)
-    diffy = convolve2D(mDiffY, mCenter, img)
-    sobelx = convolve2D(mSobelX, mCenter, img)
-    sobely = convolve2D(mSobelY, mCenter, img)
-  displayGrayImage("Differenssi", combineImages((2,1),2,[diffx,diffy]))
-  displayGrayImage("Sobel", combineImages((2,1),2,[sobelx,sobely]))
-~~~
-
 Nämä ovat eräänlaisia kuvan osittaisderivaattoja approksimoivia operaattoreita,
 ja yhdistämällä x- ja y-suuntainen osittaisderivaatta saadaan muodostettua kuvan
 **gradientti**, joka on kaksiulotteinen vektorikenttä. Siinä jokaista kuvan
@@ -215,29 +178,6 @@ tapana muodostaa ydin, jonka koko on $2 \times 3\sigma + 1$.
 Seuraavassa koodiesimerkissä esitetään kuvan osittaisderivaattojen laskeminen
 käyttäen Gaussin funktion derivaattoja.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-imageFile = "nut.png"
-
-sigma = 0.8
--- mask should fit 6 sigma
-size = 5
-center = getMaskCenter2D(size)
-maskdx = createMask2D(fgaussian2Ddx(sigma),size)
-maskdy = createMask2D(fgaussian2Ddy(sigma),size)
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    dx = unitNormalize(convolve2D(maskdx,center,img))
-    dy = unitNormalize(convolve2D(maskdy,center,img))
-  displayGrayImage("Ensimmäisen asteen osittaisderivaatat",
-    combineImages((2,1),2,[dx,dy]))
-~~~
-
 Tehokasta toteutusta tarvittaessa on myös syytä muistaa, että Gaussin funktio ja
 kaikki sen osittaisderivaatat ovat *separoituvia*: tämä tarkoittaa sitä, että
 kaksiulotteinen konvoluutio saadaan tehtyä nopeammin tekemällä peräkkäin kaksi
@@ -266,39 +206,6 @@ $$G_{\theta} = u_x G_x + u_y G_y$$.
 Tässä siis kerrotaan gradienttikuvien jokaista pikseliä vakiolla ja lasketaan
 kaksi kuvaa pikseleittäin yhteen. Seuraavassa koodiesimerkissä esitetään
 ohjattavan suotimen muodostaminen kuvasta.
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-imageFile = "nut.png"
-
-sigma = 0.8
--- mask should fit 6 sigma
-size = 5
-center = getMaskCenter2D(size)
-maskdx = createMask2D(fgaussian2Ddx(sigma),size)
-maskdy = createMask2D(fgaussian2Ddy(sigma),size)
-maskdx2 = createMask2D(fgaussian2Ddx2(sigma),size)
-maskdy2 = createMask2D(fgaussian2Ddy2(sigma),size)
-maskdxdy = createMask2D(fgaussian2Ddxdy(sigma),size)
-
-steerable(theta,image) = imAdd(imMulS(dx,ux), imMulS(dy,uy))
-  where
-    (ux,uy) = (cos(theta), sin(theta))
-    dx = convolve2D(maskdx, center, image)
-    dy = convolve2D(maskdy, center, image)
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    st1 = unitNormalize(steerable( 3*pi/4, img))
-    st2 = unitNormalize(steerable(-5*pi/8, img))
-    st3 = unitNormalize(steerable(   pi/4, img))
-  displayGrayImage("Ohjattavat filtterit",
-    combineImages((3,1),2,[st1,st2,st3]))
-~~~
 
 Tuloksena syntyvä kuva vastaa siis derivaattaoperaatiota Gaussin
 osittaisderivaattaa muistuttavalla suotimella, joka on käännetty annetun
@@ -330,35 +237,6 @@ kynnysarvon käsin. Kuvaile tuloksia ja ongelmakohtia. Voit myös yrittää
 käyttää skeleton-operaatiota löydetyn reunan ohentamiseen. Katso mallia
 aiemmasta luennosta, tutoriaalistakin voi olla apua.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- image to load
--- TODO: try different images
-imageFile = "nut.png"
-
-sigma = 0.8
--- mask should fit 6 sigma
-size = 5
-center = getMaskCenter2D(size)
-maskdx = createMask2D(fgaussian2Ddx(sigma),size)
-maskdy = createMask2D(fgaussian2Ddy(sigma),size)
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    dx = convolve2D(maskdx,center,img)
-    dy = convolve2D(maskdy,center,img)
-    mag = unitNormalize(imSqrt(imAdd(imMul(dx,dx),imMul(dy,dy))))
-    t = tOtsu(accHistogram(100,getValues(mag)))
-    tmag = threshold((0,1),t,mag)
-    ang = unitNormalize(imAtan2(dy,dx))
-  displayGrayImage("Kynnystetty gradientti",
-    combineImages((2,1),2,[tmag,ang]))
-~~~
-
 Näillä luultavasti saisi tehtyä jotakin, jos vielä ohentaa paksut reunat
 morfologian avulla ja jollakin lailla karsii ylimääräiset reunat. Parempi,
 hieman enemmän laskentaa vaativa tapa on seuraava:
@@ -381,51 +259,6 @@ Seuraavassa koodiesimerkissä esitetään reunanhaku käyttäen gradientin
 ääriarvojen etsintää yllä kuvatulla tavalla. Selvitä itsellesi mitä koodissa
 tapahtuu. Kokeile eri kuvilla ja vertaa tuloksia kynnystysmenetelmän tuottamiin
 tuloksiin. Miten tulosta voisi vielä parantaa?
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- image to load
--- TODO: try different images
-imageFile = "nut.png"
-
-sigma = 0.8
--- mask should fit 6 sigma
-size = 5
-center = getMaskCenter2D(size)
-maskdx = createMask2D(fgaussian2Ddx(sigma),size)
-maskdy = createMask2D(fgaussian2Ddy(sigma),size)
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    dx = convolve2D(maskdx,center,img)
-    dy = convolve2D(maskdy,center,img)
-    mag = unitNormalize(imSqrt(imAdd(imMul(dx,dx),imMul(dy,dy))))
-    ang = quantizeAngle4(imAtan2(dy, preventZero(dx)))
-    -- threshold to create a mask image
-    tmag = threshold((0,1),0.05, mag)
-    -- set mag and ang to 0 where magnitude is too small using the mask
-    mag' = imMul(tmag, mag)
-    ang' = imMul(tmag, ang)
-  -- find extremal pixels and draw them in cyan
-  displayImage("Gradientin ääriarvot",
-    drawPixelsColor(convGrayToColor(img),
-      forEach(gradientExtrema(mag',ang'),(valueToColor magenta))))
-
--- collects the pixels that have a gradient extremum in their neighborhood
-gradientExtrema(mag,ang) = filterNeighborhood((nes5 ang),maxEdge,mag)
-
--- a function for determining if there is a local maximum: if pixel value v is
--- greater than the maximum of its neighborhood values.
-maxEdge(v,[]) = False
-maxEdge(v,ns) = v >= maximum(ns)
-
--- creates a function for replacing pixel value with a fixed color.
-valueToColor c ((x,y),_) = ((x,y),c)
-~~~
 
 ## Toisen asteen derivaatat
 
@@ -476,45 +309,6 @@ $$g^2_\theta = u_x^2 G^2_{xx} + 2 u_x u_y G^2_{xy} + u_y^2 G^2_{yy}.$$
 
 Seuraavassa koodiesimerkissä esitetään toisen asteen derivaattojen laskenta
 kuvasta käyttäen Gaussin funktion derivaattoja.
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-imageFile = "nut.png"
-
-sigma = 0.8
--- mask should fit 6 sigma
-size = 5
-center = getMaskCenter2D(size)
-maskdx = createMask2D(fgaussian2Ddx(sigma),size)
-maskdy = createMask2D(fgaussian2Ddy(sigma),size)
-maskdx2 = createMask2D(fgaussian2Ddx2(sigma),size)
-maskdy2 = createMask2D(fgaussian2Ddy2(sigma),size)
-maskdxdy = createMask2D(fgaussian2Ddxdy(sigma),size)
-
-steerable2(theta,dx2,dy2,dxdy) =
-  imAdd(imMulS(dx2,ux**2), imAdd(imMulS(dxdy,2*ux*uy), imMulS(dy2,uy**2)))
-  where
-    (ux,uy) = (cos(theta), sin(theta))
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    dx2 = convolve2D(maskdx2,center,img)
-    dy2 = convolve2D(maskdy2,center,img)
-    dxdy = convolve2D(maskdxdy,center,img)
-    ilog = unitNormalize(imAdd(dx2,dy2))
-    st1 = unitNormalize(steerable2( 3*pi/4, dx2, dy2, dxdy))
-    st2 = unitNormalize(steerable2(-5*pi/8, dx2, dy2, dxdy))
-  displayGrayImage("Toisen asteen derivaatat",
-    combineImages((3,2),2,
-      [unitNormalize(dx2)
-      ,unitNormalize(dy2)
-      ,unitNormalize(dxdy)
-      ,ilog,st1,threshold((1,0),0.05,imMul(ilog,ilog))]))
-~~~
 
 Yllä olevan kuvamatriisin alarivissä vasemmalla on kuva, jossa on tulos
 operaatiosta $G^2_{xx} + G^2_{yy}$. Tämä on siis Laplacen operaatio, joka on
@@ -646,45 +440,6 @@ kuinka tämä voidaan tehdä. Alemmilla riveillä on rakennetensorin alkioiden a
 levitettyinä kuviksi, eli sen sijaan että meillä on kuva jossa on
 $2\times2$-matriisi jokaisessa pisteessä, meillä on $2\times2$-matriisi kuvia.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-imageFile = "nut.png"
-
-sigma = 0.8
--- mask should fit 6 sigma
-size = 5
-center = getMaskCenter2D(size)
-maskdx = createMask2D(fgaussian2Ddx(sigma),size)
-maskdy = createMask2D(fgaussian2Ddy(sigma),size)
-maskdx2 = createMask2D(fgaussian2Ddx2(sigma),size)
-maskdy2 = createMask2D(fgaussian2Ddy2(sigma),size)
-maskdxdy = createMask2D(fgaussian2Ddxdy(sigma),size)
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    dx = convolve2D(maskdx,center,img)
-    dy = convolve2D(maskdy,center,img)
-    a11 = imGaussian((5,5), imMul(dx,dx))
-    a22 = imGaussian((5,5), imMul(dy,dy))
-    a12 = imGaussian((5,5), imMul(dx,dy))
-    a21 = imGaussian((5,5), imMul(dy,dx))
-    kappa = 0.04
-    r = imSub(imSub(imMul(a11,a22),imMul(a12,a21)),
-              imMulS(imMul(imAdd(a11,a22),imAdd(a11,a22)),kappa))
-  displayGrayImage("Harrisin operaatio",
-    combineImages((2,3),2,
-        [img
-        ,unitNormalize(r)
-        ,stretchNormalize(a11)
-        ,unitNormalize(a12)
-        ,unitNormalize(a21)
-        ,stretchNormalize(a22)]))
-~~~
-
 On syytä huomata, että tämä menetelmä laskee vain tietynlaisen *vastefunktion*
 arvon. Se antaa suuria arvoja hyvin ympäristöstään erottuville pisteille, ja
 usein suuria arvoja on useita lähekkäin. Ennen löydettyjen pisteiden
@@ -740,35 +495,6 @@ enemmän tietoa myöhemmässä luvussa.
 
 Alla olevassa kuvassa lasketaan DoH ja LoG ja verrataan tuloksia.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-imageFile = "nut.png"
-
-sigma = 0.8
--- mask should fit 6 sigma
-size = 5
-center = getMaskCenter2D(size)
-maskdx = createMask2D(fgaussian2Ddx(sigma),size)
-maskdy = createMask2D(fgaussian2Ddy(sigma),size)
-maskdx2 = createMask2D(fgaussian2Ddx2(sigma),size)
-maskdy2 = createMask2D(fgaussian2Ddy2(sigma),size)
-maskdxdy = createMask2D(fgaussian2Ddxdy(sigma),size)
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    dx2 = convolve2D(maskdx2,center,img)
-    dy2 = convolve2D(maskdy2,center,img)
-    dxdy = convolve2D(maskdxdy,center,img)
-    idoh = unitNormalize(imSub(imMul(dx2,dy2), imMul(dxdy,dxdy)))
-    ilog = unitNormalize(imAdd(dx2,dy2))
-  displayGrayImage("DoH + LoG",
-    combineImages((3,1),2,[img,idoh,ilog]))
-~~~
-
 Lisätietoa Mikolajczykin ja Schmidin [Harrisin affiinista] ja [Hessen affiinista]
 wikipediasta. Myös alkuperäiset paperit ovat selkeitä ja erittäin
 mielenkiintoisia, ja niihin kannattaa tutustua jos pistepiirteet kiinnostavat.
@@ -784,4 +510,3 @@ mielenkiintoisia, ja niihin kannattaa tutustua jos pistepiirteet kiinnostavat.
    tutoriaalistakin voi olla apua.
 2) Kokeile reunanhakua gradientin ääriarvojen avulla. Vertaa tuloksia
    kynnystysmenetelmän tuottamiin tuloksiin. Miten tulosta voisi vielä parantaa?
-

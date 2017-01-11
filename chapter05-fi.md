@@ -220,19 +220,6 @@ keskinäistä suhdetta.\label{fig:kuva3}](images/kuva_3.png)
 Seuraavassa lasketaan SR kahdelle taajuuskaistalle kerrallaan. Kaista 23 vastaa
 aallonpituutta $590$ ja kaista 58 aallonpituutta $790$ kuten yllä.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-test :: CVLang()
-test = do
-  img1 <- readGrayImage("plant-23.png")
-  img2 <- readGrayImage("plant-58.png")
-  displayGrayImage("Taajuuskaista 23", img1)
-  displayGrayImage("Taajuuskaista 58", img2)
-  displayGrayImage("Taajuuskaistojen suhde", unitNormalize(imDiv(img1,img2)))
-~~~
-
 #### NDVI - Normalized Vegetation Index
 
 NDVI on paljon käytetty kasvillisuusindeksi. Se on jo hitusen monimutkaisempi,
@@ -249,20 +236,6 @@ molemmilta puolin.
 ![NDVI analyysi spektrikuvasta.\label{fig:kuva4}](images/kuva_4.png)
 
 Seuraavassa lasketaan NDVI käyttäen samoja taajuuskaistoja kuin edellä.
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-test :: CVLang()
-test = do
-  img1 <- readGrayImage("plant-23.png")
-  img2 <- readGrayImage("plant-58.png")
-  displayGrayImage("Taajuuskaista 23", img1)
-  displayGrayImage("Taajuuskaista 58", img2)
-  displayGrayImage("Taajuuskaistojen suhde",
-      unitNormalize(imDiv(imSub(img2,img1),imAdd(img2,img1))))
-~~~
 
 ### Kohteen tunnistaminen
 

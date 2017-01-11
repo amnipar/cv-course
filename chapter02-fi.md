@@ -208,79 +208,6 @@ kohinan tasoja sekä eri kokoisten suodinmaskien vaikutuksia. Miten kohinan
 määrä vaikuttaa vaadittavaan suodatukseen jotta kohina poistuu? Missä vaiheessa
 signaali alkaa hukkua kohinaan?
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- plot width in pixels
-width = 400
--- plot height in pixels
-height = 300
--- plot margin
-margin = 10
--- plot x scale
-xscale = 4*pi
--- plot y scale; estimate max and min value from the amplitudes
-yscale = sum(amplitudes) - ymin
--- y value minimum; estimate max and min value from the amplitudes
-ymin = min(0, (head(amplitudes) - sum(tail(amplitudes))))
--- standard deviation of the additive gaussian noise
--- TODO: test different values and the effect on required amount of filtering
-gaussianNoiseSigma = 1.0
-
--- mask used in convolving the signal
--- TODO: try different kinds of masks
--- either averageMask or gaussianMask can be selected, n tells the mask length
-mask :: [Float]
---mask = gaussianMask1D(maskSize)
-mask = averageMask1D(maskSize)
--- manually defined masks; take care of setting the maskSize correctly
---mask = [0.1,0.2,0.4,0.2,0.1]
---mask = [-2,-1,0,1,2]
-
--- size of the convolution mask
--- TODO: try different mask sizes
-maskSize :: Int
-maskSize = 5
-
--- index of the mask center
-maskCenter :: Int
-maskCenter = getMaskCenter1D(maskSize)
-
-amplitudes :: [Float]
-phases :: [Float]
-
--- amplitudes a and phases p for b [0..10] frequency components
--- TODO: try signals with faster and slower changes
--- signal is calculated as a[0] + sum of all (a * sin (bx + p*pi))
---          b:   0    1    2    3    4    5    6    7    8    9   10
-amplitudes = [10.0, 2.0, 5.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0]
-phases =     [ 0.0, 1.0, 0.0, 0.0, 0.0,-0.5, 0.0, 0.0, 0.0, 0.0, 1.0]
-
-test :: CVLang()
-test = do
-  displayImage("Suodatettu signaali",
-      plotLines(blue, 1, filteredPoints,
-      plotLines(red, 1, corruptedPoints,
-      plotLines(green, 2, cleanPoints,
-      emptyColorImage((width,height), white)))))
-  where
-    -- plot the signal by sampling densely and interpolating linearly
-    n = width-2*margin
-    signal = sample(n, xscale, signalGenerator(amplitudes, phases))
-    -- generate corrupted signal by adding gaussian noise
-    corrupted = corruptSignalWithGaussian(gaussianNoiseSigma, signal)
-    -- filter the corrupted signal by convolution
-    filtered = convolve1D(mask, maskCenter, corrupted)
-    -- convert the signals to image coordinates for plotting
-    cleanPoints =
-        signalToPixel((width,height), margin, (xscale,yscale), ymin, signal)
-    corruptedPoints =
-        signalToPixel((width,height), margin, (xscale,yscale), ymin, corrupted)
-    filteredPoints =
-        signalToPixel((width,height), margin, (xscale,yscale), ymin, filtered)
-~~~
-
 Muunkinlaisia suotimia on olemassa, ja näihin palataan myöhemmin.
 
 Suodattamisessa käytetään usein symmetristä maskia siten, että maskin
@@ -395,40 +322,6 @@ vertailemaan tuloksia. Kokeile ja vertaile erilaisten ja eri kokoisten maskien
 tuottamia tuloksia erilaisille kuville. Kokeile myös syöttää maskeja käsin.
 Kerro havainnoistasi.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- image to load
--- TODO: try other images, such as boat.png, rect1.png, nut.png, bolt.png
-imageFile :: String
-imageFile = "park.png"
-
--- mask options : average mask, gaussian mask, manual mask
--- TODO: try different masks
---mask = averageMask2D(maskSize)
-mask = gaussianMask2D(maskSize)
--- manually defined convolution mask; remember to set maskSize to 3!
---mask = manualMask
-manualMask = listToMask2D((maskSize,maskSize),
-  [ -1, 0, 1,
-    -1, 0, 1,
-    -1, 0, 1 ])
-
--- mask size; odd values recommended, like 3,5,7
--- TODO: try different mask sizes
---maskSize = 3 -- for manualMask
-maskSize = 5
--- mask centerpoint
-maskCenter = getMaskCenter2D(maskSize)
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  displayGrayImage("Alkuperäinen", img)
-  displayGrayImage("Suodatettu", convolve2D(mask, maskCenter, img))
-~~~
-
 ## Kynnystyksen parantelua
 
 Edellisessä luvussa opimme tuottamaan harmaasävykuvista binäärikuvia, joissa on
@@ -533,29 +426,6 @@ rect3-small.png) kynnystämistä ja korjailua. Voit myös yrittää yhdistää t
 suodatuksen kohinan vähentämiseksi. Kerro tuloksista ja pohdi kuinka niitä voisi
 parantaa.
 
-~~~{.haskell .jy_vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- TODO: try with different images
-imageFile :: String
-imageFile = "bolt_1.png"
-
--- TODO: try with different amounts of passes
-passes :: Int
-passes = 3
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    thresholded = threshold((1,0), 0.5, img)
-  displayGrayImage("Alkuperäinen", img)
-  displayGrayImage("Kynnystetty", thresholded)
-  displayGrayImage("Laajennettu", dilate(crossMask, passes, thresholded))
-  displayGrayImage("Kulutettu", erode(squareMask, passes, thresholded))
-~~~
-
 [morfologiasta wikipediassa]: http://en.wikipedia.org/wiki/Mathematical_morphology
 
 ## Hit-or-miss
@@ -634,37 +504,6 @@ hahmottamista skeleton-operaation avulla. Kurssisivulla pääsee kokeilemaan
 erilaisia kuvia sekä myös muita *hit-or-miss*-operaatioita. Kokeile eri
 kohteiden reunojen ja luurangon löytämistä *hit-or-miss* operaatioilla. Kuvaile
 ja pohdi tuloksia. Voit kokeilla myös muita operaatioita tutoriaalisivun tuella.
-
-~~~{.haskell .jy_vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- TODO: try with different images
-imageFile :: String
-imageFile = "bolt_1.png"
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    thresholded = threshold((1,0), 0.5, img)
-    closed = close(crossMask, 3, thresholded)
-    edges = imSub(closed, erode(squareMask, 1, closed))
-    skel = skeleton(convZeroOneToMinusPlus(closed))
-    skelEdge = imAdd(imMaxS(0,skel),edges)
-    pruned = pruneEndpoints(5, skel)
-    junctionPoints = pointsToCircles(3, collectPoints(0.5, findJunctions(skel)))
-    endPoints = pointsToRects(2, collectPoints(0.5,
-        findPoints(skel, endpointMasks)))
-  displayGrayImage("Alkuperäinen", img)
-  displayGrayImage("Kynnystetty", thresholded)
-  displayGrayImage("Suljettu", closed)
-  displayGrayImage("Skeleton", skelEdge)
-  displayImage("Skeleton+Points",
-      plotCircles(red, 0, junctionPoints,
-      plotRects(blue, 0, endPoints,
-      convGrayToColor(skelEdge))))
-~~~
 
 ## Tehtäviä
 

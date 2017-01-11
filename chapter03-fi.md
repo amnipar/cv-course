@@ -177,72 +177,6 @@ Kuvaile Fourier-muunnoksien eroja ja käänteismuunnoksen tuloksia.
 
 ![Fourier-kertoimista palautettu signaali](images/fourier-signal.png)
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- plot width in pixels
-width = 400
--- plot height in pixels
-height = 300
--- plot margin
-margin = 10
--- plot x scale
-xscale = 4*pi
--- plot y scale
-yscale = (sum(amplitudes) - ymin)
--- y value minimum
-ymin = min(0, (head(amplitudes) - sum(tail(amplitudes))))
--- standard deviation of the additive gaussian noise
--- TODO: try different noise levels
-gaussianNoiseSigma = 1.0
-
--- how many of the largest frequency components are used in reconstruction
--- TODO: try changing this count
-componentCount :: Int
-componentCount = 9
-
-amplitudes :: [Float]
-phases :: [Float]
-
--- amplitudes a and phases p for b [0..10] frequency components
--- TODO: try different kinds of signals
--- signal is calculated as a[0] + sum of all (a * sin (bx + p*pi))
---          b:   0    1    2    3    4    5    6    7    8    9   10
-amplitudes = [10.0, 2.0, 5.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0]
-phases =     [ 0.0, 1.0, 0.0, 0.0, 0.0,-0.5, 0.0, 0.0, 0.0, 0.0, 1.0]
-
-test :: CVLang()
-test = do
-  let
-    signal = sample((width-2*margin), xscale, signalGenerator(amplitudes,phases))
-    corrupted = corruptSignalWithGaussian(gaussianNoiseSigma, signal)
-    fsignal = dft1D(corrupted)
-    -- create a plottable signal from the logarithm of the fourier magnitude
-    msignal = zip(forEach(signal,fst),forEach(dftToPolar1D(fsignal),lnMag))
-    isignal = zip(fstItems(corrupted), idft1D((-componentCount),fsignal))
-    clean =
-        signalToPixel((width,height), margin, (xscale,yscale), ymin, signal)
-    points =
-        signalToPixel((width,height), margin, (xscale,yscale), ymin, corrupted)
-    ipoints =
-        signalToPixel((width,height), margin, (xscale,yscale), ymin, isignal)
-    mpoints =
-        signalToPixel((width,height), margin,
-          (xscale,maximum(forEach(msignal,snd))), 0, msignal)
-  displayImage("Signaalin Fourier-muunnos",
-      plotLines(red, 1, mpoints, emptyColorImage((width,height), white)))
-  displayImage("Suodatettu signaali",
-      plotLines(blue, 2, ipoints,
-        plotLines(red, 1, points,
-          plotLines(green, 2, clean,
-            emptyColorImage((width,height), white)))))
-
-yToFloat((x,y)) = (x,realToFrac y)
-yToDouble((x,y)) = (x,realToFrac y)
-lnMag(_,a,p) = log(sqrt(a**2+p**2))
-~~~
-
 ## Kaksiulotteinen Fourier-muunnos
 
 Kaksiulotteisen integroituvan signaalin $g(x,y)$ Fourier-muunnos määritellään
@@ -337,43 +271,6 @@ että tässä DFT toteutetaan naiivisti, joten suurilla kuvilla operaatio on hyv
 hidas. Tutki erilaisten pikkukuvien Fourier-muunnoksen polaariesitystä. Pohdi
 ja kuvaile eri kuvien eroja.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- available test images; s in the beginning means 'smoothed'
--- TODO: try different images and compare results
-disc     :: Image GrayScale Float
-sdisc    :: Image GrayScale Float
-torus    :: Image GrayScale Float
-storus   :: Image GrayScale Float
-square   :: Image GrayScale Float
-ssquare  :: Image GrayScale Float
-diamond  :: Image GrayScale Float
-sdiamond :: Image GrayScale Float
-
-test = do
-  displayGrayImage("Amplitude", upscaleImage(8,logNormalize(amp)))
-  displayGrayImage("Vaihe", upscaleImage(8,unitNormalize(pha)))
-  where
-    img = disc
-    (re,im) = dft2D(img)
-    (amp,pha) = dftToPolar2D(re,im)
-
--- 20pix image of r=5 white disc on black background
-disc = discGrayImage(20,5,1,0)
-sdisc = imGaussian((3,3), disc)
--- 24pix image of r1=3 and r2=9 white torus on black background
-torus = torusGrayImage(24,3,9,1,0)
-storus = imGaussian((3,3), torus)
--- 20pix image of r=5 white square on black background
-square  = squareGrayImage(20,5,1,0)
-ssquare = imGaussian((3,3), square)
--- 20pix image of r=5 white diamond on black background
-diamond  = diamondGrayImage(20,5,1,0)
-sdiamond = imGaussian((3,3), diamond)
-~~~
-
 ### Tehtävä 4.3 {-}
 
 Seuraavassa koodiesimerkissä havainnollistetaan pienen kuvan Fourier-kantaa
@@ -388,42 +285,6 @@ Tutki erilaisten pikkukuvien Fourier-kantaa. Osaatko selittää, mistä erot kuv
 välillä johtuvat?
 
 ![Fourier-kanta](images/fourier-images.png)
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- available test images; s in the beginning means 'smoothed'
--- TODO: try different images and compare results
-disc     :: Image GrayScale Float
-sdisc    :: Image GrayScale Float
-torus    :: Image GrayScale Float
-storus   :: Image GrayScale Float
-square   :: Image GrayScale Float
-ssquare  :: Image GrayScale Float
-diamond  :: Image GrayScale Float
-sdiamond :: Image GrayScale Float
-
-test = do
-  displayGrayImage("Fourier-kanta", dftImages(re,im))
-  where
-    img = disc
-    (w,h) = getSize(img)
-    (re,im) = dft2D(img)
-
--- 20pix image of r=5 white disc on black background
-disc = discGrayImage(20,5,1,0)
-sdisc = imGaussian((3,3), disc)
--- 24pix image of r1=3 and r2=9 white torus on black background
-torus = torusGrayImage(24,3,9,1,0)
-storus = imGaussian((3,3), torus)
--- 20pix image of r=5 white square on black background
-square  = squareGrayImage(20,5,1,0)
-ssquare = imGaussian((3,3), square)
--- 20pix image of r=5 white diamond on black background
-diamond  = diamondGrayImage(20,5,1,0)
-sdiamond = imGaussian((3,3), diamond)
-~~~
 
 Seuraavassa puolestaan havainnollistetaan sitä, että Fourier-kanta tuottaa melko
 *harvan* esityksen. Kuvan taajuuskomponentit on lajiteltu amplitudin mukaiseen
@@ -452,21 +313,6 @@ tehdä naiivista toteutuksesta jopa epätarkemman.
 
 Seuraavassa esitetään valokuvan Fourier-muunnos käyttäen FFT-algoritmia.
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-test = do
-  img <- readGrayImage("park.png")
-  let
-    (re,im) = complexSplit(dft(img))
-    (amp,pha) = dftToPolar2D(im,re)
-  displayGrayImage("Reaaliosa", logNormalize(re))
-  displayGrayImage("Imaginaariosa", logNormalize(im))
-  displayGrayImage("Amplitudi", logNormalize(amp))
-  displayGrayImage("Vaihe", unitNormalize(pha))
-~~~
-
 Seuraavassa havainnollistetaan, että kuvien Fourier-muunnoksen oleellinen
 informaatio sisältyy Fourier-kertoimien *vaiheeseen*: kahden eri kuvan
 vaihekomponentit vaihdetaan keskenään, ja lopputuloksena oleva kuva muistuttaa
@@ -475,26 +321,6 @@ että luonnollisia näkymiä esittävissä valokuvissa on aina melko samankaltai
 jakauma eri taajuuksia. Eroja on lähinnä siinä, mitä suuntia on edustettuna
 enemmän. Kuvan oleelliset piirteet syntyvätkin siitä, millä tavoin
 taajuuskomponentteja siirrellään eli mikä on kunkin komponentin vaihe.
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-test = do
-  img1 <- readGrayImage("park.png")
-  img2 <- readGrayImage("boat.png")
-  let
-    (pre,pim) = complexSplit(dft(img1))
-    (bre,bim) = complexSplit(dft(img2))
-    (pamp,ppha) = dftToPolar2D(pim,pre)
-    (bamp,bpha) = dftToPolar2D(bim,bre)
-    pimg = idft(dftMerge(polarToDft2D(pamp,bpha)))
-    bimg = idft(dftMerge(polarToDft2D(bamp,ppha)))
-  displayGrayImage("Puisto", img1)
-  displayGrayImage("Vene", img2)
-  displayGrayImage("Puisto+Vene", unitNormalize(pimg))
-  displayGrayImage("Vene+puisto", unitNormalize(bimg))
-~~~
 
 ## Konvoluutioteoreema
 
@@ -555,30 +381,6 @@ informaatiosta. Vaikuttaakin siltä, että tällainen tieto on olennaista näkym
 analysoinnin kannalta, ja palaamme tähän myöhemmillä luennoilla.
 
 ![Gabor-maskit](images/gmaskit.png)
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- the size of the mask; 7 recommended
-size = 7
--- the index of mask centerpoint
-center = getMaskCenter2D(size)
--- the used mask; available gabor1..gabor8, with different directions
-mask = gabor1
-
-g = [gabor1,gabor2,gabor3,gabor4,gabor5,gabor6,gabor7,gabor8]
-
-test = do
-  img <- readGrayImage("park.png")
-  let
-    (gre,gim) = filterGabor(mask, size, center, img)
-    (gamp,gpha) = dftToPolar2D(gim,gre)
-  displayGrayImage("Reaaliosa", logNormalize(gre))
-  displayGrayImage("Imaginaariosa", logNormalize(gim))
-  displayGrayImage("Amplitudi", stretchNormalize(gamp))
-  displayGrayImage("Vaihe", unitNormalize(gpha))
-~~~
 
 ## Spatial envelope
 

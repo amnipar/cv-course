@@ -76,13 +76,12 @@ Kurssilla käsitellään seuraavia asioita:
 1. Reunojen etsintä kuvista, reunakäyrien seuraaminen
 1. Yhtenäisten alueiden etsintä, alueiden kuvaileminen
 1. Kuvien analysointi eri skaaloissa, skaala-avaruus ja pistepiirteet
+1. Liikkuva kuva ja optinen vuo (optical flow)
+1. Kolmiulotteiset takaisinprojektiot
 1. Hahmontunnistuksen perusteet ja yksinkertainen piirteytys
 1. Koneoppimisen perusteet, mallien kouluttaminen ja validointi
-1. Luokittelumenetelmät, kuten neuroverkot ja tukivektorikoneet
-1. Tilastollinen hahmontunnistus
-1. Tilastolliset graafiset mallit
-1. Yksinkertaisten rakenteiden tunnistaminen
-1. Tilastolliset rakennemallit
+1. Luokittelumenetelmät, kuten neuroverkot, tukivektorikoneet ja Bayesilaiset mallit
+1. Tilastolliset parametriset mallit
 
 Kurssi on itsenäinen kokonaisuus, ja kaikki tarvittavat esitiedot kerrataan.
 Matemaattista ymmärrystä vaaditaan jonkin verran. Verkosta on vapaasti
@@ -91,31 +90,14 @@ Szeliskin kirja [-@Szeliski2011] kertaa konenäön historiaa ja painottuu
 käytännön algoritmeihin ja sovelluksiin. Princen kirja [-@Prince2012] painottuu
 malleihin ja niiden oppimiseen.
 
-Myös [kurssisivu](http://ties411.it.jyu.fi) sekä tämä [luentomoniste](
-http://ties411.it.jyu.fi/luentomoniste.pdf) löytyvät verkosta.
+Myös [kurssisivu](http://users.jyu.fi/~amjayee/TIES411/) sekä tämä [luentomoniste](
+http://http://users.jyu.fi/~amjayee/TIES411/ties411-luentomoniste.pdf) löytyvät verkosta.
 Materiaali tulee päivittymään kurssin aikana, joten vain jo pidettyjen luentojen
 materiaaliin kannattaa luottaa.
 
 ## Kurssisivun koodiesimerkit
 
-Edellä mainittu kurssisivu sisältää tekstimateriaalin lisäksi koodiesimerkit
-interaktiivisessa muodossa, jossa voi tehdä muutoksia ja kokeilla niiden
-vaikutusta. Tavoitteena on tarjota helppokäyttöinen tapa kokeilla erilaisia
-menetelmiä ja tekniikoita käytännössä ja nähdä tulokset omalla web-selaimella.
-Koodiesimerkkeihin liittyy tehtäviä, joiden tavoitteena on haastaa lukija
-pohtimaan esitettyä asiaa ja syventämään oppimista kokeilujen ja pohdintojen
-kautta.
-
-Koodiesimerkkien käyttäminen edellyttää kirjautumista omalla
-sähköpostiosoitteella Mozillan Persona-tunnistautumisen kautta. Kirjautumisen
-jälkeen käyttäjä pääsee luomaan kyseisestä sivusta oman versionsa, jolloin
-tekstikappaleiden ja koodiesimerkkien viereen avautuvat *Edit*-painikkeet.
-Tehtävien yhteydessä olevat kuvat on generoitu ohjelmallisesti; tällaisen kuvan
-vieressä olevan *Edit*-painikkeen painaminen avaa koodi-ikkunan, jossa voi
-muokata kuvan generoinutta koodia. Kun muutokset tallennetaan, kuva generoidaan
-uudelleen. Koodiin on merkitty `-- TODO:`{.haskell} -kommenteilla parametrit,
-joita tehtävässä on tarkoitus muokata. Muitakin muutoksia voi kokeilla. Tämän
-dokumentin Appendix-osassa on kuvailtu koodiesimerkkien ohjelmointirajapintaa.
+Materiaalissa viitataan kurssisivun koodiesimerkkeihin. Tämä liittyy aiemman kurssin kokeiluun tarjota web-sovellus, jossa erilaisia esimerkkialgoritmeja pystyi kokeilemaan. Tämä käytännön osuus korvataan kurssin kuluessa Docker-ympäristössä suoritettavilla tutoriaalityyppisillä ohjelmointitehtävillä, ja materiaalin tekstiä päivitetään vähitellen, mutta siellä täällä esiintyy hämääviä viittauksia kurssisivuun ja koodiesimerkkeihin, joita ei enää ole entisessä muodossaan saatavilla.
 
 # Kuvanmuodostus ja näytteistys {#kuvanmuodostus}
 
@@ -160,67 +142,6 @@ interaktiivisesti eri parametrien vaikutuksia. Kokeile muuttaa numeroarvoja
 kahdessa parametrilistassa (amplitudi ja vaihe). Kerro havainnoistasi ja yritä
 selostaa, mitä eri parametrit tekevät. Mitkä asiat vaikuttavat lopputuloksena
 syntyvään signaaliin, joka on piirretty kuvaan paksulla vihreällä viivalla?
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- plot width in pixels
-width = 400
--- plot height in pixels
-height = 300
--- plot margin
-margin = 10
--- plot x scale
-xscale = 4*pi
--- plot y scale
-yscale = 2 * (sum(tail(amplitudes)))
--- minimum value on y axis
-ymin = -(sum(tail(amplitudes)))
-
-amplitudes :: [Float]
-phases :: [Float]
-
--- TODO: change values in the two lists and observe the effects.
--- amplitudes a and phases p for b [0..10] frequency components
--- signal is calculated as a[0] + sum of all (a * sin (bx + p*pi))
---          b:   0    1    2    3    4    5    6    7    8    9   10
-amplitudes = [ 0.0, 2.0, 3.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0]
-phases =     [ 0.0, 1.0, 0.0, 0.0, 0.0,-0.5, 0.0, 0.0, 0.0, 0.0, 1.0]
-
-test :: CVLang()
-test = do
-  displayImage("Taajuuskomponentit",
-      plotLines(red, 1, c1,
-      plotLines(red, 1, c2,
-      plotLines(red, 1, c3,
-      plotLines(red, 1, c4,
-      plotLines(red, 1, c5,
-      plotLines(red, 1, c6,
-      plotLines(red, 1, c7,
-      plotLines(red, 1, c8,
-      plotLines(red, 1, c9,
-      plotLines(red, 1, c10,
-      plotLines(green, 2, points,
-      emptyColorImage((width,height), white)))))))))))))
-  where
-    signal = sample((width-2*margin), xscale, signalGenerator(amplitudes,phases))
-    points = signalToPixel((width,height), margin, (xscale,yscale), ymin, signal)
-    c1  = getComponentPoints(1)
-    c2  = getComponentPoints(2)
-    c3  = getComponentPoints(3)
-    c4  = getComponentPoints(4)
-    c5  = getComponentPoints(5)
-    c6  = getComponentPoints(6)
-    c7  = getComponentPoints(7)
-    c8  = getComponentPoints(8)
-    c9  = getComponentPoints(9)
-    c10 = getComponentPoints(10)
-
-getComponentPoints(c) = signalToPixel((width,height), margin, (xscale,yscale),
-    ymin, sample((width-2*margin), xscale,
-      frequencyComponentGenerator(amplitudes, phases, c)))
-~~~
 
 ## Näytteistys
 
@@ -281,57 +202,6 @@ huomioistasi. Jos kuvassa oleva signaali on sekunnin mittainen pätkä, mikä on
 interpoloidun signaalin näytteistystaajuus? Mikä on generoidun signaalin
 Nyquistin näytteistystaajuus, ja mikä sen määrää? Mikä on näytteistetyn
 signaalin Nyquistin taajuus, ja mikä sen määrää?
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- plot width in pixels
-width = 400
--- plot height in pixels
-height = 300
--- plot margin
-margin = 10
--- plot x scale
-xscale = 4*pi
--- plot y scale; estimate max and min value from the amplitudes
-yscale = (sum(amplitudes) - ymin)
--- y value minimum; estimate max and min value from the amplitudes
-ymin = min(0, (head(amplitudes) - sum(tail(amplitudes))))
--- TODO: change this number to observe the effects of sampling frequency
--- number of samples
-sampleCount = 40
-
-amplitudes :: [Float]
-phases :: [Float]
-
--- TODO: change these parameters to observe the effects on different signals
--- amplitudes a and phases p for b [0..10] frequency components
--- signal is calculated as a[0] + sum of all (a * sin (bx + p*pi))
---          b:   0    1    2    3    4    5    6    7    8    9   10
-amplitudes = [10.0, 2.0, 5.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 1.0]
-phases =     [ 0.0, 1.0, 0.0, 0.0, 0.0,-0.5, 0.0, 0.0, 0.0, 0.0, 1.0]
-
-test :: CVLang()
-test = do
-  displayImage("Interpoloitu signaali",
-      plotLines(blue, 1, samplePoints,
-      plotSpikes(red, 1, 2, y0, samplePoints,
-      plotLines(green, 2, signalPoints,
-      emptyColorImage((width,height), white)))))
-  where
-    -- plot the original signal by sampling densely and interpolating linearly
-    n = width-2*margin
-    signal = sample(n, xscale, signalGenerator(amplitudes,phases))
-    -- create the sampled signal with fewer sampling points
-    sampled = sample(sampleCount, xscale, signalGenerator(amplitudes, phases))
-    -- convert the signals to image coordinates for plotting
-    signalPoints =
-        signalToPixel((width,height), margin, (xscale,yscale), ymin, signal)
-    samplePoints =
-        signalToPixel((width,height), margin, (xscale,yscale), ymin, sampled)
-    y0 = ytop(height, margin, yscale, ymin, 0)
-~~~
 
 Näytteistettyjä signaaleja voidaan interpoloida monin eri tavoin, ja eri
 menetelmät eroavat sen suhteen, millä tavalla ne pyrkivät arvaamaan kuinka
@@ -505,28 +375,6 @@ arvot välille $[0,1]$? Entä normalisointi negatiivisia ja positiivisia arvoja
 sisältävälle kuvalle siten, että alkuperäisen kuvan arvo $0$ on normalisoidussa
 kuvassa arvo $0.5$?
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-shift :: ((Int,Int), Image GrayScale Float) -> Image GrayScale Float
-shift((sx,sy), image) = imageFromFunction((w,h), f)
-  where
-    (w,h) = getSize(image)
-    f((x,y)) | x < sx || y < sy = getPixel(x,y, image)
-             | otherwise        = getPixel(x-sx, y-sy, image)
-
-diff :: (Image GrayScale Float, Image GrayScale Float) -> Image GrayScale Float
-diff(a, b) = imSqrt(imMul(imSub(a,b),imSub(a,b)))
-
-test :: CVLang()
-test = do
-  img <- readGrayImage("nut.png")
-  displayGrayImage("Alkuperäinen", img)
-  displayGrayImage("Erotus siirretyn kuvan kanssa",
-    diff(img,shift((1,1),img)))
-~~~
-
 Tämän operaation tuloksesta havaitaan, että tällainen kuvan ja siirretyn kuvan
 etäisyys vaikuttaa hyödylliseltä reunojen löytämisessä. Tähän palaamme
 myöhemmässä luvussa.
@@ -553,27 +401,6 @@ Seuraavassa koodiesimerkissä esitetään kuvan kynnystäminen käyttäen kiinte
 kynnysarvoa. Kurssisivulla pääsee kokeilemaan eri kynnysarvoja ja eri
 kuvatiedostoja. Kuvaile tuloksia eri kuvilla. Onko tulos hyödyllinen
 kiinnostavien kohteiden tunnistamisen kannalta? Miksi tai miksi ei?
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- TODO: change this value to set the threshold level, should be between [0,1].
-thresholdValue :: Float
-thresholdValue = 0.5
-
-thresh :: (Float, Image GrayScale Float) -> Image GrayScale Float
-thresh(t, image) = forEachPixel(image,(isLessThan t))
-  where
-    isLessThan t (x,y,v) | v < t     = 1
-                         | otherwise = 0
-
-test :: CVLang()
-test = do
-  img <- readGrayImage("nut.png")
-  displayGrayImage("Alkuperäinen", img)
-  displayGrayImage("Kynnystetty", thresh(thresholdValue, img))
-~~~
 
 Kynnystys on merkittävä operaatio siksi, että se on yksinkertaisin menetelmä,
 jolla kuvasta voidaan irrottaa erilaisia kohteita. Se toimii hyvin silloin, kun
@@ -613,34 +440,6 @@ $k$:n arvon tulee olla negatiivinen jotta kiinnostava kohde saataisiin esiin.
 Seuraavassa esitetään kuvan kynnystäminen keskiarvo-keskihajontamenetelmällä
 saadun kynnysarvon avulla. Kurssisivulla pääsee kokeilemaan eri $k$:n ja
 $\epsilon$:n arvoja ja lataamaan eri kuvia.
-
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
--- the k parameter used in mean-dev thresholding
-kValue :: Float
-kValue = 1
-
--- the epsilon parameter used in mean-dev thresholding
-epsilonValue :: Float
-epsilonValue = 0.01
-
-thresh :: (Float, Float, Image GrayScale Float) -> Image GrayScale Float
-thresh(k, epsilon, image) = forEachPixel(image,(isLessThan t))
-  where
-    mu = imMean(image)
-    sigma = imStdDev(image)
-    t = mu + k * sigma + epsilon
-    isLessThan t (x,y,v) | v < t     = 1
-                         | otherwise = 0
-
-test :: CVLang()
-test = do
-  img <- readGrayImage("nut.png")
-  displayGrayImage("Alkuperäinen", img)
-  displayGrayImage("Kynnystetty",thresh(kValue, epsilonValue, img))
-~~~
 
 ## Tehtäviä
 

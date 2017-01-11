@@ -183,61 +183,6 @@ laukeavat, sitä vähemmän energiaa kuluu.
 
 ![Kuvapyramidit](images/pyramids.png)
 
-~~~{.haskell .jy-vision}
-{-#LANGUAGE NoImplicitPrelude#-}
-import CVLangUC
-
-imageFile = "nut.png"
-
--- recommended values are from 3 to 6
-sigmaMultiplier = 3
-
--- recommended to fit at least 3 sigma into the mask radius
-sigmaToSize(sigma) = 2 * (ceiling $ sigmaMultiplier * sigma) + 1
-
-sigmaToMask(sigma) = createMask2D(fgaussian2D(sigma),sigmaToSize(sigma))
-
-sigmaToFilter(sigma) = createFilter2D(mask,center)
-  where
-    mask = createMask2D(fgaussian2D(sigma),size)
-    size = sigmaToSize(sigma)
-    center = getMaskCenter2D(size)
-
--- sigma of the gaussian is sqrt t, where t is 0,1,2,... and 0 is original
---sigmas = [sqrt 2, sqrt 4, sqrt 8, sqrt 16, sqrt 32]
-sigmas = [1,1.6,1.6**2,1.6**3,1.6**4]
-sizes = forEach(sigmas,sigmaToSize)
-masks = forEach(sigmas,sigmaToMask)
-filters = forEach(sigmas,sigmaToFilter)
-
-test :: CVLang()
-test = do
-  img <- readGrayImage(imageFile)
-  let
-    (w,h) = getSize(img)
-    clear = emptyGrayImage((w,h),0)
-    -- get the scale versions of the original image by applying the gaussians
-    scales = forEach(filters,applyFilter2D(img))
-    -- get the laplacian images by subtracting gaussian pyramid levels
-    laplacians = forEach(zip((img:scales),scales),imSub)
-    -- find the zero crossings of the laplacians
-    zeros = forEach(laplacians,drawZero)
-  displayGrayImage("Pyramidit", combineImages((6,3),2,
-      ([img] ++ scales ++ [clear] ++ (forEach(laplacians,unitNormalize)) ++ [clear] ++ zeros)))
-
-drawZero image = drawPixelsGray(clear,zeros)
-  where
-    (w,h) = getSize(image)
-    clear = emptyGrayImage((w,h),0)
-    zeros = forEach(zeroCrossings(image),valueToMax)
-
-zeroCrossings(image) = filterNeighborhood(n8,crossesZero,image)
-
-crossesZero (_,ns) = (minimum ns) < 0 && (maximum ns) > 0
-
-valueToMax ((x,y),_) = ((x,y),1)
-~~~
-
 ## Ohjattavat pyramidit*
 
 Pyramidi voidaan muodostaa myös *ohjattavista filttereistä*, jolloin voidaan
