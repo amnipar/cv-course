@@ -85,3 +85,23 @@ $$T\left(t,I\right)(x,y)=\begin{cases}
                          1, &\text{ jos } I(x,y) < t\\
                          0, &\text{ muuten,}
                         \end{cases}$$
+
+## Lineaariset systeemit
+
+* Tuottavat ennustettavia vasteita syötteisiin
+* Aikariippumattomuus:
+  $f(t) \rightarrow R(f(t)) \Rightarrow f(t+\delta) \rightarrow R(f(t+\delta))$
+* Superpositio: R(f+g) = R(f) + R(g)
+* Skaalautuvuus: $R(kf) = kR(f)$
+* Siirtoriippumattomuus:
+  $f(x,y) \rightarrow R(f(x,y)) \Rightarrow  f(x+u,y+v) \rightarrow R(f(x+u,y+v))$
+
+## Impulssivaste
+
+* Systeemin vaste kun se saa syötteenä impulssin eli hyvin lyhyen signaalin
+* Yksikköimpulssin tulisi olla äärettömän lyhyt ja pieni mutta voimakkuudeltaan
+  vakio
+* Esimerkiksi Diracin delta:
+
+$$\delta(x) = \frac{1}{\sigma\sqrt{\pi}}e^{-\frac{x^2}{\sigma^2}},
+  \sigma \rightarrow 0$$
