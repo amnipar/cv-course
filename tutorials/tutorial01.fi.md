@@ -53,7 +53,11 @@ $ docker run --rm -it -v /c/Users/.../ht-repo:/source amnipar/cv
 
 Huomaa, että harjoitustyörepon polku pitää kirjoittaa oikein. Tässä on käytetty Windows-koneen oletusasennuksen ymmärtämää muotoa MINGW:n Bash-konsolin sisällä.
 
-Kun komentokonsoli aukeaa säiliön sisään (esimerkiksi `root@07f0a0281367:/source# `) voit suorittaa komentoja harjoitustyökansiosi sisällä oleville tiedostoille. Voit esimerkiksi luoda tiedoston *tutorial01.c*
+Kun komentokonsoli aukeaa säiliön sisään (esimerkiksi `root@07f0a0281367:/source# `) voit suorittaa komentoja harjoitustyökansiosi sisällä oleville tiedostoille. Ympäristössä voi myös ohjelmoida C:llä (ja C++:lla), Javalla, Pythonilla ja Haskellilla käyttäen OpenCV-kirjastoa. Seuraavassa yksinkertaisin mahdollinen esimerkki kullakin kielellä.
+
+## C-esimerkki
+
+Luodaan kansioon *tutorial01* tiedosto *tutorial01.c*:
 
 ```{.c}
 #include <opencv2/core/core_c.h>
@@ -68,18 +72,101 @@ int main(void) {
 }
 ```
 
-ja kääntää sen komentoriviltä komennoilla
+ja käännetään ja suoritetaan se komentoriviltä komennoilla
 
 ```sh
-root@07f0a0281367:/source# gcc -c -o tutorial01.o tutorial01.c
-root@07f0a0281367:/source# gcc -o tutorial01 tutorial01.o -lopencv_core -lopencv_highgui
-root@07f0a0281367:/source# ./tutorial01
+$ gcc -Wall -o tutorial01 tutorial01.c -lopencv_core -lopencv_highgui
+$ ./tutorial01
 ```
 
 tuloksena pitäisi syntyä tiedosto *result.png* harjoitustyöhakemistoosi.
 
-Docker-ympäristöön lisätään piakkoin tuki myös muille ohjelmointikielille kuin c, ainakin python, java ja haskell, mutta tämä työ on vielä keskeneräinen. Siihen asti voit tutkia OpenCV:n dokumentteja ja C-apia ja kokeilla erilaisia operaatioita kuvillesi.
+## Java-esimerkki
 
-Tämä tutoriaalitekstikin tulee vielä päivittymään.
+Luodaan kansioon *tutorial01* tiedosto *tutorial01.java*:
 
-* Dokumentteja esim. <http://docs.opencv.org/3.2.0/>
+```{.java}
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.highgui.Highgui;
+
+public class tutorial01 {
+	public static void main(String[] args) {
+		System.setProperty("java.library.path", "/usr/lib/jni/libopencv_java2413.so");
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+		Mat img = Highgui.imread("../images/rect.png", Highgui.IMREAD_GRAYSCALE);
+		Highgui.imwrite("../images/result.png", img);
+	}
+}
+```
+
+ja käännetään ja suoritetaan se komentoriviltä komennoilla
+
+```sh
+$ javac -cp '.:/usr/share/java/opencv.jar' tutorial01.java
+$ java -cp '.:/usr/share/java/opencv.jar' tutorial01
+```
+
+Lopputuloksen pitäisi olla sama kuin C-ohjelmalla.
+
+## Python-esimerkki
+
+Luodaan kansioon *tutorial01* tiedosto *tutorial01.py*:
+
+```{.python}
+import cv2
+
+img = cv2.imread("../images/rect.png", cv2.IMREAD_GRAYSCALE)
+cv2.imwrite("../images/result.png", img)
+```
+
+jota ei tarvitse kääntää, vaan sen voi suorittaa komentoriviltä komennolla
+
+```sh
+root@07f0a0281367:/source# python tutorial01.py
+```
+
+ja lopputulos on edelleen sama.
+
+## Haskell-esimerkki
+
+Luonaan kansioon *tutorial01* tiedosto *tutorial01.hs*:
+
+```{.haskell}
+{-# LANGUAGE ScopedTypeVariables #-}
+module Main where
+
+import CV.Image
+
+main = do
+  img :: Image GrayScale D8  <- readFromFile "../images/rect.png"
+  saveImage "../images/result.png" img
+```
+
+jonka voi kääntää ja suorittaa komentoriviltä komennoilla
+
+```sh
+$ ghc --make tutorial01.hs
+$ ./tutorial01
+```
+samalla lopputuloksella.
+
+## Tehtäviä
+
+Nyt meillä on yksinkertainen perusympäristö neljälle eri ohjelmointikielelle. Valitse niistä yksi sen mukaan, mitä osaat parhaiten. Python on hyvä vaihtoehto, koska sillä on ehkä yksinkertaisinta saada toimivaa koodia aikaan. Kurssin aikana rakennamme vähitellen yhä monipuolisempia komentorivityökaluja kokeilujen tekemiseksi harjoitustyöhön liittyvillä kuvilla.
+
+Kirjoita harjoitustyörepoosi lyhyt selostus harjoitustyöaiheestasi; millaisia kuvia aiot tutkia ja mitä haluaisit saada niillä aikaan.
+
+Lisää harjoitustyörepoosi muutama esimerkkikuva aiheeseesi liittyen. Lisää sinne myös yksinkertainen kooditiedosto valitsemaasi kieltä varten. Varmista, että yksinkertainen koodi toimii. Sen jälkeen tee kokeiluja *core*-moduulista löytyvillä
+[matemaattisilla operaatioilla](http://docs.opencv.org/2.4.13/modules/core/doc/operations_on_arrays.html). Yritä saada jotakin näkyvää aikaan. Voit myös yrittää generoida apukuvia vakioarvoilla.
+
+Toistaiseksi ympäristössä käytetään OpenCV:n versiota 2.4.13.2. Uudemmassa 3-versiossa on joitakin uusia ominaisuuksia, ja tarkoitus oli ottaa käyttöön versio 3.2, mutta eri ohjelmointikielien rajapinnat eivät vielä kunnolla tue kolmosversioita. Pythonista on käytössä versio 2.7. Javasta on käytössä openjdk-8.
+
+Dokumentteja:
+
+* <http://docs.opencv.org/2.4.13/>
+*<http://docs.opencv.org/2.4.13.2/doc/tutorials/tutorials.html>
+* <http://docs.opencv.org/java/2.4.11/>
+* <https://opencv-python-tutroals.readthedocs.io/en/latest/>
+* <http://aleator.github.io/CV/dist/doc/html/CV/index.html> (Haskell)
