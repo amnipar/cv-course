@@ -1,8 +1,6 @@
----
-code:   TIES411
-title:  Kuvanmuodostus ja näytteistys
-lang: fi-FI
----
+% TIES411 - Kuvanmuodostus ja näytteistys
+% Matti Eskelinen, Ville Tirronen, Tuomo Rossi
+% lang: fi-FI
 
 # Johdanto {#johdanto}
 
@@ -11,7 +9,7 @@ jolla on paljon käytännön sovelluksia. Termillä *machine vision* viitataan u
 nimenomaan teollisuuden piirissä tehtävään käytännön työhön, jossa rakennetaan
 näkeviä koneita soveltaen konenäkömenetelmiä.
 
-Lopullisena tavoitteena konenäkötutkimuksessa on ollut jo 60-luvulta saakka
+Lopullisena tavoitteena konenäkötutkimuksessa on ollut jo 1960-luvulta saakka
 rakentaa kone, joka ymmärtäisi näkemänsä yhtä hyvin kuin ihminen.
 Tutkijasukupolvi toisensa jälkeen on joutunut omakohtaisesti kokeilujen ja
 yritysten seurauksena huomaamaan, että tämä on paljon vaikeampaa kuin vaikuttaa.
@@ -61,7 +59,8 @@ analysointimenetelmien pääperiaatteita. Tutustumme myös erilaisiin tapoihin
 mallintaa ja ratkaista konenäkötehtäviä. Lyhyellä kurssilla ei ole mahdollista
 mennä yksityiskohtiin, mutta kurssin lopussa osallistujilla on toivon mukaan
 riittävät tiedot, taidot ja työkalut kokeilujen tekemiseen ja lupaavien
-menetelmien tutkimiseen ja jatkokehittämiseen.
+menetelmien tutkimiseen ja jatkokehittämiseen tietyn rajatun ongelman
+ratkaisemiseksi.
 
 Kurssilla käsitellään seuraavia asioita:
 
@@ -72,16 +71,16 @@ Kurssilla käsitellään seuraavia asioita:
 1. Kuvien tilastollinen analyysi tunnuslukujen, jakaumien ja pääkomponenttien
    avulla
 1. Värit ja värien spektri
-1. Spektrikuvaus ja monikanavakuvien analysointi
 1. Reunojen etsintä kuvista, reunakäyrien seuraaminen
 1. Yhtenäisten alueiden etsintä, alueiden kuvaileminen
 1. Kuvien analysointi eri skaaloissa, skaala-avaruus ja pistepiirteet
-1. Liikkuva kuva ja optinen vuo (optical flow)
-1. Kolmiulotteiset takaisinprojektiot
+1. Liikkuva kuva, optinen vuo eli *optical flow*
+1. Geometriset takaisinprojektiot ja kolmiulotteinen hahmottaminen
 1. Hahmontunnistuksen perusteet ja yksinkertainen piirteytys
 1. Koneoppimisen perusteet, mallien kouluttaminen ja validointi
-1. Luokittelumenetelmät, kuten neuroverkot, tukivektorikoneet ja Bayesilaiset mallit
-1. Tilastolliset parametriset mallit
+1. Luokittelumenetelmät, kuten neuroverkot, tukivektorikoneet ja Bayesilaiset
+   mallit
+1. Tilastolliset rakenteiset mallit
 
 Kurssi on itsenäinen kokonaisuus, ja kaikki tarvittavat esitiedot kerrataan.
 Matemaattista ymmärrystä vaaditaan jonkin verran. Verkosta on vapaasti
