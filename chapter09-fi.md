@@ -22,13 +22,13 @@ Käytännöllisiä asioita tällä kerralla:
 Eräs ihmisen luonnollisen visuaalisen ympäristön keskeinen ominaisuus on
 *skaala-invarianssi* eli toisaalta se, että kohteet voivat esiintyä näkymässä
 useassa eri koossa ja toisaalta se, että kohteen tunnistaminen ei riipu sen
-koosta kuvassa. Tässä suhteessa näköaisti poikkeaa muista aisteista; esimerkiksi
-tuntoaisti havaitsee saman kohteen aina saman kokoisena iholla, ja kuuloaisti
-kuulee äänet useimmiten samalla nopeudella. Konenäössä onkin tärkeää pyrkiä
-huomioimaan se, että tunnistettavat kohteet voivat esiintyä kuvissa monen
-kokoisina ja sisältää vaihtelevan määrän yksityiskohtia. Tietysti joissakin
-sovelluksissa kuvausolot voidaan järjestää siten, että kohde on aina saman
-kokoinen.
+koosta kuvassa. Tässä suhteessa näköaisti poikkeaa muista aisteista;
+esimerkiksi tuntoaisti havaitsee saman kohteen aina saman kokoisena iholla, ja
+kuuloaisti kuulee äänet useimmiten samalla nopeudella. Konenäössä onkin
+tärkeää pyrkiä huomioimaan se, että tunnistettavat kohteet voivat esiintyä
+kuvissa monen kokoisina ja sisältää vaihtelevan määrän yksityiskohtia.
+Tietysti joissakin sovelluksissa kuvausolot voidaan järjestää siten, että
+kohde on aina saman kokoinen.
 
 Tyypillinen tapa varmistua konenäkömenetelmän skaala-invarianssista on käyttää
 skaala-avaruutta. Se perustuu suhteellisen vahvaan matemaattiseen teoriaan,
@@ -45,11 +45,11 @@ $$L(x,y;t) = G(x,y;t) \ast I(x,y),$$
 missä puolipiste viittaa siihen, että konvoluutio suoritetaan vain parametrien
 $x$ ja $y$ suhteen kun taas $t$ pysyy vakiona. Funktion $G$ määritelmästä
 tunnistamme, että tämä *skaalaparametri* $t$ vastaa Gaussin suotimen parametria
-$\sigma^2$ eli varianssia. Muistamme aiemmalta kurssilta, että näytteistys
+$\sigma^2$ eli varianssia. Muistamme aiemmasta luvusta, että näytteistys
 voidaan määritellä konvoluutiona Diracin $\delta$:n kanssa, ja että tämä
 $\delta$ voidaan määritellä normaalijakauman eli normalisoidun Gaussin funktion
 raja-arvona, kun $\sigma^2$ lähestyy nollaa. Toteamme siis, että
-$L(x,y;0) = I(x,y)$ kuten pitääkin.
+$L(x,y;0) = I(x,y)$, kuten pitääkin.
 
 Skaala-avaruuden skaala $0$ vastaa alkuperäistä näytteistettyä kuvaa, kun taas
 suuremmat skaalat vastaavat *alipäästösuodatettuja* versioita alkuperäisestä

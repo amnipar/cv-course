@@ -57,18 +57,21 @@ tilastollisesti mitkä alueet voisivat kuulua yhteen. Voidaan käyttää myös
 objektimalleja ja näihin perustuvaa optimointia. Näihin palataan myöhemmissä
 luvuissa; tässä luvussa keskitytään kuva-alueiden visuaaliseen yhtenäisyyteen
 perustuvaan segmentointiin, joka on suhteellisen helposti määriteltävä tehtävä.
+Tämä ei kuitenkaan tarkoita, että se olisi helposti suoritettava tehtävä.
 
-Reunanhaku ja segmentointi ovat kiinteästi toisiinsa liittyviä operaatioita, ja
-jossakin mielessä ne voidaan käsittää saman operaation vastakkaisiksi puoliksi:
-täydellinen reunanhaku tuottaa sivutuotteenaan täydellisen segmentoinnin, kun
-yhtenäisiksi alueiksi katsotaan yhtenäisten reunakäyrien erottamat alueet.
-Vastaavasti täydellisen segmentoinnin sivutuotteena saadaan täydelliset
-reunakäyrät. Useimmissa kuvissa on kuitenkin niin paljon epävarmuustekijöitä,
-että reunakäyrät pilkkoutuvat epäyhtenäisiksi pätkiksi ja yhtenäiset alueet
-joko pirstaloituvat tai yhdistyvät virheellisesti viereisten alueiden kanssa.
-Tämän takia sekä reunanhaun että segmentoinnin lopputulokset vaativat yleensä
-jatkokäsittelyä, ja usein voidaan saada parempia tuloksia yhdistämällä tietoja
-reunoista ja yhtenäisistä alueista.
+Reunanhaku ja segmentointi ovat kiinteästi toisiinsa liittyviä operaatioita,
+ja jossakin mielessä ne voidaan käsittää saman operaation vastakkaisiksi
+puoliksi: täydellinen reunanhaku tuottaa sivutuotteenaan täydellisen
+segmentoinnin, kun yhtenäisiksi alueiksi katsotaan yhtenäisten reunakäyrien
+erottamat alueet. Vastaavasti täydellisen segmentoinnin sivutuotteena saadaan
+täydelliset reunakäyrät. Useimmissa kuvissa on kuitenkin niin paljon
+epävarmuustekijöitä, että reunakäyrät pilkkoutuvat epäyhtenäisiksi pätkiksi ja
+yhtenäiset alueet joko pirstaloituvat tai yhdistyvät virheellisesti viereisten
+alueiden kanssa. Tämän takia sekä reunanhaun että segmentoinnin lopputulokset
+vaativat yleensä jatkokäsittelyä, ja usein voidaan saada parempia tuloksia
+yhdistelemällä keskenään tietoja reunoista ja yhtenäisistä alueista. Voidaan
+myös suorittaa vuoron perään reunanhakua ja segmentointia, tarkentaen tulosta
+kierros kierrokselta.
 
 ## Segmentointimenetelmiä
 
@@ -106,11 +109,11 @@ joukkoon kuin kauempana toisistaan olevat pikselit.
 ## Vedenjakajat
 
 Jos kuvan gradienttia tarkastellaan topografisena karttana, voidaan analysoida
-mihin suuntaan kunkin pikselin kohdalle tiputettu kuviteltu vesipisara virtaisi.
-Tällä tavalla saadaan määriteltyä valuma-alueet ja näiden väliset
-*vedenjakajat*, jotka ovat siis gradientin lokaaleja maksimikohtia joista vesi
-pääsee virtaamaan kahteen tai useampaan eri suuntaan. Samoihin valuma-alueisiin
-kuuluvat pikselit muodostavat kuvan segmentoinnin.
+mihin suuntaan kunkin pikselin kohdalle tiputettu kuviteltu vesipisara
+virtaisi. Tällä tavalla saadaan määriteltyä valuma-alueet ja näiden väliset
+*vedenjakajat*, jotka ovat siis gradientin lokaaleja maksimeja, eräänlaisia
+harjanteita, joista vesi pääsee virtaamaan kahteen tai useampaan eri suuntaan.
+Samoihin valuma-alueisiin kuuluvat pikselit muodostavat kuvan segmentoinnin.
 
 Valuma-alueita voidaan analysoida kahdella eri tavalla: joko simuloimalla kuvan
 hukuttamista veteen alkaen minimikohdista ja panemalla merkille missä kohdissa
@@ -131,10 +134,15 @@ palaamme myöhemmin tällä luennolla.
 ## Variaatiomenetelmät*
 
 Toinen tapa analysoida kuvia funktioina on *variaatiolaskenta*. Se on
-matemaattisen analyysin haara, jossa maksimoidaan ja minimoidaan funktionaaleja.
-Nämä ovat kuvauksia vektoriavaruuksilta niihin liittyville skalaareille. Nämä
-voidaan nähdä *funktioavaruuksina* jotka kuvaavat sellaisia funktioita, jotka
-saavat parametreina toisia funktioita.
+matemaattisen analyysin haara, jossa maksimoidaan ja minimoidaan
+funktionaaleja. Nämä ovat kuvauksia vektoriavaruuksilta niihin liittyville
+skalaareille. Nämä voidaan nähdä *funktioavaruuksina* jotka kuvaavat sellaisia
+funktioita, jotka saavat parametreina toisia funktioita. Kuva-analyysissä
+käytetään tyypillisesti funktioita vektoreilta skaalarille: avaruus koostuu
+funktioista, joista kukin kuvaa vektorimuotoisen kuvan yhdeksi reaaliarvoksi.
+Näistä funktioista valitaan se, joka tuottaa parhaan arvon. Tämä funktio voi
+vastata esimerkiksi kuvan jakamista yhtenäisiin alueisiin optimaalisella
+tavalla jonkin metriikan suhteen.
 
 Eräs yleinen variaatiolaskennassa käytettyjen funktionaalien ryhmä ovat
 *energiafunktionaalit*. Näissä vektoriavaruudet kuvaavat jonkin järjestelmän
@@ -146,14 +154,16 @@ järjestelmän tasapainotilana.
 
 Kuvien segmentoinnissa käsitellään funktionaaleja, jotka kuvailevat näkymässä
 olevia alueita ja niiden reunoja. Tällaisen funktionaalin minimointi tuottaa
-siis funktion, joka kuvaa jonkinlaisen alueiden ja niiden reunojen vakaan tilan.
-Ehkä tunnetuin näistä on **Mumford-Shah**-funktionaali. Sen idea on määritellä
-kuvafunktio paloittain sileinä osafunktioina ja mitata tällaisen osituksen
-optimaalisuutta energiafunktionaalin avulla. Tämä funktionaali on määritelty
-siten, että kustannus riippuu osituksen ja alkuperäisen kuvan välisestä
-etäisyydestä, osafunktioiden sileydestä ja alueiden reunojen pituudesta. Kun
-funktionaali minimoidaan, tuloksena on ositus joka vastaa jonkinlaista hyvää
-kompromissia näiden vaatimusten välillä.
+siis funktion, joka kuvaa jonkinlaisen alueiden ja niiden reunojen vakaan
+tilan. Ehkä tunnetuin näistä on **Mumford-Shah**-funktionaali. Sen idea on
+määritellä kuvafunktio paloittain sileinä osafunktioina ja mitata tällaisen
+osituksen optimaalisuutta energiafunktionaalin avulla. Tämä funktionaali on
+määritelty siten, että kustannus riippuu osituksen ja alkuperäisen kuvan
+välisestä etäisyydestä, osafunktioiden sileydestä ja alueiden reunojen
+pituudesta; tavoitteena on siis mahdollisimman hyvin alkuperäistä kuvaa
+vastaava ositus, jonka osaset ovat mahdollisimman tasaisia ja reunakäyriltään
+lyhyitä. Kun funktionaali minimoidaan, tuloksena on ositus joka vastaa
+jonkinlaista hyvää kompromissia näiden vaatimusten välillä.
 
 Hieman yksinkertaisemmin käsiteltävä variaatiolaskentaan perustuva tapa kuvata
 alueita ja niiden reunoja ovat *tasojoukkoihin* perustuvat menetelmät (engl.
@@ -208,7 +218,8 @@ kuuluviin pisteisiin.
 
 Avaruuden $\mathbb{R}^n$ suljetut osajoukot joihin liitetään jokin tunnettu
 seminormi täyttävät kaikki edellä luetellut ehdot, joten näiden kanssa emme
-joudu vaikeuksiin.
+joudu vaikeuksiin. Toisenlaisia piirreavaruuksia kehiteltäessä on syytä
+varmistua siitä, että ehdot ovat voimassa.
 
 Kuinka määrittelemme vektoriavaruuksia kuville? Yksinkertaisimmillaan voimme
 käyttää harmaasävykuvien pikselien kirkkautta yksiulotteisena piirrevektorina.
@@ -234,18 +245,16 @@ $$F_{\text{rgb}}(I) =
   \end{array}\right] \bigg|  (x,y) \in \text{dom}(I) \right\}.$$
 
 Piirreavaruuteen liitetään aina myös käytettävä normi. Harmaasävykuvien
-tapauksessa on luontevaa käyttää esimerkiksi euklidista normia, mutta värikuvien
-kanssa joudumme vaikeuksiin. Normaalien RGB-värikuvien värien euklidiset
-etäisyydet eivät vastaa meidän käsitystämme siitä, millaiset värit näyttävät
-samankaltaisilta. Tätä värien aistimiseen liittyvää ilmiötä on tutkittu paljon,
-emmekä mene tässä yhteydessä siihen sen tarkemmin. Tyydymme toteamaan, että
-niinsanotussa *Lab-väriavaruudessa* euklidinen etäisyys vastaa paremmin meidän
-havaintoamme värien samankaltaisuudesta. Käsiteltäessä värikuvia vektoreina on
-siis syytä käyttää
-[Lab-väriavaruutta](http://en.wikipedia.org/wiki/Lab_color_space); toisinaan
-nimi kirjoitetaan myös muodossa L\*a\*b. Tässä avaruudessa väreillä on
-kirkkauskomponentti L ja kaksi värikomponenttia a ja b. Piirrekuvaus on vastaava
-kuin rgb-kuvilla:
+tapauksessa on luontevaa käyttää esimerkiksi euklidista normia, mutta
+värikuvien kanssa joudumme vaikeuksiin. Kuten aiemmassa luvussa \ref{värit}
+sivusimme, normaalien RGB-värikuvien värien euklidiset etäisyydet eivät vastaa
+meidän käsitystämme siitä, millaiset värit näyttävät samankaltaisilta. Lab-
+väriavaruudessa euklidinen etäisyys vastaa paremmin meidän havaintoamme värien
+samankaltaisuudesta. Käsiteltäessä värikuvia vektoreina on siis syytä käyttää
+Lab-väriavaruutta tai LCh(ab)-väriavaruutta. Voidaan myös käyttää pelkkää
+h(ab)-kanavassa olevaa värisävyä, jolloin normissa on otettava huomioon
+napakoordinaattimuoto, eli etäisyys on mitattava ympyrän kehää pitkin. Lab-
+kuvien piirrekuvaus on vastaava kuin RGB-kuvilla:
 
 $$F_{\text{Lab}}(I) =
   \left\{\left[\begin{array}{c}
@@ -261,7 +270,7 @@ pikselien sijainti kuvassa ja se, millaisia pikseleitä lähiympäristössä on.
 Myöhemmin tarkastelemme pikselinaapurustoja graafeina, mutta voisimmeko liittää
 pikselien sijaintitiedon jollakin tavalla vektoriavaruuksiin? Määritellään tätä
 ajatellen seuraavaksi pikselikoordinaattien muodostama *spatiaalinen* eli
-*tila-avaruus* $F_s$:
+*tila-avaruus*
 
 $$F_s(I) =
   \left\{\left[\begin{array}{c}
@@ -645,6 +654,8 @@ ja minimaaliset leikkaukset ovat taipuvaisia suosimaan mahdollisimman pieniä
 solmujen kokoelmia, jolloin poistettavia kaaria on vähemmän. On vaikeaa löytää
 hyviä leikkauksia, jotka jakaisivat graafin kahteen lähes yhtä suureen osaan.
 
+(tähän gradientteihin perustuvista menetelmistä)
+
 Parempi tapa löytää graafileikkauksia perustuu *spektraaliseen graafiteoriaan*.
 Tässä tutkitaan *matriisimuodossa* esitettyjen graafien ominaisarvoja ja
 -vektoreita. Graafi voidaan kuvailla esimerkiksi *viereisyysmatriisin* eli
@@ -683,12 +694,14 @@ parhaan tuloksen tuottava arvo.
 
 Tätä menetelmää kutsutaan nimellä *normalisoidut leikkaukset* (engl.
 *normalized cuts*) ja sen tunteminen on hyödyksi yleissivistyksen kannalta,
-mutta emme tässä mene siihen sen tarkemmin. Toteamme vain, että etsimällä useita
-pienimpiä ominaisarvoja vastaavia ominaisvektoreita saadaan useita leikkauksia,
-joilla voidaan jakaa kuva useampaan kuin kahteen osaan. Mainittu
-ominaisarvotehtävä saadaan ratkaistua tehokkaasti käyttäen Lanczosin menetelmää,
-joka soveltuu käytettäväksi *harvojen* matriisien kanssa, jollainen kuvagraafien
-Laplacen matriisi on.
+mutta emme tässä mene siihen sen tarkemmin. Toteamme vain, että etsimällä
+useita pienimpiä ominaisarvoja vastaavia ominaisvektoreita saadaan useita
+leikkauksia, joilla voidaan jakaa kuva useampaan kuin kahteen osaan. Mainittu
+ominaisarvotehtävä saadaan ratkaistua tehokkaasti käyttäen Lanczosin
+menetelmää, joka soveltuu käytettäväksi *harvojen* matriisien kanssa,
+jollainen kuvagraafien Laplacen matriisi on. Yleisesti ottaen normalisoidut
+leikkaukset on hidas menetelmä käyttää, ja sen hyödyllisyyttä vähentää se,
+että leikkaus jakaa graafin aina kahteen osaan.
 
 ![Kuvan normalisoituja leikkauksia](images/normalized-cuts.png)
 

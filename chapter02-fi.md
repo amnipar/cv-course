@@ -1,8 +1,6 @@
----
-code:   TIES411
-title:  Kuvien suodatus ja muokkaus
-lang: fi-FI
----
+% TIES411 - Kuvien suodatus ja muokkaus
+% Matti Eskelinen, Ville Tirronen, Tuomo Rossi
+% lang: fi-FI
 
 # Kuvien suodatus ja muokkaus
 

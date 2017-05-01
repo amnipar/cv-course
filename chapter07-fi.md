@@ -1,10 +1,13 @@
 ---
-code:   TIES411
-title:  Reunat ja nurkat
+title: Reunat ja nurkat
+author: Matti Eskelinen; Ville Tirronen; Tuomo Rossi
+date: 28.2.2017
+title-prefix: TIES411
 lang: fi-FI
+css: style.css
 ---
 
-# Reunat ja nurkat
+# Reunat ja nurkat {#reunat}
 
 Tässä luvussa opimme löytämään kuvista kappaleiden reunoja ja nurkkia.
 Tutustumme myös reunojen ketjutukseen. Käytännöllisiä asioita tällä kerralla:
@@ -479,12 +482,12 @@ Hessen matriisi kuvaa kuvafunktion *kaarevuutta* kyseisessä pisteessä.
 Matriisin determinantti antaa vahvoja vasteita pisteissä, joissa on voimakas
 gradientti kahteen eri suuntaan. *Determinant of Hessian* (DoH) onkin eräs
 suosittu keino löytää pistemäisiä kohteita kuvasta. Monissa Hessen matriisiin
-perustuvissa menetelmissä etsitään sen sijaan etsii pisteitä, joissa sekä
-matriisin determinantti että jälki (engl. *trace*) saa lokaalin maksimiarvon.
-Huomaamme, että $\text{trace}(H) = G^2_{xx} + G^2_{yy}$, eli se vastaa
-*Laplacian of Gaussian* -operaattorin arvoa kuvapisteessä. Tässä siis yhdistyy
-kaksi tehokasta pistemäisten kohteiden etsintään soveltuvaa operaattoria
-(DoH ja LoG). Koska LoG reagoi voimakkaasti myös reunoihin, näistä saadaan DoH:n
+perustuvissa menetelmissä etsitään sen sijaan pisteitä, joissa sekä matriisin
+determinantti että jälki (engl. *trace*) saa lokaalin maksimiarvon. Huomaamme,
+että $\text{trace}(H) = G^2_{xx} + G^2_{yy}$, eli se vastaa *Laplacian of
+Gaussian* -operaattorin arvoa kuvapisteessä. Tässä siis yhdistyy kaksi
+tehokasta pistemäisten kohteiden etsintään soveltuvaa operaattoria (DoH ja
+LoG). Koska LoG reagoi voimakkaasti myös reunoihin, näistä saadaan DoH:n
 avulla karsittua esille ne reunapisteet, joissa on myös selkeä kulma tai
 kaarevuusmaksimi.
 

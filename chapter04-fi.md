@@ -1,723 +1,803 @@
 ---
-code:   TIES411
-title:  Kuvien tilastollinen analyysi
+title: Värit ja valon aistiminen
+author: Matti Eskelinen, Ville Tirronen, Tuomo Rossi
+date: 22.2.2017
+title-prefix: TIES411
 lang: fi-FI
+css: style.css
 ---
 
-# Kuvien tilastollinen analyysi
+# Värit ja valon aistiminen {#värit}
 
-Tässä luvussa tutustumme kuvien analysointiin tilastollisesti. Opimme
-ymmärtämään tunnuslukuja, jakaumia, korrelaatioita ja pääkomponentteja.
-Myöhemmissä luvuissa opimme käyttämään näitä asioita kohteiden tunnistamisessa.
+Tähän mennessä olemme puhuneet lähinnä harmaasävykuvista. Oikeissakin
+konenäkösovelluksissa tyydytään usein jättämään väri-informaatio huomioimatta,
+konvertoimaan värikuvat harmaasävykuviksi ja tulkitsemaan kohteita vain niiden
+muodon ja pintarakenteen perusteella. Tämä helpottaa ongelman käsittelyä, sillä
+väreihin liittyy omat haasteensa. Monissa sovelluksissa väreistä kuitenkin saa
+olennaisen tärkeää lisäinformaatiota, joten on syytä oppia käsittelemään myös
+värikuvia.
 
-Aiheina *PCA*, ehkä lyhyesti *ICA*, histogrammit ja niihin perustuvat piirteet.
+Tässä luvussa paneudutaan värien ja väriaistimuksen lisäksi yleisesti valon
+havaitsemiseen, jonka ymmärtäminen voi olla hyödyksi myös mustavalkokuvia
+tutkittaessa.
 
-Käytännöllisiä asioita tällä kerralla:
+## Mitä väri on?
 
-* tutkitaan histogrammeja, ehkä verrataan niitä,
-* tutustutaan korrelaation käsitteeseen,
-* kokeillaan PCA:ta esimerkiksi kasvokuvien kanssa.
+Mitään sellaista asiaa kuin väri, sellaisena kuin ihmiset sen ymmärtävät, ei
+oikeastaan ole olemassa luonnossa. Väri on jotakin mitä me ihmiset liitämme
+ympärillä olevaan maailmaan ja siinä oleviin kohteisiin, ja jonka me koemme
+yksilöllisillä tavoilla. Väri on ihmisen vaste tietystä aallonpituusjakaumasta
+koostuvaan valoon, ja valo taas on vain sähkömagneettista säteilyä kaiken muun
+säteilyn joukossa. Aistimus väristä syntyy ihmisen silmissä ja aivoissa, ja sen
+takia väri on hyvin henkilökohtainen asia. Jokainen mieltää värit omalla
+tavallaan, ja jotkut eivät edes pysty näkemään värejä samalla lailla kuin
+toiset. Toiset eläimet puolestaan aistivat ja mieltävät valoa ja sen värejä
+hyvin toisenlaisilla tavoilla kuin me ihmiset. Tämä kaikki tekee valosta ja
+väristä kiehtovan ilmiön, jolla on oma merkityksensä kaikille ihmisille.
 
-Tilastollinen data-analyysi perustuu datajoukoista tehtäviin *yhteenvetoihin*
-ja näiden kuvailemiseen. Kuvien tapauksessa analysoidaan siis yksittäisten
-pikselien sijaan pikselijoukkoja, kokonaisia kuvia tai jopa suuria kuvajoukkoja
-*tilastollisesti*.
+## Värien fysiikkaa
 
-Eräs tärkeä syy analysoida dataa tilastollisesti on oppia ymmärtämään, kuinka
-tunnistettavia kohteita pitäisi vertailla. Kaikki yleisesti käytetyt kohteiden
-luokitusmenetelmät perustuvat jonkinlaiseen *metriikkaan* jolla mitataan
-kohteiden välisiä etäisyyksiä. Kuvadatan tapauksessa kohteiden vertailu
-pikselien arvojen perusteella ei vaikuta hyvältä ajatukselta, sillä sama kohde
-saattaa tuottaa hyvin erilaisia pikselien kokoelmia riippuen kuvakulmasta ja
-valaistuksesta. Vastaavasti kaksi eri kohdetta saattavat tuottaa melko
-samankaltaisen kokoelman pikseleitä. Tämän vuoksi on tyypillistä pyrkiä
-muodostamaan *piirreavaruuksia*, joissa kohteiden erot tulisivat paremmin
-esille.
+Valo on sähkömagneettista säteilyä, jonka aallonpituus on karkeasti välillä
+280-1000 nanometriä. Kuvassa \ref{fig:visible_spectrum} on kaavakuva tästä
+aallonpituusalueesta. Sen ääripäissä olevaa valoa, ultraviolettia ja
+infrapunaista, ihminen ei pysty näkemään. Monokromaattiseksi valoksi sanotaan
+sellaista säteilyä, joka koostuu yhdestä ainoasta aallonpituudesta. Tällaista
+valoa esiintyy kuitenkin hyvin harvoin, mm. laserissa, ja luonnossa ei
+käytännössä ollenkaan. Yleensä valo onkin *spektriyhdistelmä* lukuisista
+aallonpituuksista, ja eri aallonpituuksien hallitsevuus valossa vaihtelee; juuri
+tämä aallonpituuksien yhdistelmä ja sen koostumuksen vaihtelu synnytää erilaiset
+väriaistimukset.
 
-Lähtökohtana tilastollisessa analyysissä on data $\mathbf{X}$, joka koostuu
-$n$-ulotteisista vektoreista $\mathbf{x_i}$. Tyypillisesti kukin *näyte*, eli
-datapiste avaruudessa $\mathbb{R}^n$, esiintyy *rivinä* matriisissa
-$\mathbf{X}$, jolloin kunkin yksittäisen muuttujan arvot ovat matriisin
-sarakkeissa. Näitä muuttujia kutsutaan *havaituiksi muuttujiksi* tai
-*havaintomuuttujiksi* (engl. *observed variable*). Data on tyypillisesti
-syntynyt jonkin kiinnostavan ilmiön seurauksena, mutta itse ilmiötä ei
-syystä tai toisesta pystytä havainnoimaan suoraan. Tällaisissa tilanteissa
-ilmiö pyritään mallintamaan *piilevien muuttujien* (engl. *latent variables*)
-$\mathbf{l}$ avulla. Tutkittava ilmiö kuvitellaan funktioksi $\phi$, joka
-tuottaa havaittujen muuttujien arvoja $\mathbf{x}$ piilevien muuttujien arvoista
-$\mathbf{l}$:
+![Ihmiselle näkyvä sähkömagneettisen spektrin osa. Lähde: Wikimedia[^spectrum].\label{fig:spectrum}](images/640px-Linear_visible_spectrum.svg.png)
 
-$$\mathbf{x} = \phi(\mathbf{l}).$$
+[^spectrum]: https://commons.wikimedia.org/wiki/File:Linear_visible_spectrum.svg
 
-Olkoon maailman tila $\mathbf{w}$. Haluamme kaivaa siitä esille tietyt meitä
-kiinnostavat asiat, ja mallinnamme nämä kiinnostavat ilmiöt piilevien muuttujien
-$\mathbf{l}$ avulla. Kuva-analyysin tapauksessa meillä on *näkymä* (engl.
-*scene*) jota kuvaamme mallin $\mathbf{s}_l$ avulla. Se on osajoukko koko
-maailman tilasta. Tavoitteena on rakentaa funktio $f$, joka tuottaa havaittujen
-muuttujien arvoista jonkinlaisen arvion näkymän tilasta:
+Väri on aistimus, joka syntyy yhdistelmänä valonlähteestä, katseltavasta
+kohteesta ja aistijasta. Mitä tahansa näistä vaihdettaessa värin aistimus
+muuttuu. Valonlähde, joka voi olla aurinko, hehkulamppu, loisteputki tai muu
+sellainen, tuottaa valoa eli emittoi sähkömagneettista säteilyä. Eri
+valonlähteiden tuottama valo on erilaista, eli niiden *spektri* sisältää
+erilaisen yhdistelmän valon eri aallonpituuksia. Valo etenee
+maailmankaikkeudessa ja törmää erilaisiin kohteisiin. Kohteet imevät eli
+*absorboivat* osan valosta ja osa heijastuu eli *siroaa*; erilaiset pinnat
+heijastavat saman valonlähteen valoa eri tavoin, ja eri valonlähteiden valo
+heijastuu samasta pinnasta eri tavoin. Kohteet mielletään jonkin tietyn
+värisiksi sen takia, että yleensä kappaleet muun muassa pintarakenteensa
+perusteella imevät tietyt aallonpituudet ja heijastavat loput. Heijastuvien
+aallonpituuksien spektriyhdistelmä määrää kappaleen värin.
 
-$$f(\mathbf{x}) = \mathbf{s}_l.$$
+Lopuksi aistimus väristä syntyy havainnoijan silmissä ja aivoissa. Eri eliöt
+aistivat värejä eri tavoin ja eri aallonpituuksilla, ja jotkin eliöt eivät näe
+värejä ollenkaan. Eri ihmisyksilötkin saattavat nähdä värit eri tavoin, ja
+lopuksi vielä värit mielletään eri tavoin riippuen kulttuurista ja
+henkilökohtaisista kokemuksista ja mieltymyksistä. Esimerkiksi tietyillä
+väreillä saattaa olla tietynlaista symboliikkaa tietyn kulttuurin edustajille
+perinteisten käsitysten vuoksi, tai jollekin yksittäiselle ihmiselle hänen
+henkilökohtaisen historiansa takia.
 
-Tällainen funktio $f$ perustuu havaittujen muuttujien $\mathbf{x}$ ja piilevien
-muuttujien $\mathbf{l}$ välisten *riippuvuuksien* ymmärtämiseen. Näitä
-riippuvuuksia voidaan tutkia ja mallintaa tilastollisesti.
+Kaiken tämä pohjalta voidaan sanoa, että vaikka värien käsite pohjautuu
+fysiikkaan ja fysiologiaan, se on paljon enemmän kuin pelkkä luonnonilmiö.
 
-Tilastollisia malleja rakennetaan *satunnaismuuttujien* avulla. Tässä vaiheessa
-on syytä hahmottaa, että satunnaismuuttujat eivät sisällä *sattumanvaraisia*
-vaan *tuntemattomia* ja *epävarmoja* arvoja. Tällaisten muuttujien arvojoukko
-voidaan *mallintaa* tilastollisesti. Satunnaismuuttujat voivat saada arvoja
-tietystä joukosta, joka voi olla diskreetti joukko tai jatkuva vaihteluväli.
-Jotkin näistä arvoista saattavat olla *todennäköisempiä* kuin toiset, ja
-muuttujan eri arvojen todennäköisyyksiä kuvataan *todennäköisyysjakauman*
-avulla. Jakauma voidaan nähdä funktiona, joka määrää muuttujan kullekin arvolle
-todennäköisyyden lukuna väliltä $[0,1]$. Koska muuttuja saa väistämättä jonkin
-mahdollisista arvoistaan, funktion integraalin (eli diskreettien arvojen
-todennäköisyyksien summan) on oltava $1$.
+Tietyissä erikoissovelluksissa, kuten mikroskopiassa tai joissakin
+spektrikuvannussovelluksissa, tutkitaan kohteen läpi ohjattua valoa eikä kohteen
+pinnasta heijastunutta valoa. Tällöin havaintoon vaikuttavat kohteen
+valonläpäisy- eli transmittanssiominaisuudet. Tällä kurssilla keskitymme
+kuitenkin lähinnä heijastuneen valon tutkimiseen.
 
-Merkitään satunnaismuuttujia isoilla kirjaimilla $A,B,C$ ja niiden saamia
-arvoja pienillä kirjaimilla $A=a,B=b,C=c$. Muuttujien todennäköisyysjakaumia
-merkitään $P_A(A), P_B(B), P_C(C)$; alaindeksit korostavat sitä, että
-jokainen $P$ on erilainen, mutta useimmiten tämä lyhennetään muotoon
-$P(A),P(B),P(C)...$. Tiettyjen tapahtumien (muuttujien tiettyjen arvojen)
-todennäköisyyksiä merkitään $P(A=a),P(B=b),P(C=c)...$, ja toisinaan tässäkin
-käytetään selvyyden vuoksi alaindeksejä: $P_A(A=a)$. Jos sekaannuksen vaaraa ei
-ole, tapahtumien todennäköisyyksiä saatetaan merkitä lyhyesti $P(a)$.
-Satunnaismuuttujia voidaan käsitellä *vektoreina*, jolloin kukin datapiste on
-yksi muuttuja, tai sitten *skalaareina*, jolloin kukin vektorin alkio on oma
-muuttujansa.
+## Päävärit
 
-Määritellään vielä *ehdollinen todennäköisyys*. Merkintä $P(A \mid B)$ kuvaa
-muuttujan $A$ ehdollista todennäköisyysjakaumaa muuttujan $B$ suhteen. Se kuvaa,
-kuinka todennäköisiä kukin $A$:n arvoista on, kun $B$:n arvo tunnetaan. Jos
-muuttujat ovat *tilastollisesti riippumattomia*, eli muuttuja $B$ ei anna
-mitään lisätietoa muuttujasta $A$, silloin $P(A \mid B) = P(A)$. Palaamme
-myöhemmin ehdollisiin todennäköisyyksiin tilastollisten mallien yhteydessä.
+Koulusta on varmasti jokaiselle tuttu päävärien käsite. Ne ovat värejä, joita
+sekoittamalla saadaan muodostettua toisia värejä. Kuvaamataidon tunneilla
+käytettiin punaisia, sinisiä ja keltaisia vesivärinappeja ja niistä pystyttiin
+sekoittamaan kaikki värit (ehkä mustaa lukuunottamatta) vähän harjoittelemalla,
+tai ainakin siltä tuntui. Joka tapauksessa, tästä saadaan tärkeä havainto siitä,
+että värejä voidaan sekoittaa keskenään ja saada näin uusia värejä.
 
-## Tilastolliset momentit
+## Lisäys- ja vähennysvärit
 
-Kokonaisen datajoukon käyttäytymistä ja muotoa voidaan kuvailla
-yksinkertaisimmillaan tilastollisten tunnuslukujen eli *momenttien* avulla.
-Nämä kuvailevat muuttujien *jakaumaa*, eli arvojen jakautumista eri arvojen
-kesken, ja jakauman muotoa. Koko jakauman sijaan voidaan siis käyttää sen
-muotoa kuvailevia lukuja.
+Punaista, sinistä ja keltaista käytettiin siis koulussa *pääväreinä*. Oikeastaan
+päävärejä on kuitenkin kahdenlaisia. Niinsanotut lisäysvärit tai *primaariset*
+päävärit ovat punainen, sininen ja vihreä. Nimi lisäysväri johtuu siitä, että ne
+tavallaan lisäävät aistimukseen jotain; kun kappaletta valaistaan punaisilla,
+sinisillä ja vihreillä valoilla, ne tuovat lisää värejä kappaleen heijastamaan
+valoon. Kaikkia kolmea yhdistämällä saadaan valkoista valoa.
 
-Tärkeimpiä tunnuslukuja ovat *keskiarvo* ja *varianssi* (engl. *mean* and
-*variance*). Nämä, kuten muutkin tunnusluvut, määritellään yleensä käyttäen
-*odotusarvon* käsitettä. Odotusarvo tarkoittaa arvoa, joka *odotetaan* saatavan,
-kun satunnaismuuttujan arvoja havainnoidaan äärettömän monta kertaa ja
-lasketaan havaintojen keskiarvo. Formaalimmin odotusarvo on painotettu
-keskiarvo, joka saadaan laskemalla summa muuttujan arvojen ja niiden
-todennäköisyyksien tuloista:
+Niinsanotut vähennysvärit taas ovat syaani, magenta ja keltainen. Niitä saadaan
+yhdistämällä punaista, vihreää ja sinistä; esimerkiksi syaania saadaan
+yhdistämällä sinistä ja vihreää. Niitä kutsutaan myös *sekundaarisiksi*
+pääväreiksi juuri sen takia, että ne saadaan muodostettua primaarisia päävärejä
+yhdistelemällä. Vähennysväreiksi niitä sanotaan siksi, että jos jokin kappale
+maalataan syaanilla, magentalla ja keltaisella maalilla, ne poistavat kappaleen
+heijastamasta valosta värejä. Esimerkiksi jos kappale maalataan syaanilla
+maalilla, maalin sisältämä pigmentti poistaa heijastuvasta valosta keltaisen,
+jolloin jos kappaletta katsotaan valkoisessa valossa, se näyttää syaanilta.
+Kaikkia päävärejä yhdistettäessä poistetaan luonnollisesti kaikki väri, jolloin
+vain vähän valoa heijastuu takaisin, jolloin kappale näyttää mustalta. Tämä
+johtuu kontrastista kirkkaampien alueiden kanssa; mikään pigmentti ei ime
+täydellisesti kaikkea siihen osuvaa valoa, joten täydellistä mustaa väriä ei ole
+olemassa.
 
-$$E\left[X\right] = \sum_i x_i P(X=x_i)$$
+Kuten edellä olleesta kuvaamataitoesimerkistä huomattiin, pääväreinä voidaan
+käyttää mitä tahansa värejä, ja kaikkia värejä, sekä lisäys- että
+vähennysvärejä, yhdistämällä saadaan uusia värejä. Muistamme, että
+vesivärinapeissa käytettiin usein sellaisia värejä kuin krominkeltainen,
+ultramariininsininen ja karmiininpunainen varsinaisten päävärien eli syaanin,
+magentan ja keltaisen sijaan. Viralliset, puhtaat päävärit ovat kuitenkin
+punainen, sininen ja vihreä sekä syaani, magenta ja keltainen. Huomaamme myös,
+että tässä värejä käsiteltiin erikseen valonlähteen ja pintamateriaalin
+näkökulmasta. Näillä on luonnollisesti myös yhteisvaikutus: jos syaanin väristä
+kappaletta valaistaan vihreällä valolla, se näyttää siniseltä. Edelleen, jos
+kappaletta katsoo esimerkiksi punavihervärisokea henkilö, hänen kokemuksensa
+kappaleen väristä on toisenlainen kuin värit normaalisti näkevällä henkilöllä.
 
-kun $X$ on satunnaismuuttuja, joka voi saada arvot $x_i$ todennäköisyydellä
-$P(x_i)$. Tässä määritelmässä odotusarvon laskeminen siis edellyttää muuttujan
-jakauman tuntemista. Tyypillisesti jakaumaa ei tunneta, jolloin voidaan
-käyttää *empiiristä* odotusarvoa. Tämä on yksinkertaisesti aritmeettinen
-keskiarvo muuttujan $N$:stä havaitusta arvosta:
+## Värien fysiologiaa
 
-$$E\left[X\right] = \frac{1}{N}\sum_{i=1}^{N} x_i.$$
+Meidän ymmärtämämme värien käsite pohjautuu pitkälti ihmisen tapaan aistia
+väriä. Ihmisen silmissä on kahdenlaisia valolle herkkiä soluja, joita sanotaan
+sauvoiksi ja tapeiksi. Niiden tehtävät ovat erilaiset. Sauvasoluissa on valolle
+herkkää proteiinia, ja ne aistivat valon kirkkautta. Sauvasoluja on
+huomattavasti enemmän kuin tappeja, ja ne ovat keskittyneet verkkokalvon
+reunoille; keskellä niitä ei ole ollenkaan. Sauvat vastaavat ääreisnäöstä,
+liikkeen havainnoinnista ja pimeänäöstä (scotopic vision). Vastakohta tälle on
+päivänäkö (photopic vision).
 
-Keskiarvoa kutsutaan myös *ensimmäiseksi momentiksi nollan suhteen*, koska siinä
-summataan ensimmäisiä potensseja muuttujien etäisyyksille nollasta. Keskiarvo
-siis kuvaa kuinka paljon datajoukko kokonaisuudessaan poikkeaa nollasta, ja sitä
-merkitään yleensä symbolilla $\mu$.
+Päivänäöstä ja värinäöstä huolehtivat tappisolut, joita on kolmenlaisia. Tapit
+ovat keskittyneet näkökentän keskikohtaan, reunoilla niitä on hyvin vähän. Tapit
+ovat parempia havaitsemaan pieniä yksityiskohtia, ja siksi ne vastaavat tarkasta
+näöstä, mutta ne eivät ole yhtä herkkiä valon kirkkauden muutoksille kuin
+sauvat. Kolmenlaiset tappisolut sisältävät kolmenlaista pigmenttiä, joista
+jokainen on herkkä tietyn taajuiselle valolle. Tappeja kutsutaan joskus
+punaisiksi, vihreiksi ja sinisiksi tapeiksi sen takia, että nämä ovat valon
+päävärit ja ihmisen ajatellaan aistivan niitä.
 
-Muuttujan *varianssi* kuvaa, kuinka laajalle sen saamat arvot leviävät.
-Varianssi $Var(X)$ määritellään yleensä odotusarvona neliölliselle etäisyydelle
-odotusarvosta $E\left[X\right]$ eli keskiarvosta $\mu$:
+Kuitenkin, tappien aistimien spektrien huippukohdat eivät edes ole punaisessa,
+vihreässä ja sinisessä, ja lisäksi myös kukin tapeista aistii värejä laajalla
+aallonpituuskaistalla. Siksi suositellaan puhuttavan lyhyen, keskipitkän ja
+pitkän aallonpituusalueen tapeista. Kuvassa \ref{fig:conesens} on esitettynä
+tappisolujen aistimat aallonpituusalueet. Eri tappityyppejä ei ole saman verran,
+vaan niiden suhde on kutakuinkin 40:20:1, eli lyhyen aallonpituuden tappeja on
+vähiten ja pitkän eniten. Lyhyen aallonpituuden tapit ovat kuitenkin
+huomattavasti herkempiä kuin pitkän aallonpituuden tapit. Kunkin tappijoukon
+vaikutus värinäössä onkin yhtä suuri, huolimatta lukumäärien suuresta erosta.
 
-$$Var\left(X\right) = \
-  E\left[\left(X - E\left[X\right]\right)^2\right] = \
-  E\left[\left(X-\mu\right)^2\right].$$
+![Tappisolujen herkkyysalueet. Lähde: Wikimedia[^conesens].\label{fig:conesens}](images/635px-Cones_SMJ2_E.svg.png)
 
-Tämä lauseke sievenee seuraavalla tavalla:
+[^conesens]: <https://commons.wikimedia.org/wiki/File:Cones_SMJ2_E.svg>
 
-$$Var\left(X\right) = E\left[X^2\right] - \left(E\left[X\right]\right)^2.$$
+Voidaan siis ajatella, että ihmisen verkkokalvo näytteistää valon värin kolmelle
+kanavalle, ja väriaistimus syntyy näiden kanavien yhteisvaikutuksesta. Kanavat
+menevät osittain päällekkäin, mutta niiden huippukohdat ovat eri paikoissa.
+Näiden kolmen kanavan ja sauvasolujen aistiman valon intensiteetin sisältämä
+tieto koodataan jollakin lailla ennen kuin se viedään aivojen käsiteltäväksi.
+Vieläkään ei tiedetä varmuudella, miten aivot käsittelevät värejä, mutta
+erilaisia teorioita on olemassa. Toisen teorian mukaan värit koodataan kolmeen
+kanavaan siten, että punainen, vihreä ja sininen ovat kukin omana kanavanaan ja
+valoisuus liitetään mukaan näihin kanaviin. Toisen teorian, niin kutsutun
+vastaväriteorian mukaan olisi puna-vihreä, sini-keltainen ja musta-valkoinen
+kanava. Kumpikin näistä teorioista selittää joitakin kokeellisia havaintoja
+ihmisen näköaistimuksesta. Totuus lienee jonkinlainen yhdistelmä näistä kahdesta
+teoriasta.
 
-Varianssi on siis yhtä kuin muuttujan arvon *neliön* odotusarvo, vähennettynä
-muuttujan odotusarvon neliöllä. Tämä on hyvin hyödyllistä, ja palaamme tähän
-asiaan myöhemmin.
+Sauvasoluja on enemmän kuin tappeja, ja sen takia ihminen on herkempi valon
+kirkkauden kuin värin vaihtelulle. Tätä käytetään hyödyksi joissakin kuvan
+pakkausmenetelmissä, jossa valon kirkkausaste ja värisävy tallennetaan erikseen:
+Värisävyä pystytään pakkaamaan tiiviimmin, koska silmä ei huomaa yhtä herkästi
+eroja värisävyssä kuin kirkkaudessa.
 
-Varianssia merkitään yleensä $\sigma_X^2$ tai yksinkertaisesti $\sigma^2$, ja
-sitä kutsutaan myös *toiseksi momentiksi keskiarvon suhteen* tai *toiseksi
-keskeismomentiksi*, koska siinä summataan toisia potensseja muuttujien
-etäisyyksille keskiarvosta. Kuten todettu, varianssi kuvaa *neliöllisen
-etäisyyden* odotusarvoa, ja sen neliöjuurta $\sigma$:aa kutsutaan
-*keskihajonnaksi* (engl. *standard deviation*), joka on siis jossakin mielessä
-odotusarvo muuttujan arvon ja keskiarvon erotuksen itseisarvolle.
+Kolme tappisolutyyppiä aistii siis eri aallonpituuskaistaa. Näiden solujen
+aistimusten yhdistelmänä silmä pystyy erottamaan noin seitsemän miljoonaa eri
+värisävyä, mutta nämä värit eivät ole jakautuneet tasaisesti näkyvän valon
+spektrille. Tietyillä spektrin osilla ihmisen erottelukyky on suurempi kuin
+toisaalla. Tämä epätasainen jakauma johtuu pääasiassa siitä, että aivojen tapa
+koodata värejä on epälineaarinen, joten vaikka värit aistitaan lineaarisesti,
+nittä käsitellään ja ne mielletään epälineaarisesti. Tämän takia tietokoneissa
+käytetään 16 miljoonaa väriä: näyttölaitteissa värit ovat jakautuneet tasaisesti
+koko spektrille, joten värejä tarvitaan enemmäin kuin 7 miljoonaa jotta
+ihmishavainnoija ei havaitsisi hyppäyksiä värisävyjen välillä.
 
-Muita yleisesti käytettyjä momentteja ovat *vinous* (engl. *skewness*) ja
-*huipukkuus* (engl. *kurtosis*). Nämä kuvaavat sitä, kuinka symmetrisesti
-muuttujan arvot ovat jakautuneet keskiarvon molemmin puolin ja kuinka
-voimakkaasti ne ovat keskittyneet keskiarvon ympärille. Vinous on *kolmas* ja
-huipukkuus *neljäs normalisoitu keskeismomentti*. Normalisointi tarkoittaa
-jakamista $\sigma^n$:llä:
+## Värien teoriaa
 
-$$m_{\mu}^n = \frac{E\left[\left(x-\mu\right)^n\right]}{\sigma^n}.$$
+Väri ei siis ole pelkästään kappaleiden ominaisuus, vaan viime kädessä ihmisen
+hermoston signaaleja. Tämän vuoksi värien teoria pohjautuu kiinteästi ihmisen
+näköaistimuksen fysiologiaan ja on lähtökohdiltaan hiukan häilyvä ja
+henkilökohtainen. Näiden lähtökohtaisten vaikeuksien poistamiseksi on tehty
+paljon työtä.
 
-## Kovarianssi ja korrelaatio
+*Commission Internationale de l'Eclairage* (CIE) eli kansainvälinen
+valaistuskomissio on vuosikymmenien ajan tutkinut ja määritellyt ihmisen
+värinäköä. Poistaakseen valaistuksesta ja havainnoijasta aiheutuvat vaihtelut,
+CIE on määritellyt standardivalaisimet ja standardihavainnoijat, joiden avulla
+värit, esimerkiksi maalien pigmentit, määritellään.
 
-Varianssi kuvaa yksittäisten muuttujien vaihtelua datajoukossa, kun taas
-*kovarianssi* kuvaa kahden muuttujan yhteisvaihtelua, eli vaihtelevatko
-muuttujien arvot samalla tavalla, vastakkaisella tavalla vai toisistaan
-riippumattomalla tavalla.
+Standardivalaisimet perustuvat tietyn lämpöisen täydellisen mustan kappaleen
+lähettämään säteilyyn. D50 tarkoittaa 5000 Kelvinin lämpöisen kappaleen
+lähettämää valoa, joka on kellertävän valkoinen, ja D65 puolestaan 6500 Kelvinin
+lämpöisen kappaleen lähettämää valoa, joka vastaavasti on sinertävän valkoinen.
+Värien lämpötilalla tarkoitetaankin sen mustan kappaleen lämpötilaa, jonka
+hehkun valaisemana värien voidaan ajatella syntyneen.
 
-Kovarianssi määritellään odotusarvojen avulla seuraavasti:
+Standardihavainnoijia on kahdenlaisia, jotka vastaavat ihmisen näköä 2 asteen ja
+10 asteen näkökentällä. Näistä jatkossa enemmän.
 
-$$Cov(X,Y) = E\left[\left(X-E\left[X\right]\right)
-                    \left(Y-E\left[Y\right]\right)\right],$$
+Edellä selvitettiin, kuinka väri on sähkömagneettistä säteilyä tietyllä
+aallonpituusalueella. Väri voidaankin pelkistää spektrijakaumafunktioksi (engl.
+*spectral power distribution*, SPD), joka kertoo säteilyn aallonpituuksien
+jakauman valossa. Värien mittaamiseen voidaan käyttää erityistä laitetta,
+spektrofotometriä. Se mittaa näytteen heijastaman spektrijakauman, näytteistäen
+sen esimerkiksi 5, 2 tai 1 nanometrin välein. On muistettava, että jakauma
+riippuu valaistusolosuhteista. Siksi näytteen valaisuun pitää käyttää jotakin
+standardivalaisinta, yleensä D50 tai D65.
 
-eli kovarianssi on ikään kuin kahden muuttujan yhdistetty varianssi. Muuttujan
-kovarianssi itsensä kanssa onkin sama asia kuin varianssi. Kovarianssi voidaan
-laskea myös vektorimuotoisille muuttujille, jolloin tuloksena on
-*kovarianssimatriisi*, jonka diagonaalilla ovat kunkin yksittäisen muuttujan
-varianssit.
+Kuten edellä todettiin, ihmisen värinäkö pohjautuu tappisoluihin. Tappien
+toiminta voidaan pelkistää todennäköisyysfunktioksi fotonien aallonpituuden
+suhteen; tietyllä tappityypillä on tietty todennäköisyys absorboida fotoni,
+jolla on tietty energia ja siten aallonpituus. Väriaistimuksen kannalta fotonin
+energialla ei ole merkitystä: väriaistimus syntyy sen perusteella, kuinka monta
+fotonia kukin tappisolutyyppi absorboi aikayksikössä. Tämä kertoo osaltaan
+siitä, kuinka abstrakti käsite värinäkö on, ja että värit eivät todellakaan ole
+viime kädessä muuta kuin aivoissa syntyvä vaste tietynlaiseen säteilyyn.
 
-Kovarianssi kertoo myös, kuinka paljon kahden muuttujan *tulon* odotusarvo
-poikkeaa muuttujien odotusarvojen tulosta:
+Edellä väri määriteltiin spektrijakaumafunktioksi sähkömagneettisesta
+säteilystä, vaikka tarkkaan ottaen väri on aivoissa syntyvä vaste kyseiseen
+jakaumaan. Vaste on kuitenkin hyvin yksilöllinen asia, joten jatkossa puhumme
+väristä spektrijakaumana. Standardivalaisimen valossa standardihavainnoija näkee
+jakauman kuitenkin aina samalla tavalla.
 
-$Cov(X,Y) = E\left[XY\right] - E\left[X\right]E\left[Y\right]$.
+Ihmisen silmässä on siis kolmenlaisia tappisoluja. Tästä juontuu niin kutsuttu
+tristimulus-teoria. Sen mukaan kaikki värit voidaan esittää kolmen komponentin
+eli stimuluksen avulla. Nämä kolme komponenttia vastaavat vektoria
+kolmiulotteisessa avaruudessa, jota sanotaan tristimulus-avaruudeksi. Tällainen
+vektori voidaan tietysti esittää hyvin monella eri tavalla, riippuen käytetyistä
+kantavektoreista, ja niinpä onkin olemassa monia erilaisia viittaustapoja
+(engl. *references*) tristimulus-avaruuteen. Näitä viittaustapoja kutsutaan
+*värimalleiksi* tai *väriavaruuksiksi*, ja niistä kerrotaan myöhemmin lisää.
 
-Kovarianssin numeroarvoa on vaikea tulkita, koska se riippuu muuttujien
-skaaloista. Niinsanottu *Pearsonin korrelaatiokerroin*, jota usein kutsutaan
-yksinkertaisesti korrelaatioksi, ratkaisee tämän ongelman jakamalla kovarianssin
-muuttujien keskihajontojen tulolla.
+## Tristimulus-viittaukset
 
-$$Corr(X,Y) = \frac{Cov(X,Y)}{\sigma_X \sigma_Y}.$$
+Edellä esitetyn pohjalta määritellään väri seuraavasti. Olkoon $VS$ (sanoista
+*Visual Spectrum* eli näkäaistimuksen havaitsema spektri) ihmissilmän aistima
+sähkömagneettisen spektrin osa (siis osapuilleen 380nm - 780nm). $S(\lambda)$
+olkoon tällöin spektrijakaumafunktio, joka kertoo valon intensiteetin
+aallonpituudella $\lambda \in VS$. Olkoot sitten $A$, $B$ ja $C$ kolme
+komponenttia, joita käytetään viittaamaan tristimulus-avaruuteen. Määritellään
+funktiot $a(\lambda)$, $b(\lambda)$ ja $c(\lambda)$ siten, että ne kertovat
+kyseisen komponentin arvon aallonpituudella $\lambda$. Tällaisia funktioita
+kutsutaan värin sovitusfunktioiksi (engl. *color matching functions*).
 
-Tätä merkitään toisinaan myös symbolilla $\rho_{X,Y}$, ja tuloksena on arvoja
-väliltä $\left[-1,1\right]$. Kovarianssi ja korrelaatio kuvaavat muuttujien
-*lineaarista* suhdetta. Korrelaatio voidaan ajatella kertoimena, joka kertoo
-kuinka paljon muuttujan $B$ arvo muuttuu, kun muuttujan $A$ arvo muuttuu $x$:n
-verran. Muuttujien välinen riippuvuus ei aina ole lineaarinen, joten toisinaan
-on turvauduttava toisenlaisiin keinoihin. Näihin palaamme myöhemmin.
+Nyt näiden kolmen viittauskomponentin arvot spektrillä $S$ saadaan integroimalla
+kukin sovitusfunktio näkyvän spektrin yli:
 
-## Kuva-alueiden momentit
+$$\begin{aligned}
+A &= \int\limits_{VS} a\left(\lambda\right) S\left(\lambda\right) \, d\lambda \\
+B &= \int\limits_{VS} b\left(\lambda\right) S\left(\lambda\right) \, d\lambda \\
+C &= \int\limits_{VS} c\left(\lambda\right) S\left(\lambda\right) \, d\lambda
+\end{aligned}$$
 
-Kokonaisen kuvan tilastolliset tunnusluvut eivät sisällä kovin hyödyllistä
-tietoa. Toisaalta pienten kuva-alueiden keskiarvo ja varianssi kertoisivat
-jotakin oleellista kuvassa olevista vaihteluista. Kokeillaan siis käyttää
-konvoluutiota kuva-alueiden keskiarvon laskemiseen, ja muistetaan varianssin
-laskukaava pikseliarvojen neliön odotusarvon ja pikseliarvojen odotusarvon
-neliön erotuksena: $Var\left(X\right) = E\left[X^2\right] -
-\left(E\left[X\right]\right)^2.$
+Tristimulus-viittaus on vektori $\begin{pmatrix} A & B & C \end{pmatrix}$.
+Kutsutaan tätä viittausvektoriksi. Tällainen vektori kuvaa värin tietyssä
+värimallissa eli viittauksessa tristimulus-avaruuteen. Kukin kolmesta
+komponentista voidaan ajatella eräänlaisena sisätulona, joka kertoo kuinka
+paljon kyseistä komponenttia on havaitussa värin spektrijakaumassa. Tämä vastaa
+kolmen eri tappisolutyypin absorboimien fotonien määrää. Integraalit voidaan
+nähdä myös projektiona ääretönulotteisesta vektoriavaruudesta kolmiulotteiseen
+avaruuteen.
 
-### Tehtävä 5.1 {-}
+## Metamerismi
 
-Seuraavassa koodiesimerkissä esitetään kuva-alueiden keskiarvon, varianssin ja
-keskihajonnan laskeminen. Tuloksena on kuvia, jotka sisältävät nämä momentit
-jokaiselle pikseliympäristölle. Kurssisivulla pääsee kokeilemaan eri kuvilla ja
-vaihtamaan ympäristön kokoa. Kokeile eri kuvia ja erikokoisia ympäristöjä.
-Kuvaile tuloksia. Millä tavoin operaatioita voisi hyödyntää?
+Periaatteessa todellinen spektrijakauma muodostaa ääretönulotteisen
+vektoriavaruuden; jakauma sisältää säteilyn intensiteetin kaikilla mahdollisilla
+aallonpituuksilla, joita on ylinumeroituva määrä. Kun tämä tieto esitetään
+kolmiulotteisessa tristimulus-avaruudessa, joka on siis lineaarialgebran termein
+aliavaruus, tietoa luonnollisesti häviää. Tämä tarkoittaa, että yksi
+viittausvektori vastaa useita todellisia spektrijakaumia.
 
-### Tehtävä 5.2 {-}
+Tätä ilmiötä kutsutaan nimellä metamerismi, ja kahta eriä väriä eli
+spektrijakaumaa, joilla on sama viittausvektori, kutsutaan metameeriseksi
+pariksi. Tämä ilmiö on varsin merkittävä ongelma. Käytännössä ilmiö esiintyy
+esimerkiksi silloin, kun kaksi vaatekappaletta, jotka näyttävät tietyssä
+valaistuksessa samanvärisiltä, näyttävätkin jossakin toisessa valaistuksessa
+erivärisiltä. Tämä johtuu tietysti siitä, että valaistus vaikuttaa merkittävästi
+spektrijakaumaan. Metamerismistä johtuen silmä ei erota kahden eri kappaleen
+tuottamia spektrijakaumia eri väreiksi yhdessä valaistuksessa, mutta toisessa
+erottaa.
 
-Seuraavassa koodiesimerkissä esitetään kuva-alueiden kovarianssin ja
-korrelaation laskeminen. Tuloksena on jälleen kuvia, jossa on nämä suureet
-laskettuina jokaiselle pikseliympäristölle. Nämä operaatiot pitää suorittaa
-kahdelle kuvalle kerrallaan. Esimerkeissä käytetään saman kuvan siirrettyjä
-versioita, sekä saman kuvan Gabor-suodatettuja versioita eri suuntaisilla
-maskeilla. Kokeile eri kokoisia alueita ja sekä kovarianssia että korrelaatiota.
-kuvaile tuloksia ja yritä selittää, mitä kovarianssi ja korrelaatio näissä
-esimerkeissä mittaavat. Mitä eroa niillä on?
+Nyt voidaan siis määritellä yhtäsuuruus väreille: $C_1 \equiv C_2$, missä $C_1$
+ja $C_2$ ovat edellisessä kappaleessa määritellyn kaltaisien viittausvektorien
+mukaisia värejä, esim. $\begin{pmatrix} C_{11} & C_{12} & C_{13} \end{pmatrix}$.
+Tämä yhtäsuuruus pätee, jos värit ovat metameerisia pareja.
 
-## Integraalikuva
+### Grassmanin lait
 
-Tilastollisten momenttien laskeminen konvoluution avulla on raskas operaatio,
-varsinkin jos tutkittava alue on suuri ja operaatio halutaan tehdä jokaiselle
-pikselille, kuten yllä. Seuraavaksi tutustumme keinoon laskea pikselien summia
-mielivaltaiselta nelikulmaiselta alueelta vakioajassa.
-
-Määritellään **integraalikuva** $Int(I)$ kuvan $I$ suhteen seuraavasti:
-
-$$Int(I)(x,y) = \sum_{i=0}^{x}\sum_{j=0}^{y}I(i,j).$$
-
-![Pikselin integraali](images/integral.png)
-
-Integraalikuvan pikseli kohdassa $(x,y)$ sisältää siis summan kuvan $I$
-pikseleistä, jotka sijaitsevat kuvan vasemman ylänurkan ja kohdan $(x,y)$
-välissä. Oheisessa kuvassa mustalla merkityn pikselin integraal on siis summa
-viivoitetulla alueella olevien pikselien arvoista, mukaanlukien pikselin oma
-arvo. Integraalikuva saadaan muodostettua käymällä kuva yhden kerran läpi
-riveittäin ja kokoamalla integraalisumma edellisten pikselien summista
+Grassmanin lait määrittelevät joitakin värien ominaisuuksia. Ne kuuluvat
 seuraavasti:
 
-$$Int(I)(x,y) = I(x,y) + Int(I)(x-1,y) + Int(I)(x,y-1) - Int(I)(x-1,y-1), \\
-  \;\text{siten, että}\; I(x,y) = 0 \;\text{kun}\; x,y < 0.$$
+* $C_1 \equiv C_2 \Leftrightarrow C_2 \equiv C_1$ (Symmetrialaki)
+* $C_1 \equiv C_2, C_2 \equiv C_3 \Leftrightarrow C_1 \equiv C_3$
+  (Transitiivisuuslaki)
+* $C_1 \equiv C_2 \Leftrightarrow aC_1 \equiv aC_2 \, \forall a \in \mathbb{R}$
+* $C_1 \equiv C_2, C_3 \equiv C_4 \Leftrightarrow  (C_1 + C_2) \equiv 
+  (C_3 + C_4)$
 
-![Integraalin laskeminen](images/integral_calculation.png)
+$C_1$, $C_2$, $C_3$ ja $C_4$ ovat vektoreita jossakin tristimulus-
+vektoriavaruudessa. Nämä lait vahvistavat väriviittausvektoreille samat
+vertailu- yhteenlasku- ja skalaarillakertomisominaisuudet kuin normaaleille
+vektoreille. On huomattava, että lain G3 skalaari $a$ saa olla myös
+negatiivinen, vaikkakaan tällaiselle operaatiolle ei ole suoranaista
+vastaavuutta reaalimaailmassa.
 
-Kuvaa pitää siis laajentaa lisäämällä alkuun yksi sarake ja rivi joiden arvot
-ovat nollia. Integraalikuvan pikseli vinoittainen naapuri $Int(I)(x-1,y-1)$
-pitää vähentää summasta, sillä muuten ylänurkan pikselit tulee laskettua
-kahteen kertaan. Oheinen kuva selventää asiaa. Vinoviivoitukset kuvaavat
-naapuripikselien integraalien kattamia alueita.
+## Perusviittaus
 
-Integraalikuvan avulla saadaan laskettua mielivaltaisen nelikulmaisen alueen
-pikseliarvojen summa kahdella vähennyslaskulla ja yhdellä yhteenlaskulla.
-Olkoot $a,b,c$ ja $d$ pikseleitä, jotka määräävät tutkittavan alueen nurkat
-myötäpäivään alkaen vasemmasta ylänurkasta. Tämän alueen summa on
+Viittaustapaa, joka vastaa ihmisen näköaistia, kutsutaan perusviittaukseksi
+(engl. *fundamental reference*). Siinä kolme komponenttia ovat $S$, $M$ ja $L$
+(sanoista Short, Medium, Long) tappisolujen aistimien aallonpituusalueiden
+mukaisesti. Tässä värimallissa kunkin komponentin arvo tarkoittaa kyseisen
+tappisolun absorboimaa osuutta verkkokalvolle tulevista valokvanteista eli
+fotoneista.
+
+Tappisolut absorboivat säteilyn sisältämiä fotoneita tietyllä
+todennäköisyydellä, joka riippuu kyseisten tappien herkkyydestä kyseisille
+aallonpituuksille. $\bar{s}(\lambda)$, $\bar{m}(\lambda)$ ja $\bar{l}(\lambda)$
+olkoot herkkyysfunktioita, jotka ilmaisevat tappisolun todennäköisyyden
+absorboida tietyn aallonpituuden kvantti. Näistä saadaan muodostettua värin
+sovitusfunktiot $s(\lambda)$, $m(\lambda)$ ja $l(\lambda)$ lineaarisesti
+kertomalla joillakin sopivilla kertoimilla $k_s$, $k_m$ ja $k_l$. Kertoimet
+riippuvat muun muassa silmän optisista ominaisuuksista ja käytetyistä
+mittayksiköistä; kertoimet vain skaalaavat arvot oikein. Tätä viittausta
+kutsutaan myös SML-viittaukseksi. SML - menetelmällä on nykyään lähinnä
+teoreettista merkitystä, ja seuraavassa esitettävä XYZ-viittaus eli XYZ-
+värimalli on huomionarvoisempi.
+
+## XYZ - värimalli
+
+Nykyään standardiviittauksena käytetään CIE:n kehittämää XYZ-viittausta. Tämä
+saadaan lineaarisella muunnoksella edellä esitetystä SML-mallista, mutta XYZ on
+hyödyllisempi, koska sen käyttämillä värin sovitusfunktioilla on muutamia
+hyödyllisiä ominaisuuksia. Muun muassa Y-komponentti sisältää pelkkää
+luminenssi- eli kirkkausinformaatiota. Joissakin viittauksissa komponentit
+saattavat saada myös negatiivisia arvoja, mutta näin ei käy XYZ:ssa. Toisaalta
+XYZ-viittaus on ekvivalentti ihmisen näköaistimuksen kanssa, sillä se saadaan
+lineaarisella muunnoksella SML-viittauksesta.
+
+Ihmisen aistimus värin kirkkaudesta riippuu aallonpituudesta. Kokeellisesti on
+havaittu, että vastekäyrä on melko lähellä keskipitkän aallonpituuden
+vastekäyrää, eli siis periaatteessa vihreän värin vastetta. Toisinaan
+käytetäänkin yksinkertaisesti vihreää värikanavaa, kun halutaan yksinkertainen
+ja nopea muunnos RGB-kuvasta harmaasävykuvaksi. 
+
+![XYZ-sovitusfunktiot. Lähde: Wikipedia[^xyzcmf].\label{fig:xyzcmf}](images/640px-CIE_1931_XYZ_Color_Matching_Functions.svg.png)
+
+[^xyzcmf]: http://en.wikipedia.org/wiki/File:CIE_1931_XYZ_Color_Matching_Functions.svg
+
+XYZ-värit saadaan samanlaisella integroinnilla kuin tristimulus-viittauksien
+yhteydessä kerrottiin. Värien sovitusfunktioina käytetään kuvan \ref{fig:xyzcmf}
+kaltaisia funktioita, jotka ovat siis todennäköisyysjakaumafunktioita. Näitä
+sovitusfunktioita kutsutaan myös CIE:n standardihavainnoijaksi. Ne vastaavat
+ihmisen verkkokalvon tappisolujen vasteita 2 asteen näkökentällä. Näkökentän
+laajuudella on merkitystä siksi, että tappisolujen jakauma vaihtelee
+verkkokalvon eri osissa. Standardihavainnoijassa otetaan siis huomioon vain
+aivan näkökentän keskellä olevat tappisolut.
+
+On huomattava, että diagrammissa kaikki käyrät on normalisoitu siten, että
+kunkin integraali näkyvän valon spektrin yli on $1$. Todellisten
+vastefunktioiden skaalat ovat hyvin erilaiset, sillä eri tappisolujen
+herkkyydessä on suuria eroja.
+
+XYZ-värimallia käytetään värien mittauslaitteissa, kuten edellä mainituissa spektrofotometreissä. Useat ammattilaisten käyttämät ohjelmistot käyttävät XYZ-väriavaruutta.
+
+### CIE:n xy-väridiagrammi
+
+Jos ajatellaan valon kirkkaudesta eli luminanssista (engl. *luminance*)
+riippumattomia värin ominaispiirteitä, puhutaan värikkyydestä (engl.
+*chromaticity*). Tätä kuvaavatt toisaalta värisävy, kuten esimerkiksi spektrin
+nimetyt värisävyt (punainen, oranssi, keltainen, vihreä, sininen ja violetti),
+ja toisaalta värin puhtaus tai värikylläisyys eli saturaatio (engl.
+*saturation*). Näistä muodostuu se värien kirjo, eli teknisesti ilmaistuna
+*gamut*, jonka ihminen pystyy havaitsemaan.
+
+Ihmisen näkemä värien kirjo esitetään tavallisesti niinsanottuna xy-
+väridiagrammina. Kukin värisävy voidaan ilmaista käyttäen
+*värikkyyskoordinaatteja*, jotka tarkoittavat x- ja y-koordinaatteja tässä
+väridiagrammissa. Se on CIE:n määrittämä ja vastaa edellä kuvattua CIE:n
+standardihavainnoijaa. Diagrammi siis esittää standardoidun ihmishavainnoijan
+näkemää värien kirjoa tappisolujen vasteen mielessä.
+
+Muistamme, että XYZ-koordinaateissa Y-koordinaatti sisältää pelkkää
+valoisuustietoa. Väridiagrammi muodostetaankin tutkimalla kolmiulotteisen XYZ-avaruuden tasoa $X + Y + Z = 1$. Koska $X$, $Y$ ja $Z$ ovat positiivisia,
+tämä taso on kolmio jota rajoittavat koordinaattiakselit ja jonka kärkipisteet
+ovat akseleilla ykkösen kohdalla. Värikkyyskoordinaatit muodostuvat projektiona tähän tasoon siten, että $x = \frac{X}{X+Y+Z}$ ja $y =
+\frac{Y}{X+Y+Z}$. Voidaan määritellä myös $z = \frac{Z}{X+Y+Z}$, mutta tämä on
+redundantti tekijä, sillä se saadaan esitettyä x:n ja y:n avulla: $z = 1-x-y$.
+
+Kun näkyvän spektrin monokromaattinen, eli vain yhtä aallonpituutta sisältävä,
+valo kuvitellaan funktiona aallonpituuden suhteen ja projisoidaan xy-tasoon,
+muodostuu hieman hevosenkengän muotoinen käyrä. Se muodostaa kuvassa
+\ref{fig:xychrom} esitetyn värikkyysdiagrammin (engl. *chromaticity diagram*)
+reunakäyrän, joka siis esittää puhtaita spektrin värejä. Värin luminanssi $Y$ on
+kohtisuorassa tätä xy-tasoa vasten.
+
+![CIE:n xy-värikkyysdiagrammi. Lähde: Wikipedia[^xychrom].\label{fig:xychrom}](images/565px-CIE1931xy_blank.svg.png)
+
+[^xychrom]: http://en.wikipedia.org/wiki/File:CIE1931xy_blank.svg
+
+Diagrammilla on seuraavanlaisia ominaisuuksia. Reunakäyrällä ovat puhtaat
+spektrin värit ja kuvion sisällä ovat kaikki mahdolliset ihmisen näkemät
+värisävyt, ottamatta huomioon kirkkauden vaikutusta, joka siis on eliminoitu
+kaaviosta. Kun kuvasta poimitaan kaksi väriä, niitä yhdistävällä suoralla ovat
+kaikki värit, jotka saadaan muodostettua näiden kahden värin avulla. Samaan
+tapaan voidaan ottaa useampia värejä, ja näiden rajoittama monikulmio sisältää
+värit, jotka saadaan yhdistelemällä näitä valittuja värejä.
+
+Kyseessä on siis tavallaan lineaariavaruus, jossa kahdella eri värillä saadaan
+viritettyä jana ja kolmella värillä, jotka eivät ole samalla suoralla, saadaan
+viritettyä kolmio. Tavallaan siis 'lineaarisesti riippumattomilla' väreillä
+saadaan viritettyä 'aliavaruus'. Miksei saada viritettyä suoraa ja koko
+väriavaruutta, kuten lineaariavaruuksissa? Tämä johtuu siitä, että värejä ei
+voida ottaa negatiivista määrää, joten väriavaruus ei täysin vastaa
+lineaariavaruutta.
+
+Kuvion keskellä kohdassa $(\frac{1}{3},\frac{1}{3})$ on niin sanottu valkoinen
+eli epäkromaattinen piste. Tästä pisteestä kuvion reuna kohti värin saturaatio
+eli värikylläisyys lisääntyy. Värikylläisyys tarkoittaa sitä, kuinka hallitseva
+värisävy on kyseisessä värissä. Värikylläisyyden vähentyessä harmaasävyjen osuus
+lisääntyy. Värien vastavärit löytyvät piirtämällä suora valkoisen pisteen
+kautta. Hevosenkengän päitä yhdistävä suora on niin sanottu violetti suora,
+jolla olevat värit eivät esiinny puhtaina spektrissä, vaan jotka muodostuvat
+punaisen ja violetin sekoituksina.
+
+Tästä kuviosta päästään edellä jo mainittuun käsitteeseen *gamut*, joka
+karkeasti tarkoittaa sitä värien kirjoa, joka pystytään esittämään jollakin
+laitteella tai värimallilla, eli siis periaatteessa gamut on jokin osa edellä
+esitetystä kaarevasta värialueesta. Erilaisilla laitteilla on erilainen gamut,
+ja tämä aiheuttaa ongelmia. Tästä puhutaan lisää seuraavassa kappaleessa.
+Esimerkkinä näistä ongelmista voidaan sanoa, että itse xy-väridiagrammia ei
+pystytä esittämään täsmällisesti, koska näytöt ja tulostimet eivät pysty
+tuottamaan oikein kaikkia kuviossa esiintyviä värejä.
+
+Seuraavassa määritellään joitakin väreihin liittyviä termejä.
+
+### Luminanssi
+
+Luminanssi (engl. *luminance*) on valoisuuden yksikkö. Se tarkoittaa valovuon
+suuruutta, joka tulee jostakin pinnan pisteestä, nähtynä tietystä suunnasta.
+Valovuo taas johdetaan säteilyn sisältämästä kokonaistehosta tai -energiasta.
+Luminanssi tarkoittaa siis pinnasta heijastuvan säteilyenergian määrää jostakin
+pisteestä tarkasteltuna, ja se on fysikaalinen suure. Luminanssia merkitään
+yleensä kirjaimella Y, ja sitä siis vastaa XYZ-avaruuden Y-komponentti.
+
+### Kirkkaus
+
+Kirkkaudella (engl. *brightness*) ymmärretään ihmisen aistimusta siitä, mikä
+alue sisältää enemmän ja mikä vähemmän valoa.
+
+### Valoisuus
+
+Valoisuus (engl. *lightness*) tarkoittaa aistimusta alueen kirkkaudesta
+suhteessa näkymässä olevaan valkoiseen viitekohteeseen.
+
+### Luma
+
+Luma tarkoittaa gamma-korjattua luminanssia ja sitä merkitään usein Y'.
+
+### Kroma
+
+Kroma (engl. *chroma*) tarkoittaa alueen värikkyyttä verrattuna valkoisen
+viitekohteen kirkkauteen.
+
+### Värikylläisyys
+
+Värikylläisyys (engl. *saturation*) tarkoittaa alueen värikkyyttä suhteessa sen
+itsensä kirkkauteen.
+
+## Värien ongelmia
+
+Väri on monessa suhteessa ongelmallinen käsite. Ensinnäkin väri on
+henkilökohtainen asia; jokainen näkee ja mieltää värit omalla tavallaan.
+Toiseksi, valaistus ja ympärillä olevat värit vaikuttavat siihen, miten
+miellämme värit. Tämä selvitys keskittyy ongelmiin konenäön ja kuvankäsittelyn
+näkökulmasta, ja näihin perustavanlaatuisin syy on se, että ihmissilmä ja
+erilaiset laitteet näkevät ja tuottavat värejä eri lailla. Tietokoneiden näytöt
+pystyvät tuottamaan tietyn väriskaalan, samoin tulostimet. Ihmissilmät ja
+erilaiset kamerat havaitsevat kukin omanlaisensa väriskaalan. Kuten edellä
+todettiin, tässä yhteydessä sanotaan, että näillä laitteilla on erilainen gamut.
+
+Ongelmia syntyy siitä, että näyttöjen tuottama väriskaala on eri kuin
+tulostimilla; tulostimet eivät yksinkertaisesti pysty tuottamaan joitakin
+näytöllä näkyviä värejä, samoin kuin näytöt eivät pysty esittämään kaikkia
+tulostimen tuottamia värejä. Samoin skannerien ja kameroiden tallentama
+väriskaala on erilainen kuin mitä näytöt ja tulostimet pystyvät tuottamaan.
+Yleisesti mitkään laitteet eivät pysty käsittelemään koko ihmisen näkemää värien
+kirjoa, vaan vain osan siitä. Ongelmana on siis muuntaa värejä siten, että
+käytettävä laite pystyy käsittelemään niitä, ja että samalla ne poikkeaisivat
+todellisista, ihmisen havaitsemista väreistä mahdollisimman vähän.
+
+Ongelmia tuottaa myös värien esitystapa: värit pitäisi pystyä kuvaamaan
+tietokoneelle jollakin diskreetillä tavalla, jotta se pystyisi käsittelemään
+niitä. Eri laitteet käyttävät erilaisia tapoja kuvata värejä, ja näiden
+kuvaustapojen välinen muuntaminen on ongelmallista. Seuraavassa kappaleessa
+käsitellään näitä asioita tarkemmin.
+
+## Värimallit
+
+Värimallit pyrkivät nimensä mukaisesti mallintamaan ja approksimoimaan luonnossa
+esiintyviä ja ihmisen havaitsemia värejä tietokoneella. Värimallit ovat
+ikäänkuin matemaattisia malleja, jotka pyrkivät kuvaamaan värejä. Malleja on
+useita erilaisia. Valikoiman laajuus selittyy osittain sillä, että eri mallit
+soveltuvat eri käyttötarkoituksiin. Pääosa harvinaisemmista malleista on
+kuitenkin syntynyt vain siksi, että jokin taho on halunnut luoda oman
+standardinsa, tai siksi, että vanhoja malleja on vähän paranneltu jossakin
+suhteessa.
+
+Värimallit perustuvat edellä kuvattuun tristimulus-teoriaan. Sen pääsisältö on
+siis se, että värit on kolmiulotteinen avaruus; usein puhutaankin
+väriavaruuksista. Tämän takia värit saadaan esitettyä kolmen komponentin, nk.
+stimuluksen avulla. Kaikki nykyiset värimallit perustuvat enemmän tai vähemmän
+tähän teoriaan. Puhutaan myös kolmesta pääväristä, vaikka kaikki kolme
+komponenttia eivät tarkkaan ottaen olekaan värejä kaikissa värimalleissa.
+
+Värimallit ovat tavallaan määritelmiä. Ne määrittelevät värit jollakin tavalla.
+Määritelmiä on sekä laiteriippuvia että laiteriippumattomia. Laiteriippuvissa
+määritelmissä tulos eli näytettävä väri riippuu käytettävästä laitteesta.
+Laiteriippumattomat määritelmät ovat tarkkoja ja käytettävät laitteet
+kalibroidaan jotta niiden antamat tulokset olisivat oikeita.
+
+Värimalleja on varsin suurilukuinen joukko. Suuri määrä johtuu monista syistä.
+Jotkin laitteet asettavat rajoituksia väritiedon koolle. Osa väriavaruuksista on
+lineaarisia, eli tietty värin esityksen muutos aiheuttaa vastaavan muutoksen
+värihavainnossa. Jotkin värimallit ovat helppokäyttöisiä. Jotkin ovat
+laiteriippuvaisia, eli soveltuvat vain tietylle laitteelle, kun taas toiset ovat
+laiteriippumattomia. Seuraavassa esitellään yleisimpiä värimalleja. Suurin osa
+käytetyistä värimalleista on näiden muunnelmia.
+
+### RGB
+
+RGB on ehkä tunnetuin ja yleisimmin käytetty värimalli valon sekoittamiseen
+perustuvissa laitteissa, kuten näytöt ja skannerit. Se perustuu valon päävärien
+käyttöön, jotka, kuten edellä kerrottiin, ovat punainen, vihreä ja sininen.
+Näistä väreistä tulee myös värimallin nimi (Red, Green, Blue). Erilaisia RGB-
+värimalleja on itse asiassa äärettömän paljon. Tämä johtuu siitä, että kolme
+pääväriä voidaan valita hyvin monella tavalla. Eri näyttöjen esittämät värit
+poikkeavat toisistaan aavistuksen siitä riippuen, minkävärisiä valonlähteitä
+niissä on käytetty; eri sävyiset punaiset, vihreät ja siniset tuottavat
+erilaisen väriskaalan. Värisävyjen valinnasta riippuu myös näytön gamut;
+käytettyjen päävärien 'virittämän' kolmion sisällä ovat kaikki värit jotka
+voidaan esittää. Tyypillisesti näytöt eivät kuitenkaan pysty esittämään
+kovinkaan värikylläisiä sävyjä.
+
+Periaatteessa pääväreiksi ei tarvitse ottaa juuri punaista, vihreää ja sinistä.
+Mitkä tahansa kolme värisävyä kelpaavat, tosin niiden sijainnista CIE:n
+värikkyysdiagrammissa riippuu, mitä värejä niillä pystytään esittämään. Tilanne
+on vähän kuin lineaariavaruuksissa. Jos kolme väriä ovat samalla suoralla
+värikkyysdiagrammissa, ne 'virittävät' vain kyseisen suoran, eli jokin väreistä
+pystytään esittämään kahden muun avulla. 'Lineaarisesti riippumattomat' värit,
+eli sellaiset, joita ei voi esittää toistensa avulla, eivät kuitenkaan viritä
+koko väriavaruutta, vaan ainoastaan 'värivektorien' kattaman kolmion, kuten
+edellä todettiin. Osin tämän takia, osin vanhasta tottumuksesta pääväreiksi
+valitaa jokin sopiva punaisen, vihreän ja sinisen sävy. Kolmas tärkeä syy on se,
+että koska nämä ovat valon päävärit, valkoinen saadaan ottamalla kaikkia kolmea
+osapuilleen saman verran. Sekoitussuhteista tulee siis käytännöllisemmät kuin
+käytettäessä satunnaisia värejä. Nämä värit virittävät myös melko säännöllisen
+kolmikulmion.
+
+RGB:ssä siis komponentteina on kolme pääväriä, joiden sekoitussuhde ratkaisee
+esitettävän värin. Periaatteessa tällä tavalla pitäisi saada aikaan kaikki
+värit, mikä pitää paikkansa vain osittain. Kaikki värisävyt saadaan kyllä
+aikaan, mutta värikylläisyys jää kauas luonnollisesta, käytettävät päävärisävyt
+kun eivät ole kovin hyviä. RGB:n ongelma on myös epäkäytännöllisyys. Värisävyä
+valittaessa pitää asettaa lähinnä arvaukseen perustuen kolmen värikomponentin
+arvo.
+
+RGB on laiteriippuvainen ja epälineaarinen värimalli, epäintuitiivinen käyttää,
+mutta yleinen.
+
+### CMY
+
+CMY on sukua RGB:lle, ja on toinen nykyisistä pääasiallisesti käytetyistä
+värimalleista. Se perustuu pigmenttien pääväreihin, niin sanottuihin
+sekundaarisiin pääväreihin tai vähennysväreihin. Ne ovat syaani, magenta ja
+keltainen. Näistä tulee myös värimallin nimi (Cyan, Magenta, Yellow). Näitä
+sanotaan vähennysväreiksi sen takia, että kukin pigmentti poistaa heijastuvasta
+spektristä jonkin värin. Kaikista kolmesta saadaan siis mustaa kun kaikkia
+otetaan saman verran; mustassa tavallaan kaikki väri on otettu pois.
+
+Usein musta väriaine laitetaan tulostimeen erillisessä mustekasetissa, jolloin
+puhutaan CMYK-värimallista (K tulee sanasta blacK). Tämä perustuu siihen, että
+kun kolmea pääväriä sekoittamalla ei tarvitse tulla puhdasta mustaa, gamut
+saadaan paremmaksi; päävärisävyt voidaan valita vapaammin. Usein kolmea pääväriä
+yhdistämällä saadaankin vain likaisen ruskea värisävy.
+
+CMY-värimallia käytetään lähinnä pigmenttien sekoittamiseen perustuvissa
+laitteissa, kuten tulostimissa. Tässä mallissa 'virittäviä' värejä on usein itse
+asiassa kuusi. Tämä johtuu siitä, että monet tulostimet tekevät paitsi syaanin,
+magentan ja keltaisen värisiä mustepisaroita, myös sinisiä, punaisia ja vihreitä
+mustepisaroita. Siksi monien CMY-laitteiden gamut on kuusikulmainen.
+
+CMY-värimallin pääasialliset heikkoudet ovat samat kuin RGB-mallissakin.
+Väriskaala ja värisävyjen kylläisyys riippuvat käytettyjen pigmenttien laadusta.
+CMY on myös yhtä epäkäytännöllinen ja epähavainnollinen kuin RGB. Kaikkein
+merkittävin ongelma syntyy RGB- ja CMY-värimallien yhteistoiminnasta: koska
+näytöt käyttävät RGB:tä ja tulostimet CMY:tä käytännön pakon sanelemana,
+konversio näiden välillä on merkittävä asia. Itse konversio ei aiheuta ongelmia,
+vaan se, että RGB-mallien ja CMY-mallien gamut on usein aivan erilainen,
+riippuen käytetyistä päävärisävyistä. Siis, vaikka mallien välinen konversio on
+lineaarinen, monia näytöllä olevia värejä on mahdoton esittää tulostimella, ja
+päinvastoin.
+
+CMY on, kuten RGB, laiteriippuvainen, epälineaarinen ja epäintuitiivinen
+käyttää.
+
+### HSB ja sen muunnelmat
+
+RGB:ssä ja CMY:ssä värit eivät ole kovin havainnollisessa muodossa. Kolmas
+suosittu värimalli, HSB muunnelmineen, helpottaa värien hahmottamista. HSB tulee
+sanoista Hue, Saturation, Brightness eli värisävy, värikylläisyys ja kirkkaus.
+Tämä värimalli hahmottaa värit samalla lailla kuin ihmisetkin: värillä on
+ensinnäkin jokin sävy, kuten sininen, punainen tai keltainen. Toiseksi väri voi
+olla pastellisävyinen tai puhdas. Tätä kuvaa värikylläisyys, joka periaatteessa
+tarkoittaa harmaasävyjen osuutta värissä, tai värisävyn hallitsevuutta harmaan
+suhteen. Kolmanneksi värin kirkkaus voi vaihdella. Kirkkaus tarkoittaa
+periaatteessa sitä, kuinka paljon valoa väristä heijastuu. Mitä suurempi
+kirkkaus, sitä valoisammalta väri näyttää.
+
+HSB-värimallissa ja sen sukulaisissa värisävy tyypillisesti valitaan ympyrän
+kehältä, ja se saa arvoja väliltä 0-359. Saturaatio ja kirkkaus ilmaistaan
+prosenttilukuna 0-100. HSB-värimalli käyttää siis sylinterikoordinaatteja, eli
+muunnos RGB:n ja HSB:n välillä ei ole lineaarinen.
+
+RGB, CMY ja HSB sijaitsevat periaatteessa samassa väriavaruudessa, joka voidaan
+ajatella kuutioksi. Kuution kulmissa ovat punainen, vihreä, sininen, syaani,
+magenta, keltainen, valkoinen ja musta. Kirkkaus kasvaa kuution päädiagonaalia
+pitkin mustasta valkoiseen ja saturaatio on kohtisuorassa tätä vasten, samoin
+kuin ympyrä, jolta värisävyt valitaan.
+
+HSB-värimallista on useita muunnelmia, jotka poikkeavat toisistaan hieman. Näitä
+ovat muun muassa HLS (Hue, Lightness, Saturation), HSV (Hue, Saturation, Value)
+ja HSI (Hue, Saturation, Intensity); pääasiallinen ero on siinä, miten kirkkaus
+määritellään. Tähän on useita tapoja, seuraavassa tärkeimmät.
 
 $$\begin{aligned}
-  s &= \sum_{i=x_a}^{x_c}\sum_{j=y_a}{y_c}I(i,j) \\
-    &= Int(I)(x_c,y_c) - Int(I)(x_b,y_b-1) - Int(I)(x_d-1,y_d) +
-       Int(I)(x_a-1,y_a-1).
-  \end{aligned}$$
+\text{Brightness} &= \frac{R+G+B}{3} \\
+\text{Lightness} &= \frac{\max\left\{R,G,B\right\} + \min\left\{R,G,B\right\}}{2} \\
+\text{Value} &= \max\left\{R,G,B\right\} \\
+\end{aligned}$$
 
-![Summan laskeminen integraalikuvan avulla](images/integral_sum.png)
+Intensity on sama asia kuin Brightness.
 
-Vasemman ylänurkan summa tulee vähennettyä kahteen kertaan, joten se täytyy
-lisätä summaan. Oheinen kuva selventää tilannetta. Tavoitteena on laskea
-keskellä olevan harmaan alueen summa. Pikselin C integraalista on vähennettävä
-pikselin B ja pikselin D integraali, jolloin pikselin A integraali on lisättävä
-takaisin kokonaissummaan.
+Kaksi vähän samantyyppistä värimallia ovat LCH (Luminance, Chroma, Hue) ja LSH
+(Luminance, Saturation, Hue) mutta ne eivät toimi aivan samalla tavalla kuin
+edellä mainitut. Niitä käsitellään erikseen jäljempänä.
 
-Jos nyt muodostamme integraalikuvan tutkittavan kuvan pikseliarvoista ja
-neliöllisistä pikseliarvoista, saamme laskettua pikseliympäristöjen keskiarvon
-ja varianssin tehokkaasti. Varjopuolena on se, että tutkittavat alueet ovat
-nelikulmaisia eivätkä pyöreitä, kuten käytettäessä konvoluutiota Gaussin
-ytimellä. Tätä on yritetty korjata laskemalla *vinoittainen* integraali
-kääntämällä kuvaa 45 astetta ja laskemalla tälle käännetylle kuvalle integraali.
-Laskemalla keskiarvo suoran ja vinon kuvan mukaisista vastinpisteiden
-integraaleista saadaan eliminoitua osittain neliön nurkka-alueiden vaikutus.
+HSB ja sen sukulaiset ovat vain tapa viitata RGB-avaruuteen, joten ne ovat yhtä
+laiteriippuvaisia ja epälineaarisia kuin RGB:kin. Niitä on kuitenkin
+suhteellisen intuitiivista käyttää, sillä tämä malli vastaa paremmin ihmisen
+käsitystä väreistä.
 
-## Jakaumat
+### CIE XYZ
 
-Keskeinen työkalu tilastollisessa analyysissä ovat eri muuttujien *jakaumat*,
-jotka kuvaavat muuttujien arvojoukkoa ja eri arvojen suhteellista
-*esiintymistiheyttä* eli *frekvenssiä* (engl. *frequency*). Koska
-kuva-analyysissä käsitellään tyypillisesti *diskreettejä* muuttujia, käytössä
-ovat *histogrammit* eli diskreetit jakaumat. Nämä koostuvat yksinkertaisesti
-taulukosta, jossa luetellaan muuttujan kaikki mahdolliset arvot sekä kunkin
-arvon esiintymien määrä. Yleensä histogrammi *normalisoidaan* jakaumaksi,
-jolloin histogrammi kertoo kunkin yksittäisen arvon esiintymistodennäköisyyden.
+XYZ-värimallista olikin jo puhetta. Siinä värit kuvataan kolmen kuvitteellisen
+päävärin $X$, $Y$, $Z$ avulla, jotka saavat arvoja väliltä $\left[0,1\right]$.
+XYZ:n etu on se, että se on täysin laitteistoriippumaton, samoin kuin kaikki
+värimallit jotka on johdettu siitä. XYZ ei kuitenkaan ole lineaarinen, ja tähän
+asiaan puututaan seuraavassa luvussa.
 
-Kuvan histogrammi muodostetaan jakamalla pikselien arvoväli haluttuun määrään
-lokeroita (engl. *bins*) ja kokoamalla summa pikseleistä, joiden arvot osuvat
-kuhunkin lokeroon. Histogrammeja voidaan muodostaa pikselien harmaasävy- ja
-väriarvoista, mutta myös erilaisten filtterien tuloksista.
+XYZ-värejä käytetään harvoin sellaisenaan. Yleensä käytetään sen sijaan
+väridiagrammin värikkyyskoordinaatteja ja lisäksi luminanssikomponenttia $Y$;
+puhutaan xyY-väreistä. Edellä on kerrottu kuinka x ja y lasketaan $X$:n, $Y$:n
+ja $Z$:n avulla. Tämän menetelmän avulla on helppo verrata kahta väriä
+keskenään, mikä tietysti on tarkoituskin. XYZ on standardivärimalli
+ammattilaislaitteissa, koska se kuvaa kaikki mahdolliset värit
+yksikäsitteisesti. Tavallisen ihmisen kannalta se on hiukan abstrakti, sillä
+kaikkia värimallilla kuvattavia värejä ei pystytä esittämään nykyisin laittein.
 
-### Tehtävä 5.3 {-}
+Seuraavissa kappaleissa käsitellään joitakin XYZ-mallin johdannaisia.
 
-Seuraavassa koodiesimerkissä lasketaan histogrammeja kuville ja erilaisten
-suotimien vasteille. Kokeile eri kuvilla ja suotimilla ja tutki jakaumia.
-Kuvaile ja yritä selittää havaintoja.
+### CIE L\*a\*b\*
 
-## Otsun kynnysarvo
+Eräs värimallien ongelmista on se, että ne eivät ole 'lineaarisia'; nykyisin
+puhutaan mieluummin havainnon tasaisuudesta (engl. *perceptual uniformness*)
+kuin lineaarisuudesta, sillä lineaarisuuden käsite ei täysin vastaa sitä, mistä
+tässä on kyse. Ongelman ydin on siis se, että muutos värin
+koordinaattiesityksessä aiheuttaa eri suuruisen muutoksen värihavainnossa. CIE
+yritti ratkaista tätä ongelmaa hyvin pitkään, ja valmisti kaksi ehdotusta
+värimalliksi, jossa tämä ongelma on ratkaistu. Kumpikaan ratkaisuista ei ole
+täysin onnistunut, vaikka ero värin ja havainnon välillä onkin huomattavasti
+pienempi kuin varhemmissa värimalleissa.
 
-Esimerkkinä histogrammien käyttämisestä tutustumme Otsun menetelmänä tunnettuun
-tapaan valita kynnysarvo. Menetelmä perustuu ideaan, että kuvan pikselit
-jakautuvat kahteen luokkaan: kohteeseen ja taustaan. Oletetaan, että kummallakin
-luokalla on oma jakaumansa pikselien arvoille, jolloin koko kuvan jakaumaan
-muodostuu kaksi huippua. Valitaan nyt kynnysarvo siten, että muodostuvan kahden
-jakauman varianssit ovat mahdollisimman pieniä. Tämä määritellään painotettuna
-summana kahden luokan sisäisistä variansseista (*within-class variance*):
+L\*a\*b\*, joskus kutsuttu myös LAB:ksi tai Labiksi, on toinen näistä
+ehdotetuista malleista. Käytämme yksinkertaisuuden vuoksi muotoa Lab.
+Asteriskeilla merkitty muoto on historiallista perua, sillä Lab perustuu
+Hunterin aiemmin esittämään samannimiseen värimalliin, joten asteriskeja
+käytetään erottamaan CIE:n L-, a- ja b-komponentit Hunterin käyttämistä.
 
-$$\sigma_w^2(t) = p_1(t)\sigma_1^2(t) + p_2(t)\sigma_2^2(t).$$
+Lab on niin sanottu vastavärimalli. Se perustuu havaintoon, että jossakin
+näköjärjestelmän sisällä värit koodataan vastaväreinä siten, että muodostetaan
+sini-keltainen ja puna-vihreä kanava. a sisältää tiedon puna-vihreästä ja b
+sini-keltaisesta; L sisältää valoisuustiedon, eli se on siis tavallaan
+musta-valkoinen kanava. Se ei ole sama asia kuin XYZ:n Y-komponentti, vaikka Y
+on myös melko lineaarinen. L on muodostettu siten, että se kuvaisi paremmin
+valoisuuden eroja ja ihmisen vastetta valon kirkkauteen.
 
-Termit $p_i(t)$ kuvaavat luokkien todennäköisyyksiä, jotka voidaan laskea
-normalisoidusta histogrammista joka voidaan siis ymmärtää
-*todennäköisyysmassafunktiona* $P$:
+Lab on varsin suosittu värimalli ammattilaisten keskuudessa. Se on
+laitteistoriippumaton, ja lineaarisuus tekee siitä käyttökelpoisen monissa
+yhteyksissä. Sitä käytetään ICC:n (International Color Consortium)
+laiteprofiileissa, ja Adoben postscriptissa se on perusvärimalli. Lab on
+suora johdannainen XYZ:sta, ja tämä konversio kuvataan jäljempänä.
 
-$$p_1(t) = \sum_{i=0}^tP(i), p_2(t) = \sum_{i=t+1}^nP(i).$$
+### CIE L\*u\*v\*
 
-Parametri $t$ viittaa kynnysarvoon eli siihen histogrammin lokeroon, jonka
-kohdalta jakauma jaetaan kahteen luokkaan, ja $n$ on lokeroiden määrä.
-Ensimmäisen luokan todennäköisyys saadaan siis summaamalla yhteen lokeroiden
-painot alusta kynnysarvoon, ja toisen luokan todennäköisyys summaamalla yhteen
-lokeroiden painot kynnysarvost loppuun. Toisaalta tietysti toisen luokan
-todennäköisyys on myös $p_2(t) = 1 - p_1(t)$.
+L\*u\*v\* on toinen lineaarisista värimalleista, jotka CIE kehitti, ja sitä
+kutsutaan joskus myös nimellä LUV tai Luv. Sen L-komponentti on sama kuin
+LABissa, mutta u\* ja v\* ovat periaattessa muunnos xy-värikkyysdiagrammin x- ja
+y-koordinaateista. Muunnos on tehty siten, että mahdollisimman hyvä lineaarisuus
+saavutettaisiin. L\*u\*v\*:n arvo on paitsi lineaarisuudessa, myös siinä, että
+se tarjoaa samanlaisen värikkyysdiagrammin kuin xyY, mutta sitä käytetään ehkä
+hiukan vähemmän kuin Labia. Värikkyysdiagrammi esitetään kuvassa
 
-Otsun mukaan luokkien sisäisten varianssien summan minimointi on sama asia kuin
-luokkien välisen varianssin maksimointi (*between-classes variance*):
+![uv-värikkyysdiagrammi. Lähde: Wikipedia[^uvdiagram].\label{fig:uvdiagram}](images/480px-CIE_1976_UCS.png)
 
-$$\sigma_b^2(t) = p_1(t) p_t(t) (\mu_1(t) - \mu_2(t))^2.$$
+[^uvdiagram]: http://en.wikipedia.org/wiki/File:CIE_1976_UCS.png
 
-Luokkien keskiarvot $\mu_i(t)$ saadaan laskettua seuraavasti:
+Seuraava kuva havainnollistaa lineaarisuutta eli havainnon tasaisuutta. Kuvassa
+\ref{fig:xyscale} on xy-värikkyysdiagrammin päällä esitetty ellipsinä alueita,
+joiden sisällä väriero on tietyn raja-arvon sisällä. Ellipsit on piirretty
+kymmenkertaisina todelliseen kokoon nähden vertailun helpottamiseksi. Kuvasta
+näkee selvästi, että ellipsit ovat hyvin pitkänomaisia, eli värien eron
+havaitseminen vaihtelee hyvin paljon eri suunnissa. uv-värikkyysdiagrammissa
+vastaavat ellipsit olisivat huomattavasti ympyrämäisempiä.
+
+![xy-avaruuden skaala. Lähde: Wikipedia[^xyscale].\label{fig:xyscale}](images/543px-CIExy1931_MacAdam.png)
+
+[^xyscale]: http://en.wikipedia.org/wiki/File:CIExy1931_MacAdam.png
+
+### LCH ja LSH
+
+Toisinaan näkee mainittavan värimallit LCH ja LSH. Kuten edellä mainittiin, ne
+ovat HSB:n sukulaisia, mutta ne muodostetaan suoraan XYZ-värimallista tai sen
+johdannaisista. LCH tulee sanoista Luminance, Chroma, Hue ja LSH sanoista
+Luminance, Saturation, Hue. Ne toimivat samankaltaisesti kuin HSB. Ne tarjoavat
+intuitiivisen lähestymistavan XYZ-, Lab- ja Luv-värimalleihin, mutta
+niiden käyttö on melko marginaalista.
+
+Hyödyllisin värimalli Lab:n tai Luv:n kanssa käytettäväksi lienee LCH, tai LCh, LCh(ab) tai LCh(uv), kuten se toisinaan myös esitetään. Ne ovat sylinteriprojektioita Lab- ja Luv-väreistä. Näissä malleissa L-komponentti on täysin sama. C-komponentti on Chroma, eli suhteellinen värikylläisyys. Se lasketaan yksinkertaisesti etäisyytenä valkoisesta pisteestä:
 
 $$\begin{aligned}
-  \mu_1(t) &= \frac{\sum_{i=0}^t P(i)x(i)}{p_1(t)} \\
-  \mu_2(t) &= \frac{\sum_{i=t+1}^n P(i)x(i)}{p_2(t)}
+  C_{ab} &= \sqrt{a^2 + b^2} \\
+  C_{uv} &= \sqrt{u^2 + v^2}
   \end{aligned}$$
 
-missä $x(i)$ tarkoittaa histogrammin lokeron keskikohtaa vastaavaa pikselin
-arvoa. Tässä on siis tuttu odotusarvon kaava, jota vielä skaalataan koko luokan
-todennäköisyydellä. Kun nyt käydään läpi kaikki mahdolliset kynnysarvot (eli
-kaikki histogrammin lokerot) voidaan valita se kynnysarvo, joka tuottaa
-suurimman $\sigma_b^2$:n arvon. Usein valitaan vieläpä kaksi parasta
-kynnysarvoa ja lasketaan näiden keskiarvo. Tämä menetelmä tuottaa suhteellisen
-hyviä kynnysarvoja, jos kuva todella jakaantuu kahteen selkeään luokkaan, ja on
-yleisesti käytetty edelleen.
+H-komponentti, $h(ab)$, $h(uv)$ tai joskus jopa $h^{\circ}(ab)$ tarkoittaa värisävyä esitettynä kulmana väriympyrällä, ja se lasketaan käyttäen arkustangenttia:
 
-Seuraavassa koodiesimerkissä esitetään kynnystäminen Otsun menetelmällä.
+$$\begin{aligned}
+  h(ab) &= \arctan\frac{b}{a} \\
+  h(uv) &= \arctan\frac{v}{u}
+  \end{aligned}$$
 
-## Histogrammien vertailu
+### YCC ja sen muunnelmat
 
-Usein on hyödyllistä tutkia kahden histogrammin välistä *etäisyyttä*. Tämä voi
-tulla eteen esimerkiksi silloin, jos kohteita kuvaillaan piirrejakaumien avulla
-ja vertaillaan mitkä kohteista ovat samanlaisia. Toisinaan on myös tarpeen
-tutkia mistä jakaumasta jokin näytejoukko voisi olla peräisin.
+Televisiomaailmassa käytetään monenlaisia värimalleja, joille on yhteistä se,
+että ne erottavat luminanssin krominanssista, eli värikkyyden kirkkaudesta.
+Yleensä vielä värikkyys pakataan tiiviimmin kuin kirkkaus; kuten edellä
+mainittiin, ihminen huomaa herkemmin erot kirkkaudessa kuin värisävyssä, ja tätä
+hyödynnetään TV-tekniikassa.
 
-On monia hyvin tunnettuja metriikoita joilla histogrammeja ja muitakin jakaumia
-voi vertailla. Vertailtavien histogrammien tulisi tietysti olla yhtä suuria
-(eli niissä tulisi olla yhtä monta lokeroa) ja normalisoituja. Voitaisiin laskea
-esimerkiksi normaali euklidinen etäisyys vektoreina tulkituille histogrammeille,
-mutta tämä on herkkä pienille eroille arvojen jakautumisessa lokeroihin. Parempi
-vaihtoehto on laskea *korrelaatio*:
+Tähän ryhmään kuuluvat YCC (Luminance Y, ja kaksi Chrominance-komponenttia) ja
+suuret standardit YIQ, jota käytetään amerikkalaisessa NTSC-
+televisiostandardissa ja YUV, jota käytetään eurooppalaisessa PAL-standardissa.
+I tulee sanasta Inphase ja Q sanasta Quadrature. Lisäksi YCbCr on
+digitaalitelevision standardi, kun taas NTSC ja PAL ovat analogisia.
 
-$$d_{\rho}(H_1,H_2) =
-  \frac{\sum_i(H_1(i)-\mu_1)(H_2(i)-\mu_2)}
-       {\sqrt{\sum_i(H_1(i)-\mu_1)^2\sum_i(H_2(i)-\mu_2)^2}}.$$
+YIQ ja YIV ovat lineaarisia, ja kaikki ovat laiteriippuvaisia ja
+epäintuitiivisia, mutta tietenkin laajalti käytössä.
 
-Toinen yleisesti käytetty metriikka on $\chi^2$ eli *chi-squared*:
+## Värien hyödyntäminen konenäkösovelluksissa
 
-$$d_{\chi}(H_1,H_2) = \sum_i\frac{(H_1(i)-H_2(i))^2}{H_1(i)}.$$
+Perinteisesti konenäkösovelluksissa on käytetty harmaasävykuvia ja pyrittu tunnistamaan kohteita muodoa ja reunojen avulla. Osittain kyse on ongelman yksinkertaistamisesta, käsiteltävän datamäärän pienentämisestä ja prosessoinnin nopeuttamisesta. Luonnollisesti värikuvia tallentavien kameroidenkin laatu on alkanut kehittyä riittävän hyväksi vasta viime vuosikymmeninä.
 
-*Bhattacharyyan kerroin* kuvaa kahden jakauman päällekkäisyyttä:
+Nykyään kamerat ovat jo melko hyviä, ja väri tarjoaa hyödyllistä lisäinformaatiota monissa sovelluksissa, joten kannattaa harkita värien hyödyntämistä. On kuitenkin syytä ymmärtää väreihin ja värien havaitsemiseen liittyvät ongelmat.
 
-$$c_B(H_1,H_2) = \sum_i\sqrt{H_1(i)H_2(i)}.$$
+Värien hyödyntämistä kohteiden tunnistamisessa hankaloittaa valaistuksen vaikutus. Varjostukset ja pimeä valaistus laskevat värikylläisyyttä, mikä tekee värisävyn yksilöimisestä vaikeampaa. Tunnistamisessa ei voida nojautua tarkkoihin väriarvoihin, vaan on parempi käyttää värisävyjä, esimerkiksi Lab-väreistä muodostettujen LCh(ab)-värien h-komponenttia. Valaistuksen vaikutus värisävyyn on huomioitava, eli jos sovellusta käytetään monissa erilaisissa ympäristöissä, on syytä kerätä dataa kaikista erilaisista ympäristöistä ja tutkia valonlähteiden vaikutusta.
 
-Tästä voidaan muodostaa etäisyysmitta vähentämällä se ykkösestä. Tätä kutsutaan
-toisinaan *Hellingerin etäisyydeksi*, ja koska summa voidaan ymmärtää
-integraalina ja histogrammit ovat eräänlaisia todennäköisyysjakaumia, tuloksena
-on $0$ kun histogrammit ovat täysin päällekkäisiä ja $1$ kun ne ovat täysin
-erillisiä:
+Värejä voi hyödyntää myös reunojen ja yhtenäisten alueiden tunnistamisessa. Toisinaan kahden aivan eri värisen alueen välinen suhteellinen kirkkaus on lähes sama, jolloin harmaasävykuvassa ei näy reunaa, mutta värisävystä muodostetussa kuvassa näkyy. Yhtenäisiä alueita voi kuvailla värisävyn tai värihistogrammin avulla.
 
-$$d_H(H_1,H2) = 1 - c_B(H_1,H_2).$$
+Värikylläisyyttä voi käyttää kuvaamaan värisävyn epävarmuutta. Jos värikylläisyys on suuri, värisävykin on luultavasti lähellä oikeaa. Jos värikylläisyys on matala, värisävyssä voi olla epävarmuutta, jolloin siihen ei ehkä kannata luottaa niin paljon.
 
-## Informaatioteorian käsitteitä
-
-Tilastolliseen analyysiin ja jakaumiin liittyvät läheisesti *informaatioteorian*
-keskeiset käsitteet. Kuvitellaan, että tehtävänä on *koodata* viesti, joka
-koostuu yksiköistä joiden jakauma tunnetaan. Käytettävä koodi voidaan optimoida
-tämän jakauman mukaan, jolloin viestin pituus voidaan minimoida.
-
-Keskeinen *entropian* käsite mittaa kuinka paljon satunnaismuuttuja sisältää
-informaatiota sen perusteella, kuinka epävarma satunnaismuuttujan $X$ arvo
-on. Tämä riippuu muuttujan jakaumasta:
-
-$$H(X) = -\sum_{x \in X}P_X(x) \log P_X(x).$$
-
-Jos viestin sisältö on täysin ennalta arvattavissa, viesti ei sisällä yhtään
-informaatiota tämän määritelmän mukaan. Vastaavasti viestin sisältämä
-informaatio on maksimaalinen, jos sen sisältö on täysin satunnainen. Tämä ei
-tietysti kuvaa informaation hyödyllisyyttä vaan sitä, kuinka paljon sitä
-voidaan pakata. Täysin satunnaista viestiä ei voida tiivistää yhtään, kun taas
-viesti jonka sisältö voidaan ennustaa jonkin säännön mukaan voidaan pakata
-tiiviisti kuvailemalla kyseinen sääntö.
-
-Ehdollinen entropia liittyy ehdolliseen todennäköisyyteen, ja kuvaa kuinka
-paljon tieto jostakin toisesta muuttujasta lisää ensimmäisen muuttujan
-epävarmuutta:
-
-$$H(X \mid Y) =
-  -\sum_{y \in Y}P_Y(y)\sum{x\ in X}P_X(X \mid Y) \log P_X(X \mid Y).$$
-
-Tämän avulla voidaan muodostaa käsite *mutual information* eli keskinäinen
-informaatio:
-
-$$I(X;Y) = H(X) - H(X \mid Y)$$
-
-joka tarkoittaa sitä, kuinka paljon muuttujan $Y$ arvon tunteminen säästää
-bittejä koodatessa muuttujan $X$ arvoa. Näiden käsitteiden pohjalta voidaan
-muodostaa vielä yksi tapa vertailla jakaumia, nimittäin *Kullback-Leiblerin
-poikkeama* eli *divergenssi*:
-
-$$D_{KL}(P_1 \parallel P_2) =
-  \sum_i\log\left(\frac{P_1(i)}{P_2(i)}\right)P_1(i).$$
-
-Tämä luku mittaa kuinka paljon informaatiota menetetään, kun viestin koodaus
-perustuu jakaumaan $P_2$ oikean jakauman $P_1$ sijaan. Tämä voidaan ymmärtää
-niiden ylimääräisten bittien määränä jotka on siirrettävä sen takia kun
-käytetään *huonoa koodausta*; voidaan ajatella, että käytetty koodi on optimoitu
-jakauman $P_2$ mukaan, mutta todellinen jakauma onkin $P_1$. Jos jakaumat ovat
-lähellä toisiaan, syntyvä virhe on pieni. On huomattava, että $D_{KL}$ ei ole
-symmetrinen; $D_{KL}(P_1 \parallel P_2) \neq D_{KL}(P_2 \parallel P_1)$.
-Toisinaan tämä ongelma ohitetaan käyttämällä etäisyytenä näiden summaa.
-
-Palaamme informaatioteorian käsitteisiin vielä myöhemmissä luvuissa.
-
-## Normaalijakauma
-
-Eräs hyvin monissa tilanteissa vastaan tuleva todennäköisyysjakauma on
-*normaalijakauma* tai Gaussinen jakauma (engl. *normal distribution* tai
-*Gaussian distribution*). Tämä jakauma on tutun kellokäyrän muotoinen, ja siinä
-on keskellä huippu joka tyypillisesti laskee tasaisesti ja nopeasti lähelle
-nollaa. Jakauma kuvaa sitä, että suurin osa alkioista saa lähellä keskiarvoa
-olevia arvoja, ja kauempana keskiarvosta olevat alkiot ovat yhä harvinaisempia.
-
-Syy siihen, miksi normaalijakaumaa käytetään niin paljon ja miksi se esiintyy
-niin monissa eri tilanteissa, löytyy *keskeisestä raja-arvolauseesta* (engl.
-*central limit theorem*). Tämä lause kertoo lyhyesti sanottuna sen, että jos
-lasketaan keskiarvoja useista riippumattomista satunnaismuuttujista jotka voivat
-olla mistä tahansa jakaumasta jolla on hyvin määritelty keskiarvo ja varianssi,
-tällaiset keskiarvot ovat normaalijakautuneita. Tämä tarkoittaa siis sitä, että
-mikä tahansa ilmiö, joka muodostuu useiden eri ilmiöiden yhteisvaikutuksena,
-käyttäytyy normaalijakauman tavoin. Tällaisia ilmiöitä esiintyy kaikkialla
-luonnossa. Esimerkiksi voidaan ajatella, että ihmisen pituus määräytyy useiden
-erilaisten geneettisten ja ympäristötekijöiden yhteisvaikutuksena, joten on
-järkevää olettaa pituuden noudattavan normaalijakaumaa.
-
-Tilastolliset momentit *vinous* ja *huipukkuus* mielletään usein suhteessa
-normaalijakaumaan, joka on symmetrinen ja leviää melko tasaisesti. Jakauma on
-vino, jos sen toinen reuna on 'paksumpi' kuin toinen. Jakauma on huipukas tai
-*kurtoottinen*, jos se on korkeampi ja kapeampi kuin normaalijakauma.
-Normaalijakauman kurtoosi on $3$. Jos muuttujan jakauman kurtoosi on tätä
-suurempi, sanotaan että jakauma on *harva* (engl. *sparse*); tämä tarkoittaa
-sitä, että muuttujan saamat arvot keskittyvät muutamiin yleisimpiin, ja muut
-arvot ovat suhteellisen harvinaisia.
-
-Kuvadatan eräs keskeinen ominaisuus on sen *harvuus*. On osoitettu, että minkä
-tahansa kuvafiltterin (jopa satunnaisen filtterin) tuottamien arvojen jakauma
-on huipukas, eli sen kurtoosi on suurempi kuin $3$. Tämän vuoksi kuvadataa
-kutsutaan *ei-gaussiseksi* eli *harvaksi*. Käytännössä tämä näkyy siinä, että
-esimerkiksi reunafiltterit tuottavat useimmiten lähellä nollaa olevia arvoja, ja
-nollaa suuremmat ja pienemmät arvot ovat suhteellisen harvinaisia. Tämä on
-intuitiivisesti järkevää, sillä tyypillisesti kuvissa on enemmän tasaista
-pintaa kuin reunoja. Ilmiötä voi havainnoida tutkimalla aiemmin muodostettuja
-histogrammeja Gaborin suotimen ja reunanhakusuotimen arvoille.
-
-## Pääkomponenttianalyysi
-
-Suuressa, moniulotteisessa datajoukossa on usein vaihtelua useissa eri suunnissa
-ja eri muuttujien välillä on paljon *korrelaatiota*. Tämä tarkoittaa sitä, että
-tietyt muuttujaparit muuttuvat osin samaan tahtiin, joko vastakkaisiin suuntiin
-(negatiivinen korrelaatio) tai samaan suuntaan (positiivinen korrelaatio). Usein
-on myös niin, että tietty kuvajoukko, jossa esiintyy tiettyjä kohteita rajatusta
-joukosta, ei täytä kuin hyvin pienen osan koko data-avaruudesta.
-
-**Pääkomponenttianalyysi** (engl. *Principal Component Analysis*, PCA) voidaan
-mieltää datan kuvailemiseksi jollakin lailla yksinkertaisemmassa ja datan
-sisäistä rakennetta ja vaihtelua paremmin mukailevassa muodossa. Tarkoituksena
-on poistaa muuttujien välinen korrelaatio tekemällä *kannanvaihto* käyttäen
-*ortogonaalista lineaarista muunnosta* kantavektoreille, jotka mukailevat dataa
-mahdollisimman hyvin. Periaatteessa tuloksena on saman datan esitys käyttämällä
-uusia, keskenään korreloimattomia muuttujia.
-
-Pääkomponenttianalyysi voidaan tehdä usealla eri tavalla, mutta eräs yleinen
-tapa on etsiä datan *kovarianssimatriisin* ominaisarvot ja ominaisvektorit.
-
-Sovellus, jossa pääkomponenttianalyysin avulla tehtyä kannanvaihtoa on käytetty
-menestyksellisesti, on kasvojen tunnistaminen. Käytämme tässä esimerkissä
-datasettiä, joka on saatu Länsi-Australian Yliopiston tutkijan
-[Ajmal Mianin web-sivulta](http://www.csse.uwa.edu.au/~ajmal/databases.html):
-
-![Kasvodatassa esiintyvät henkilöt](images/faces.png)
-
-Datajoukosta on valittu 16 eri henkilöä, ja kustakin henkilöstä on 20
-kasvokuvaa. On syytä huomata, että kuvat on esikäsitelty siten, että kaikki ovat
-samankokoisia, ja kaikissa kuvissa silmät, nenä ja suu ovat suurin piirtein
-samassa kohdassa. Kuvia on myös rajattu siten, että hiukset ja vaatteet eivät
-näy. Kirkkautta ei kuitenkaan ole normalisoitu, ja kuvissa on suuria
-valaistuseroja. PCA löytää kuvista seuraavat pääkomponentit:
-
-![Kasvodatan pääkomponentit](images/eface.png)
-
-Vasemmassa ylänurkassa on kaikkien kuvien keskiarvo, ja muut ovat tärkeimpiä
-pääkomponentteja. Kuten taajuuskomponentit, myös pääkomponentit ovat siis kuvia.
-Kuvien koko on 100x100, joten pääkomponentteja on 10000. Muutamasta tärkeimmästä
-ei voi päätellä kovin paljon, mutta tässä tapauksessa useimmat vaikuttavat
-havaitsevan valaistuseroja. On luultavaa, että jotkin komponentit havaitsevat
-myös henkilöiden välisiä yksilöllisiä eroja. Kun kasvokuvat projisoidaan tähän
-pääkomponenttien muodostamaan uuteen kantaan, eri henkilöt toivottavasti
-kuvautuvat kauaksi toisistaan, kun taas saman henkilön kuvat toivottavasti
-kasaantuvat yhteen. Oheisessa kuvassa on vasemmassa ylänurkassa testihenkilön
-kuva; tämä otos ei sisälly joukkoon, josta pääkomponentit on muodostettu. Muut
-kuvat ovat tämän kuvan 15 lähintä naapuria pääkomponenttien muodostamassa
-avaruudessa. Vaikuttaisi siis siltä, että tämä menetelmä tunnistaa melko
-luotettavasti oikean henkilön 16 henkilön joukosta.
-
-![Lähimmät naapurit kasvoavaruudessa](images/bestfit.png)
-
-On syytä huomata, että sovellus on hyvin rajoitettu. Jos muodostetaan 10000
-pääkomponenttia 320 kuvan perusteella, ei voida olettaa tuloksen olevan kovin
-tarkka. Samoin 16 eri henkilöä on melko pieni joukko. Miljoonien eri ihmisten
-tunnistaminen tällä menetelmällä, erityisesti jos kustakin henkilöstä on vain
-pari kuvaa ehkäpä vielä heikommin asemoituna kuin tässä, olisi paljon
-haastavampaa.
-
-Palaamme vielä pääkomponentteihin myöhemmin kun ryhdymme tutustumaan kohteiden
-tunnistamiseen. Toistetaan tässä vielä se huomio, että kuten taajuuskomponentit,
-myös pääkomponentit sisältävät *globaalia* informaatiota kuvasta. Se soveltuu
-lähinnä sellaisiin tilanteisiin, joissa on kaksiulotteiselta muodoltaan vakio
-kohde tarkasti rajatussa kuvassa.
-
-## Dimension pienentäminen
-
-Olemme jo moneen otteeseen todenneet, että vektoreina tulkitut kuvat sisältävät
-hyvin korkeaulotteista dataa. Myös monissa muissa ongelmissa kohdataan hyvin
-moniulotteisissa avaruuksissa esiintyvää dataa; sanotaan, että tällaisella
-avaruudella on suuri *dimensio*. Myöhemmin hahmontunnistuksen ja koneoppimisen
-yhteydessä mietimme tarkemmin sitä, minkä takia datan suuri dimensio on ongelma;
-tässä vaiheessa tyydymme toteamaan lyhyesti, että mitä suurempi on datan
-dimensio, sitä enemmän tarvitaan esimerkkejä erilaisten dataa analysoivien
-mallien kouluttamiseen.
-
-Aiemmin pohdimme myös sitä, että vaikka data sijoittuu korkeaulotteiseen
-avaruuteen, sillä ei välttämättä ole yhtä monta *vapausastetta* kuin avaruuden
-dimensio sallii. Kunkin datapisteen ympäristössä saattaa siis esiintyä vaihtelua
-vain muutamiin eri suuntiin, ei kaikkiin mahdollisiin suuntiin. Sanotaan, että
-tällainen data sijoittuu *monistoon* eli *manifoldiin*, sileään topologiseen
-avaruuteen joka on *upotettu* (engl. *embedding*) korkeampiulotteisen euklidisen
-avaruuden sisään.
-
-Jos datan sisältämä vaihtelu on matalampiulotteista kuin avaruuden dimensio,
-tuntuisi hyödylliseltä yrittää pienentää dimensiota. Tähän käytetään usein
-nimenomaan PCA:ta. Suurimmat pääkomponentit osoittavat ne suunnat, joissa
-datassa tapahtuu eniten vaihtelua. Voidaan siis valita muutama tärkein
-pääkomponentti ja muodostaa niistä kantavektorit, joiden määrittämään
-matalampiulotteiseen aliavaruuteen data voidaan projisoida. Tämä aliavaruus
-kuvaa kuitenkin edelleen suurimman osan datassa tapahtuvasta vaihtelusta.
-
-PCA toimii toisinaan hyvin dimension pienentämisessä, mutta on pidettävä
-mielessä, että kyseessä on *lineaarinen* muunnos euklidisesta avaruudesta
-toiseen. Jos data sijoittuu hyvin epälineaariseen monistoon, PCA saattaa tuottaa
-harhaanjohtavaa tietoa. Ajatellaan vaikkapa aiempaa esimerkkiä yksinkertaisesta
-monistosta, pallon pinnasta. Jos pinta projisoidaan lineaarisesti tasolle,
-pallon vastakkaisilla puolilla olevat pisteet projisoituvat samaan kohtaan.
-Jäljelle jää siis pyöreä ja litteä levy, jossa pisteiden väliset etäisyydet
-eivät enää vastaa alkuperäisen datan mukaisia etäisyyksiä.
-
-Monistoissa pitäisi käyttää euklidisen, suoraviivaisen etäisyyden sijaan
-*geodesistä*, moniston pintaa pitkin mitattavaa etäisyyttä. Pallopinnan
-tapauksessa pallon vastakkaisilla puolilla olevien pisteiden välinen etäisyys
-pitäisi mitata pallon pintaa pitkin, ei suoraan pallon keskipisteen kautta; jos
-ajatellaan köyden tapaan mutkittelevaa monistoa, saattaa käydä siten että hyvin
-kaukana toisistaan olevat pisteet sattuvat euklidisessa avaruudessa lähelle
-toisiaan. Datan generoinut ilmiö saattaa kuitenkin olla sellainen, että mikään
-luonnollinen vaihtelu ei salli pitää näiden kahden pisteen edustamia objekteja
-samanlaisina. Euklidisen etäisyyden käyttäminen tuottaisi virheellisen tuloksen.
-
-Projektio matalampiulotteiseen avaruuteen pitäisi tehdä levittämällä monisto
-litteäksi, esimerkiksi kuorimalla pallon pinta ja levittämällä se tasaiseksi.
-Nyt taas kaksi vierekkäistä pistettä saattaa päätyä projektion vastakkaisiin
-reunoihin. Onkin tarpeen käyttää datasta graafimuotoista esitystä, jossa
-pisteiden välinen geodesinen etäisyys tallennetaan solmujen välisten kaarien
-painokertoimina.
-
-On olemassa keino pienentää datan dimensiota siten, että pisteiden väliset
-likimääräiset geodesiset etäisyydet säilyvät. Tätä menetelmää kutsutaan
-*diffuusiokartaksi* (engl. *diffusion map*) ja se perustuu juuri graafeihin ja
-datapisteiden välisten geodesisten etäisyyksien arviointiin käyttäen
-*diffuusioetäisyyttä*. Menetelmä perustuu lämmön diffuusion eli leviämisen
-simulointiin käyttäen *satunnaiskävelyä*. Kukin datapiste yhdistetään muutamiin
-lähimpiin datapisteisiin käyttämällä esimerkiksi gaussisesti painotettua
-etäisyyttä euklidisessa avaruudessa. Sitten diffuusioprosessin avulla
-määritellään jokaisen pisteparin välinen etäisyys sen mukaan, kuinka pitkä matka
-on kuljettava graafin kaaria pitkin jotta päästään siirtymään pisteestä toiseen.
-On olemassa menetelmät, joilla diffuusioetäisyyden perusteella saadaan
-muodostettua *metrinen avaruus*, jossa pisteiden välinen geodesinen etäisyys
-säilyy tiettyjen virherajojen puitteissa. Tietysti datapisteitä on oltava
-riittävästi, jotta pystytään arvioimaan luotettavasti kunkin pisteen lähimmät
-naapurit. Muuten graafiin saattaa tulla linkkejä sellaisten solmujen välille,
-jotka ovatkin todellisuudessa eri puolilla monistoa.
-
-Diffuusiokartta on *epälineaarinen* menetelmä dimension pienentämiseksi. Muita
-vastaavia menetelmiä ovat esimerkiksi Kohosen *itseorganisoituvat kartat* ja
-erilaiset *autoencoder*-tyyppiset neuroverkot. Emme tässä yhteydessä mene sen
-tarkemmin näihin menetelmiin, mutta on hyvä ymmärtää että PCA:n tapaiset
-lineaariset menetelmät eivät sovellu kaikkiin tilanteisiin ja että on olemassa
-myös epälineaarisia menetelmiä.
-
-## Satunnaisprojektio
-
-Diffuusiokartat ovat melko monimutkainen menetelmä käytettäväksi satunnaisiin
-kokeiluihin ja testeihin. Ne vaativat myös melko paljon dataa. Myös PCA vaatii
-suurehkon datajoukon pääkomponenttien muodostamiseksi. Jos on tarpeen
-havainnoida nopeasti datan rakennetta, eräs käyttökelpoinen keino on
-*satunnaisprojektio* (engl. *random projection*).
-
-Satunnaisprojektio tarkoittaa datan lineaarimuunnosta käyttäen kantaa, joka
-muodostetaan satunnaisesti valituista vektoreista. Tärkeä tulos nimeltä
-*Johnson-Lindenstrauss lemma* kertoo, että satunnaisprojektio säilyttää
-pisteiden väliset likimääräiset suhteelliset euklidiset etäisyydet. Se myös
-määrää rajat syntyvälle virheelle, joka riippuu datapisteiden määrästä ja datan
-uudesta dimensiosta projektion jälkeen. Voidaan siis valita $\epsilon$, joka
-määrää suurimman sallitun virheen pisteiden välisille etäisyyksille, ja valita
-sitten dimensio joka takaa että virhe säilyy tätä pienempänä. Vastaavasti
-voidaan valita haluttu dimensio, ja arvioida sitten syntyvän virheen suuruus.
-
-Satunnaisprojektiossa käytetty matriisi voidaan muodostaa monella eri tavalla.
-Joka tapauksessa kantavektorit (projektiomatriisin sarakkeet) tulee normalisoida
-yksikkövektoreiksi. Eräs yleinen tapa on valita kantavektorit siten, että niiden
-alkiot ovat *riippumattomia ja gaussisesti jakautuneita*. Tuloksena on *tiheitä*
-matriiseja (suurin osa alkioista poikkeaa nollasta). Toinen tapa on muodostaa
-*harva* matriisi  asettamalla suurin osa alkioista nollaksi, ja pieni osa joko
-$1$:ksi tai $-1$:ksi.
-
-Olkoon matriisi $\mathbf{X}$ datamatriisi, jonka dimensio on $m \times n$.
-Meillä on siis $m$ datavektoria, jotka ovat $n$-ulotteisia. Kun data
-projisoidaan $k$-ulotteiseksi, tarvitaan projektiomatriisi, jonka koko on
-$n \times k$. Olkoon tämä satunnainen matriisi $\mathbf{R}$.
-
-Jos matriisi $R$ ei ole ortogonaalinen, projektio vääristää avaruutta. Käytännön
-kokemukset osoittavat kuitenkin, että satunnaismatriisit ovat hyvin lähellä
-ortogonaalista. Tämä johtunee siitä, että jos $k \ll n$, on olemassa hyvin monia
-tapoja valita $k$ vektoria jotka ovat lähes ortogonaalisia $n$-ulotteisessa
-avaruudessa. Satunnaisesti valitut vektorit voidaan tietysti ortogonalisoida
-käyttäen esimerkiksi Gram-Schmidt -menetelmää, mutta tämä on laskennallisesti
-raskasta ja saattaa aiheuttaa numeerisia ongelmia. Koska vektorien valinta on
-halpa operaatio, voidaan ortogonaalisuutta arvioida esimerkiksi laskemalla
-neliöllinen etäisyys matriisin $\mathbf{R}^T\mathbf{R}$ ja yksikkömatriisin
-välillä, ja valita uusi matriisi, jos etäisyys on suurempi kuin jokin raja-arvo.
-
-## Riippumattomat komponentit*
-
-Toisenlainen näkökulma datan vaihtelun selittämiseen on se, että datan
-ajatellaan sisältävän useita erillisiä komponentteja tai *lähteitä*, jotka ovat
-toisistaan *tilastollisesti riippumattomia*. Yksinkertainen esimerkki on
-audiosignaali, jossa on kaksi erillistä äänilähdettä, kuten esimerkiksi kaksi
-ihmistä jotka puhuvat yhtä aikaa toistensa päälle kuuntelematta toisiaan,
-jolloin nämä kaksi puhesignaalia ovat riippumattomia. Tyypillinen esimerkki on
-myös aivosähkökäyrä, jossa kunkin elektrodin havaintoihin sekoittuu signaaleja
-monilta eri aivoalueilta. Kuvissa taas on aina hyvin paljon erilaisia itsenäisiä
-komponentteja, toisin sanoen kohteita ja niiden osia. Näistä kahdesta
-jälkimmäisestä esimerkistä on kuitenkin huomattava, että riippumattomuusoletus
-ei täysin päde. Eri aivoalueiden signaalit korreloivat hieman keskenään, samoin
-kuvissa olevat kohteet ja niiden osat.
-
-Menetelmä, jolla datasta voidaan löytää riippumattomia komponentteja, on
-nimeltään *independent component analysis* (ICA). Se perustuu **tilastollisen
-riippumattomuuden** *maksimointiin* arvioitujen komponenttien välillä. Koska
-kyseessä on optimointitehtävä, komponenttien välillä olevat vähäiset
-riippuvuudet eivät tuota ongelmia. Tehtävän ratkaisemiseen on olemassa monia
-erilaisia menetelmiä, ja yksi käytetyimmistä on suomalaisten tutkijoiden (mm.
-Jarmo Hurri ja Aapo Hyvärinen) kehittämä FastICA.
-
-ICA-menetelmässä oletetaan, että tutkittava data on syntynyt *lineaarisena*
-sekoituksena joukosta *piileviä muuttujia* (engl. *latent variables*) jotka ovat
-keskenään *tilastollisesti riippumattomia* ja *ei-gaussisesti* jakautuneita;
-toisin sanoen, näiden komponenttien jakauma on *harvempi* kuin normaalijakauma,
-eli yleisimmät arvot esiintyvät *useammin* kuin normaalijakauma edellyttäisi.
-Näitä piileviä muuttujia kutsutaan riippumattomiksi komponenteiksi, lähteiksi
-tai faktoreiksi, ja ICA-menetelmällä nämä voidaan löytää maksimoimalla
-riippumattomuus esimerkiksi iteratiivisella menetelmällä kuten FastICA.
-Löydetyt komponentit eivät siis välttämättä ole keskenään täysin riippumattomia,
-vaan jonkinlainen maksimi joka datasta löydetään. Menetelmä muistuttaa hieman
-pääkomponenttianalyysiä ja faktorianalyysiä, mutta on niitä tehokkaampi.
-Perusmenetelmässä komponenttien sekoitus on *lineaarinen*, mutta on mahdollista
-käyttää myös epälineaarisia sekoitusfunktioita ja laajentaa siten menetelmän
-käyttömahdollisuuksia.
-
-Hyvärinen, Hurri ja Hoyer ovat kirjoittaneet vapaasti verkosta ladattavan kirjan
-[Natural Image Statistics](http://www.naturalimagestatistics.net) jossa
-tutkitaan kuvia tilastollisesti muun muassa ICA:n avulla. Kirjassa kerrotaan
-esimerkiksi, että pienien kuvanpalasten riippumattomat komponentit ovat
-erilaisia *reunafilttereitä*, jotka muistuttavat Gaborin filttereitä. Samoin
-havaitaan, että löydetyt komponentit eivät ole täysin riippumattomia.
-
-## Tehtäviä
-
-1) Kokeile tilastollisia momentteja eri kuvilla ja erikokoisilla ympäristöillä.
-   Kuvaile tuloksia. Millä tavoin operaatioita voisi hyödyntää?
-2) Kokeile sekä kovarianssia että korrelaatiota erikokoisilla ympäristöillä.
-   Kuvaile tuloksia ja yritä selittää, mitä kovarianssi ja korrelaatio näissä
-   esimerkeissä mittaavat. Mitä eroa niillä on?
-3) Tutki eri kuvien jakaumia. Kokeile myös suotimia. Kuvaile ja yritä selittää
-   havaintoja.
-4) BONUS: Kerää tai etsi netistä jotakin sinua kiinnostavaa kuvadataa, muokkaa
-   sitä tarvittaessa, ja kokeile pääkomponenttianalyysiä (koodi kurssirepossa).
-   Raportoi havainnoista ja tuloksista. Ei pakollinen, sillä vaatii
-   ohjelmistojen asentamista omalle koneelle.
+Lopuksi lienee syytä todeta, että kaikki tämä esitetty teoria pohjautuu viime kädessä ihmisen värinäköön, ja värien standardisointi pyrkii poistamaan epävarmuustekijät nimenomaan ihmishavainnoijan kannalta. Konenäköjärjestelmissä ei kuitenkaan välttämättä ole tarpeen pitäytyä ihmisen rajoittuneessa näkökyvyssä tai värinäössä. Nykyaikaiset kamerat pystyvät aistimaan ja erottelemaan värejä tarvittaessa huomattavasti ihmisiä tarkemmin ja laajemmalla spektrillä. Voidaan myös käyttää erityisiä spektrikameroita, jotka eivät tukeudu värin näytteistämiseen spektrivastefunktioiden avulla, vaan näytteistävät suoraan valon intensiteettiä lukuisilla kapeilla taajuuskaistoilla.

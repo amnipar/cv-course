@@ -1,6 +1,6 @@
 ---
-code:   TIES411
 title:  Spektrikuvien analysointi
+title-prefix:   TIES411
 lang: fi-FI
 ---
 

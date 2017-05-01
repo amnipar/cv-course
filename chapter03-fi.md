@@ -1,8 +1,6 @@
----
-code:   TIES411
-title:  Kuvien taajuusanalyysi
-lang: fi-FI
----
+% TIES411 - Kuvien taajuusanalyysi
+% Matti Eskelinen, Ville Tirronen, Tuomo Rossi
+% lang: fi-FI
 
 # Kuvien taajuusanalyysi
 
