@@ -18,3 +18,6 @@ Nämä ovat kurssiin sisältyviä käytännön harjoituksia, joissa kokeillaan t
 * [Tutoriaali 5](./tutorial05.fi): reunojen etsiminen
 * [Tutoriaali 6](./tutorial06.fi): segmentointi
 * [Tutoriaali 7](./tutorial07.fi): kuvapyramidit ja skaala-avaruus
+* [Tutoriaali 8](./tutorial08.fi): pistepiirteet
+* [Tutoriaali 9](./tutorial09.fi): geometriset muunnokset
+* [Tutoriaali 10](./tutorial10.fi): liikkeen analysointi ja optinen vuo
