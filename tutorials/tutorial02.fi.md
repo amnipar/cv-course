@@ -1,8 +1,11 @@
-% TIES411 Konenäkö ja kuva-analyysi
-% Tuomo Rossi ja Matti Eskelinen
-% Kevät 2017
-
-# Tutoriaali 2
+---
+title: Tutoriaali 2
+author: Matti Eskelinen
+date: 14.1.2018
+title-prefix: TIES411
+lang: fi
+css: style.css
+---
 
 Ensimmäisen tutoriaalin jälkeen olemme saaneet Docker-ympäristön käyttöön ja saamme suoritettua siinä OpenCV-kirjastoa hyödyntävää koodia. Tällä kerralla ryhdymme opettelemaan erilaisten perusoperaatioiden käyttämistä kuvien suodattamiseen ja yksinkertaiseen muokkaamiseen.
 

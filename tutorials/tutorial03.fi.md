@@ -1,8 +1,11 @@
-% TIES411 Konenäkö ja kuva-analyysi
-% Tuomo Rossi ja Matti Eskelinen
-% Kevät 2017
-
-# Tutoriaali 3
+---
+title: Tutoriaali 3
+author: Matti Eskelinen
+date: 14.1.2018
+title-prefix: TIES411
+lang: fi
+css: style.css
+---
 
 Tällä kertaa kokeilemme Fourier-muunnoksen laskemista kuvalle, tutkimme tuloksia ja kokeilemme erilaisten operaatioiden vaikutuksia lopputulokseen.
 
