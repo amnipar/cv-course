@@ -1,6 +1,11 @@
-% TIES411 - Kuvien suodatus ja muokkaus
-% Matti Eskelinen, Ville Tirronen, Tuomo Rossi
-% lang: fi-FI
+---
+title: Luku 3 - Kuvien suodatus ja muokkaus
+author: Matti Eskelinen
+date: 8.2.2018
+title-prefix: TIES411
+lang: fi
+css: style.css
+---
 
 # Kuvien suodatus ja muokkaus
 
@@ -32,13 +37,14 @@ vasteen $R(f(t+\delta))$. Tässä yhteydessä on syytä huomata, että systeemis
 esiintyvä viive ei ole merkki aikariippuvuudesta, ellei viiveen suuruus riipu
 ajanhetkestä.
 
-Lineaarisuus puolestaan tarkoittaa sitä, että systeemi toteuttaa
-*superpositiona* ja *skaalautuvuutena* tunnetut ominaisuudet. **Superpositio**
-tarkoittaa sitä, että kahden syötteen summan tuottama vaste on sama kuin kahden
-erillisen syötteen tuottamien vasteiden summa: $R(f+g) = R(f) + R(g)$.
-**Skaalautuvuus** puolestaan tarkoittaa sitä, että nollasyötteen vaste on nolla,
-ja skaalatun syötteen vaste on sama kuin skaalaamattoman syötteen skaalattu
-vaste: $R(kf) = kR(f)$.
+Lineaarisuus tarkoittaa sitä, että systeemi toteuttaa *superpositiona* ja
+*skaalautuvuutena* tunnetut ominaisuudet. **Superpositio** tarkoittaa sitä, että
+kahden syötteen summan tuottama vaste on sama kuin kahden erillisen syötteen
+tuottamien vasteiden summa: $R(f+g) = R(f) + R(g)$. **Skaalautuvuus** puolestaan
+tarkoittaa sitä, että nollasyötteen vaste on nolla, ja skaalatun syötteen vaste
+on sama kuin skaalaamattoman syötteen skaalattu vaste: $R(kf) = kR(f)$. Nämä
+ovat siis vastaavat ominaisuudet kuin muillakin lineaarisilla systeemeillä:
+asioita voidaan laskea yhteen ja kertoa skalaarilla.
 
 **Siirtoriippumattomuus** tai siirtoinvarianssi tarkoittaa sitä, että tilan
 suhteen siirretty syöte tuottaa vastaavalla tavalla siirtyneen vasteen: jos
@@ -66,41 +72,50 @@ jonkinlaisen kirkkaan läiskän.
 
 Nämä ominaisuudet täyttävät järjestelmät tuottavat helposti ennustettavia
 vasteita syötteisiin, mikä tekee järjestelmistä jossakin mielessä helppoja
-analysoida. Useimmat kuvantamisjärjestelmät käyttäytyvät tällä tavoin.
+analysoida. Useimmat kuvantamisjärjestelmät käyttäytyvät tällä tavoin. Tämän
+kurssin yhteydessä ei jouduta sen syvällisemmin pohtimaan näitä ominaisuuksia,
+mutta on hyvä olla tietoinen siitä, että tällaisten ominaisuuksien *oletetaan*
+olevan voimassa.
 
 ## Impulssivaste
 
 Eräs lineaaristen, aika- ja siirtoriippumattomien järjestelmien keskeinen
 ominaisuus on se, että niiden käyttäytymistä voidaan kuvata *impulssivasteen*
-avulla. Impulssivaste on funktio, joka kuvaa vastetta jonka järjestelmä tuottaa
-kun se saa syötteenä impulssin eli lyhyen signaalin. Äänisignaalien tapauksessa
-impulssi voisi olla hyvin lyhyt piipahdus, kun taas kuvasignaalien tapauksessa
-impulssi voisi olla hyvin pieni ja kirkas valopiste.
+avulla. Impulssivaste on funktio, joka kuvaa järjestelmän tuottamaa vastetta
+syötteenä saamaansa *impulssiin* eli tietynlaiseen lyhyeen signaaliin.
+Äänisignaalien tapauksessa impulssi voisi olla hyvin lyhyt piipahdus, kun taas
+kuvasignaalien tapauksessa impulssi voisi olla hyvin pieni ja kirkas valopiste.
 
-Millainen impulssin pitäisi olla? Jotta järjestelmän vastetta voitaisiin mitata
+Millainen impulssin pitäisi olla? Jotta järjestelmän vastetta voidaan mitata
 tarkasti, sen pitäisi olla ajan suhteen mahdollisimman lyhyt ja tilan suhteen
-mahdollisimman pieni, mutta sen voimakkuuden tulisi olla vakio.  Usein puhutaan
-*yksikköimpulssista*.
+mahdollisimman pieni, mutta sen voimakkuuden tulisi olla vakio. Usein puhutaan
+*yksikköimpulssista*, jonka voimakkuus on ykkönen jollakin asteikolla.
 
 Määritellään hieman kummallisen oloinen matemaattinen olio nimeltä
 *Diracin delta* $\delta$. Tätä kutsutaan toisinaan myös *delta-funktioksi*,
 vaikka se ei tarkkaan ottaen ole funktio perinteisessä mielessä. Se määritellään
 intuitiivisesti funktion kaltaisena oliona, jonka arvo on $0$ koko
 reaaliakselilla lukuunottamatta origoa, ja jonka integraali yli koko
-reaaliakselin on $1$. Pohtimalla asiaa hetken voidaan vakuuttua siitä, että on
-hieman vaikeaa sanoa, mikä funktion arvon sitten pitäisi olla origossa.
+reaaliakselin on $1$.
 
-Diracin delta voidaan mieltää raja-arvojakaumana, kun tarkastellaan jonoa
-normaalijakaumia eli Gaussisia jakaumia, joiden *keskiarvo* on $0$ ja joiden
-*keskihajonta* lähestyy arvoa $0$:
+Pohtimalla asiaa hetken voidaan vakuuttua siitä, että on hieman vaikeaa sanoa,
+mikä funktion arvon pitäisi olla origossa. Vain yhdessä pisteessä nollasta
+poikkeavia arvoja saavan funktion integraali ei mitenkään voi olla $1$.
+
+Integraali $1$ tuo mieleen todennäköisyysjakauman. Diracin delta voidaankin
+mieltää raja-arvojakaumana, kun tarkastellaan jonoa normaalijakaumia eli
+Gaussisia jakaumia, joiden *keskiarvo* on $0$ ja joiden *keskihajonta* lähestyy
+arvoa $0$:
 
 $$\delta(x) = \frac{1}{\sigma\sqrt{\pi}}e^{-\frac{x^2}{\sigma^2}},
   \sigma \rightarrow 0.$$
 
 Koska kyseessä on todennäköisyysjakauma, sen integraali yli koko reaaliakselin
-on $1$. Intuitiivisesti ajatellen arvo $\delta(0)$ lähestyy ääretöntä.
-Diracin $\delta$ on siis järkeenkäypä olio lähinnä silloin, kun se esiintyy
-integraalin sisällä, jolloin siitä voidaan lausua jotakin hyvin määriteltyä.
+on $1$. Intuitiivisesti ajatellen arvo $\delta(0)$ lähestyy ääretöntä. Kyseessä
+ei kuitenkaan ole mikään konkreettinen jakauma, vaan edellä kuvatun jonon raja-
+arvo. Diracin $\delta$ on siis järkeenkäypä olio lähinnä silloin, kun se
+esiintyy integraalin sisällä, jolloin siitä voidaan lausua jotakin hyvin
+määriteltyä.
 
 Kuvantamisjärjestelmistä puhuttaessa impulssi on siis äärettömän lyhyt,
 äärettömän pieni ja äärettömän kirkas valopulssi, jonka voimakkuus tietyllä
@@ -123,18 +138,24 @@ $$(f \ast g)(x) = \int_{-\infty}^{\infty}f(y)g(x-y)dy.$$
 Konvoluutiota $(f \ast g)(x)$ voidaan siis ajatella *painotettuna keskiarvona*
 funktiosta $f(y)$, jossa painokertoimet määräytyvät funktion $g(-y)$ mukaan.
 Konvoluution soveltamista tiettyihin funktioihin kutsutaan *konvolvoinniksi*.
-Tässä tapauksessa voidaan sanoa, että funktiota $f$ konvolvoidaan funktiolla
+Tässä tapauksessa sanotaan, että funktiota $f$ konvolvoidaan funktiolla
 $g$. Konvoluutio on *kommutatiivinen*, joten sama tulos saadaan jos funktiota
-$g$ konvolvoidaan funktiolla $f$.
+$g$ konvolvoidaan funktiolla $f$. Tyypillisesti konvoluutiota käytetään
+kuitenkin siten, että toinen funktioista on ikään kuin operaattori, jonka avulla
+toiselle funktiolle tehdään jokin muunnos. Tämän takia operaattorina toimiva
+funktio asetetaan tyypillisesti jälkimmäiseksi lausekkeessa, ja sanotaan, että
+operaattorilla konvolvoidaan tutkittavaa funktiota.
 
-Konvoluutio kuvaa edellä määriteltyjen lineaaristen aika- ja
-siirtoriippumattomien järjestelmien vasteita tunnettuihin syötteisiin. Tällaisen
-järjestelmän vaste on yhtä kuin syöte konvolvoituna järjestelmän
-yksikköimpulssivasteella.
+Konvoluution rooli signaalinkäsittelyssä on, että se kuvaa edellä määriteltyjen
+lineaaristen aika- ja siirtoriippumattomien järjestelmien vasteita tunnettuihin
+syötteisiin. Tällaisen järjestelmän tuottama vaste on yhtä kuin syöte
+konvolvoituna järjestelmän yksikköimpulssivasteella. Erilaisia suodattimia ja
+muita signaalinkäsittelyjärjestelmiä mallinnetaankin tyypillisesti niiden
+yksikköimpulssivastetta kuvaavina funktioina.
 
 Myöhemmin palaamme vielä impulssivasteeseen kun pohdimme signaalien
-*taajuustason* analyysiä ja Fourier-muunnosta. Käy ilmi, että vastaava
-tarkastelu yksinkertaistuu taajuustasossa.
+*taajuustason* analyysiä ja Fourier-muunnosta. Käy ilmi, että vasteen
+laskeminen yksinkertaistuu huomattavasti taajuustasossa.
 
 ## Diskreetti konvoluutio ja suodatus
 
@@ -309,7 +330,8 @@ konvoluutio, käytetään toisinaan merkintää $f\;\ast\ast\;g$. Tietyt suotime
 kuten esimerkiksi Gaussinen suodin, ovat *separoituvia*: tämä tarkoittaa sitä,
 että ne voidaan jakaa kahdeksi yksiulotteiseksi suotimeksi, jolloin kaksi
 yksiulotteista konvoluutiota, yksi riveittäin ja yksi sarakkeittain, tuottaa
-saman tuloksen kuin yksi kaksiulotteinen konvoluutio.
+saman tuloksen kuin yksi kaksiulotteinen konvoluutio. Tämä vähentää
+huomattavasti tarvittavien laskutoimituksien määrää.
 
 ### Tehtävä 3.2 {-}
 
@@ -359,15 +381,15 @@ seuraavaksi.
 ## Binäärikuvien morfologiset operaatiot
 
 Nyt määrittelemme konvoluution avulla *morfologisia operaatioita*. Ne ovat
-eräänlaisia filttereitä, jotka muuttavat binäärikuvan muotoa. Niitä tarvitaan
+eräänlaisia suotimia, jotka muuttavat binäärikuvan muotoa. Niitä tarvitaan
 usein kynnystyksen jälkeen löydettyjen kappaleiden siistimiseen, esimerkiksi
 pienien reikien ja rakojen paikkaamiseen tai tukkeutuneiden reikien avaamiseen.
 
-Morfologiset operaatiot perustuvat *muokkauselementtiin* (sructuring element).
-Se on eräänlainen binäärinen maski, tyypillisesti paljon tutkittavaa kappaletta
-pienempi, jota liikutetaan kappaleen yli. Kappaleen rakennetta muokataan sen
-perusteella, kuinka elementti sopii kappaleen sisälle. Tyypillisiä elementtejä
-ovat eri muotoiset ja kokoiset laatikot ja ellipsit. Seuraavassa on
+Morfologiset operaatiot perustuvat *muokkauselementtiin* (engl. *structuring
+element*). Se on eräänlainen binäärinen maski, tyypillisesti paljon tutkittavaa
+kappaletta pienempi, jota liikutetaan kappaleen yli. Kappaleen rakennetta
+muokataan sen perusteella, kuinka elementti sopii kappaleen sisälle. Tyypillisiä
+elementtejä ovat eri muotoiset ja kokoiset laatikot ja ellipsit. Seuraavassa on
 yksinkertainen esimerkki:
 
 $$s = \left[\begin{array}{ccc}  0 &  1 &  0 \\

@@ -1,9 +1,9 @@
 ---
-title: Värit ja valon aistiminen
-author: Matti Eskelinen, Ville Tirronen, Tuomo Rossi
-date: 22.2.2017
+title: Luku 5 - Värit ja valon aistiminen
+author: Matti Eskelinen
+date: 18.2.2018
 title-prefix: TIES411
-lang: fi-FI
+lang: fi
 css: style.css
 ---
 
@@ -24,7 +24,7 @@ tutkittaessa.
 ## Mitä väri on?
 
 Mitään sellaista asiaa kuin väri, sellaisena kuin ihmiset sen ymmärtävät, ei
-oikeastaan ole olemassa luonnossa. Väri on jotakin mitä me ihmiset liitämme
+oikeastaan ole olemassa luonnossa. Väri on jotakin, mitä me ihmiset liitämme
 ympärillä olevaan maailmaan ja siinä oleviin kohteisiin, ja jonka me koemme
 yksilöllisillä tavoilla. Väri on ihmisen vaste tietystä aallonpituusjakaumasta
 koostuvaan valoon, ja valo taas on vain sähkömagneettista säteilyä kaiken muun
@@ -48,7 +48,7 @@ aallonpituuksista, ja eri aallonpituuksien hallitsevuus valossa vaihtelee; juuri
 tämä aallonpituuksien yhdistelmä ja sen koostumuksen vaihtelu synnytää erilaiset
 väriaistimukset.
 
-![Ihmiselle näkyvä sähkömagneettisen spektrin osa. Lähde: Wikimedia[^spectrum].\label{fig:spectrum}](images/640px-Linear_visible_spectrum.svg.png)
+![Ihmisen havaitsema sähkömagneettisen spektrin osa. Lähde: Wikimedia[^spectrum].\label{fig:spectrum}](images/640px-Linear_visible_spectrum.svg.png)
 
 [^spectrum]: https://commons.wikimedia.org/wiki/File:Linear_visible_spectrum.svg
 
@@ -138,8 +138,8 @@ sauvoiksi ja tapeiksi. Niiden tehtävät ovat erilaiset. Sauvasoluissa on valoll
 herkkää proteiinia, ja ne aistivat valon kirkkautta. Sauvasoluja on
 huomattavasti enemmän kuin tappeja, ja ne ovat keskittyneet verkkokalvon
 reunoille; keskellä niitä ei ole ollenkaan. Sauvat vastaavat ääreisnäöstä,
-liikkeen havainnoinnista ja pimeänäöstä (scotopic vision). Vastakohta tälle on
-päivänäkö (photopic vision).
+liikkeen havainnoinnista ja pimeänäöstä (engl. *scotopic vision*). Vastakohta
+tälle on päivänäkö (engl. *photopic vision*).
 
 Päivänäöstä ja värinäöstä huolehtivat tappisolut, joita on kolmenlaisia. Tapit
 ovat keskittyneet näkökentän keskikohtaan, reunoilla niitä on hyvin vähän. Tapit
@@ -190,7 +190,7 @@ värisävyä, mutta nämä värit eivät ole jakautuneet tasaisesti näkyvän va
 spektrille. Tietyillä spektrin osilla ihmisen erottelukyky on suurempi kuin
 toisaalla. Tämä epätasainen jakauma johtuu pääasiassa siitä, että aivojen tapa
 koodata värejä on epälineaarinen, joten vaikka värit aistitaan lineaarisesti,
-nittä käsitellään ja ne mielletään epälineaarisesti. Tämän takia tietokoneissa
+niitä käsitellään ja ne mielletään epälineaarisesti. Tämän takia tietokoneissa
 käytetään 16 miljoonaa väriä: näyttölaitteissa värit ovat jakautuneet tasaisesti
 koko spektrille, joten värejä tarvitaan enemmäin kuin 7 miljoonaa jotta
 ihmishavainnoija ei havaitsisi hyppäyksiä värisävyjen välillä.
@@ -216,8 +216,8 @@ lämpöisen kappaleen lähettämää valoa, joka vastaavasti on sinertävän val
 Värien lämpötilalla tarkoitetaankin sen mustan kappaleen lämpötilaa, jonka
 hehkun valaisemana värien voidaan ajatella syntyneen.
 
-Standardihavainnoijia on kahdenlaisia, jotka vastaavat ihmisen näköä 2 asteen ja
-10 asteen näkökentällä. Näistä jatkossa enemmän.
+Standardihavainnoijia on kahdenlaisia, ja ne vastaavat ihmisen näköhavaintoa 2
+asteen ja 10 asteen näkökentällä. Näistä jatkossa enemmän.
 
 Edellä selvitettiin, kuinka väri on sähkömagneettistä säteilyä tietyllä
 aallonpituusalueella. Väri voidaankin pelkistää spektrijakaumafunktioksi (engl.
@@ -291,7 +291,7 @@ kolmiulotteisessa tristimulus-avaruudessa, joka on siis lineaarialgebran termein
 aliavaruus, tietoa luonnollisesti häviää. Tämä tarkoittaa, että yksi
 viittausvektori vastaa useita todellisia spektrijakaumia.
 
-Tätä ilmiötä kutsutaan nimellä metamerismi, ja kahta eriä väriä eli
+Tätä ilmiötä kutsutaan nimellä metamerismi, ja kahta eri väriä, eli
 spektrijakaumaa, joilla on sama viittausvektori, kutsutaan metameeriseksi
 pariksi. Tämä ilmiö on varsin merkittävä ongelma. Käytännössä ilmiö esiintyy
 esimerkiksi silloin, kun kaksi vaatekappaletta, jotka näyttävät tietyssä
@@ -382,13 +382,15 @@ kunkin integraali näkyvän valon spektrin yli on $1$. Todellisten
 vastefunktioiden skaalat ovat hyvin erilaiset, sillä eri tappisolujen
 herkkyydessä on suuria eroja.
 
-XYZ-värimallia käytetään värien mittauslaitteissa, kuten edellä mainituissa spektrofotometreissä. Useat ammattilaisten käyttämät ohjelmistot käyttävät XYZ-väriavaruutta.
+XYZ-värimallia käytetään värien mittauslaitteissa, kuten edellä mainituissa
+spektrofotometreissä. Useat ammattilaisten käyttämät ohjelmistot käyttävät XYZ-
+väriavaruutta.
 
 ### CIE:n xy-väridiagrammi
 
 Jos ajatellaan valon kirkkaudesta eli luminanssista (engl. *luminance*)
 riippumattomia värin ominaispiirteitä, puhutaan värikkyydestä (engl.
-*chromaticity*). Tätä kuvaavatt toisaalta värisävy, kuten esimerkiksi spektrin
+*chromaticity*). Tätä kuvaavat toisaalta värisävy, kuten esimerkiksi spektrin
 nimetyt värisävyt (punainen, oranssi, keltainen, vihreä, sininen ja violetti),
 ja toisaalta värin puhtaus tai värikylläisyys eli saturaatio (engl.
 *saturation*). Näistä muodostuu se värien kirjo, eli teknisesti ilmaistuna
@@ -402,11 +404,13 @@ standardihavainnoijaa. Diagrammi siis esittää standardoidun ihmishavainnoijan
 näkemää värien kirjoa tappisolujen vasteen mielessä.
 
 Muistamme, että XYZ-koordinaateissa Y-koordinaatti sisältää pelkkää
-valoisuustietoa. Väridiagrammi muodostetaankin tutkimalla kolmiulotteisen XYZ-avaruuden tasoa $X + Y + Z = 1$. Koska $X$, $Y$ ja $Z$ ovat positiivisia,
-tämä taso on kolmio jota rajoittavat koordinaattiakselit ja jonka kärkipisteet
-ovat akseleilla ykkösen kohdalla. Värikkyyskoordinaatit muodostuvat projektiona tähän tasoon siten, että $x = \frac{X}{X+Y+Z}$ ja $y =
-\frac{Y}{X+Y+Z}$. Voidaan määritellä myös $z = \frac{Z}{X+Y+Z}$, mutta tämä on
-redundantti tekijä, sillä se saadaan esitettyä x:n ja y:n avulla: $z = 1-x-y$.
+valoisuustietoa. Väridiagrammi muodostetaankin tutkimalla kolmiulotteisen XYZ-
+avaruuden tasoa $X + Y + Z = 1$. Koska $X$, $Y$ ja $Z$ ovat positiivisia, tämä
+taso on kolmio jota rajoittavat koordinaattiakselit ja jonka kärkipisteet ovat
+akseleilla ykkösen kohdalla. Värikkyyskoordinaatit muodostuvat projektiona tähän
+tasoon siten, että $x = \frac{X}{X+Y+Z}$ ja $y = \frac{Y}{X+Y+Z}$. Voidaan
+määritellä myös $z = \frac{Z}{X+Y+Z}$, mutta tämä on redundantti tekijä, sillä
+se saadaan esitettyä x:n ja y:n avulla: $z = 1-x-y$.
 
 Kun näkyvän spektrin monokromaattinen, eli vain yhtä aallonpituutta sisältävä,
 valo kuvitellaan funktiona aallonpituuden suhteen ja projisoidaan xy-tasoon,
@@ -436,7 +440,7 @@ voida ottaa negatiivista määrää, joten väriavaruus ei täysin vastaa
 lineaariavaruutta.
 
 Kuvion keskellä kohdassa $(\frac{1}{3},\frac{1}{3})$ on niin sanottu valkoinen
-eli epäkromaattinen piste. Tästä pisteestä kuvion reuna kohti värin saturaatio
+eli epäkromaattinen piste. Tästä pisteestä kuvion reunaa kohti värin saturaatio
 eli värikylläisyys lisääntyy. Värikylläisyys tarkoittaa sitä, kuinka hallitseva
 värisävy on kyseisessä värissä. Värikylläisyyden vähentyessä harmaasävyjen osuus
 lisääntyy. Värien vastavärit löytyvät piirtämällä suora valkoisen pisteen
@@ -752,19 +756,25 @@ vastaavat ellipsit olisivat huomattavasti ympyrämäisempiä.
 
 Toisinaan näkee mainittavan värimallit LCH ja LSH. Kuten edellä mainittiin, ne
 ovat HSB:n sukulaisia, mutta ne muodostetaan suoraan XYZ-värimallista tai sen
-johdannaisista. LCH tulee sanoista Luminance, Chroma, Hue ja LSH sanoista
-Luminance, Saturation, Hue. Ne toimivat samankaltaisesti kuin HSB. Ne tarjoavat
-intuitiivisen lähestymistavan XYZ-, Lab- ja Luv-värimalleihin, mutta
+johdannaisista. LCH tulee sanoista *Luminance*, *Chroma*, *Hue* ja LSH sanoista
+*Luminance*, *Saturation*, *Hue*. Ne toimivat samankaltaisesti kuin HSB. Ne
+tarjoavat intuitiivisen lähestymistavan XYZ-, Lab- ja Luv-värimalleihin, mutta
 niiden käyttö on melko marginaalista.
 
-Hyödyllisin värimalli Lab:n tai Luv:n kanssa käytettäväksi lienee LCH, tai LCh, LCh(ab) tai LCh(uv), kuten se toisinaan myös esitetään. Ne ovat sylinteriprojektioita Lab- ja Luv-väreistä. Näissä malleissa L-komponentti on täysin sama. C-komponentti on Chroma, eli suhteellinen värikylläisyys. Se lasketaan yksinkertaisesti etäisyytenä valkoisesta pisteestä:
+Hyödyllisin värimalli Lab:n tai Luv:n kanssa käytettäväksi lienee LCH, tai LCh,
+LCh(ab) tai LCh(uv), kuten se toisinaan myös esitetään. Ne ovat
+sylinteriprojektioita Lab- ja Luv-väreistä. Näissä malleissa L-komponentti on
+täysin sama. C-komponentti on Chroma, eli suhteellinen värikylläisyys. Se
+lasketaan yksinkertaisesti etäisyytenä valkoisesta pisteestä:
 
 $$\begin{aligned}
   C_{ab} &= \sqrt{a^2 + b^2} \\
   C_{uv} &= \sqrt{u^2 + v^2}
   \end{aligned}$$
 
-H-komponentti, $h(ab)$, $h(uv)$ tai joskus jopa $h^{\circ}(ab)$ tarkoittaa värisävyä esitettynä kulmana väriympyrällä, ja se lasketaan käyttäen arkustangenttia:
+H-komponentti, $h(ab)$, $h(uv)$ tai joskus jopa $h^{\circ}(ab)$ tarkoittaa
+värisävyä esitettynä kulmana väriympyrällä, ja se lasketaan käyttäen
+arkustangenttia:
 
 $$\begin{aligned}
   h(ab) &= \arctan\frac{b}{a} \\
@@ -781,8 +791,8 @@ hyödynnetään TV-tekniikassa.
 
 Tähän ryhmään kuuluvat YCC (Luminance Y, ja kaksi Chrominance-komponenttia) ja
 suuret standardit YIQ, jota käytetään amerikkalaisessa NTSC-
-televisiostandardissa ja YUV, jota käytetään eurooppalaisessa PAL-standardissa.
-I tulee sanasta Inphase ja Q sanasta Quadrature. Lisäksi YCbCr on
+televisiostandardissa, ja YUV, jota käytetään eurooppalaisessa PAL-standardissa.
+I tulee sanasta *Inphase* ja Q sanasta *Quadrature*. Lisäksi YCbCr on
 digitaalitelevision standardi, kun taas NTSC ja PAL ovat analogisia.
 
 YIQ ja YIV ovat lineaarisia, ja kaikki ovat laiteriippuvaisia ja
@@ -790,14 +800,45 @@ epäintuitiivisia, mutta tietenkin laajalti käytössä.
 
 ## Värien hyödyntäminen konenäkösovelluksissa
 
-Perinteisesti konenäkösovelluksissa on käytetty harmaasävykuvia ja pyrittu tunnistamaan kohteita muodoa ja reunojen avulla. Osittain kyse on ongelman yksinkertaistamisesta, käsiteltävän datamäärän pienentämisestä ja prosessoinnin nopeuttamisesta. Luonnollisesti värikuvia tallentavien kameroidenkin laatu on alkanut kehittyä riittävän hyväksi vasta viime vuosikymmeninä.
+Perinteisesti konenäkösovelluksissa on käytetty harmaasävykuvia ja pyritty
+tunnistamaan kohteita muodoa ja reunojen avulla. Osittain kyse on ongelman
+yksinkertaistamisesta, käsiteltävän datamäärän pienentämisestä ja prosessoinnin
+nopeuttamisesta. Luonnollisesti värikuvia tallentavien kameroidenkin laatu on
+alkanut kehittyä riittävän hyväksi vasta viime vuosikymmeninä.
 
-Nykyään kamerat ovat jo melko hyviä, ja väri tarjoaa hyödyllistä lisäinformaatiota monissa sovelluksissa, joten kannattaa harkita värien hyödyntämistä. On kuitenkin syytä ymmärtää väreihin ja värien havaitsemiseen liittyvät ongelmat.
+Nykyään kamerat ovat jo melko hyviä, ja väri tarjoaa hyödyllistä
+lisäinformaatiota monissa sovelluksissa, joten kannattaa harkita värien
+hyödyntämistä. On kuitenkin syytä ymmärtää väreihin ja värien havaitsemiseen
+liittyvät ongelmat.
 
-Värien hyödyntämistä kohteiden tunnistamisessa hankaloittaa valaistuksen vaikutus. Varjostukset ja pimeä valaistus laskevat värikylläisyyttä, mikä tekee värisävyn yksilöimisestä vaikeampaa. Tunnistamisessa ei voida nojautua tarkkoihin väriarvoihin, vaan on parempi käyttää värisävyjä, esimerkiksi Lab-väreistä muodostettujen LCh(ab)-värien h-komponenttia. Valaistuksen vaikutus värisävyyn on huomioitava, eli jos sovellusta käytetään monissa erilaisissa ympäristöissä, on syytä kerätä dataa kaikista erilaisista ympäristöistä ja tutkia valonlähteiden vaikutusta.
+Värien hyödyntämistä kohteiden tunnistamisessa hankaloittaa valaistuksen
+vaikutus. Varjostukset ja pimeä valaistus laskevat värikylläisyyttä, mikä tekee
+värisävyn yksilöimisestä vaikeampaa. Tunnistamisessa ei voida nojautua
+tarkkoihin väriarvoihin, vaan on parempi käyttää värisävyjä, esimerkiksi Lab-
+väreistä muodostettujen LCh(ab)-värien h-komponenttia. Valaistuksen vaikutus
+värisävyyn on huomioitava, eli jos sovellusta käytetään monissa erilaisissa
+ympäristöissä, on syytä kerätä dataa kaikista erilaisista ympäristöistä ja
+tutkia valonlähteiden vaikutusta.
 
-Värejä voi hyödyntää myös reunojen ja yhtenäisten alueiden tunnistamisessa. Toisinaan kahden aivan eri värisen alueen välinen suhteellinen kirkkaus on lähes sama, jolloin harmaasävykuvassa ei näy reunaa, mutta värisävystä muodostetussa kuvassa näkyy. Yhtenäisiä alueita voi kuvailla värisävyn tai värihistogrammin avulla.
+Värejä voi hyödyntää myös reunojen ja yhtenäisten alueiden tunnistamisessa.
+Toisinaan kahden aivan eri värisen alueen välinen suhteellinen kirkkaus on lähes
+sama, jolloin harmaasävykuvassa ei näy reunaa, mutta värisävystä muodostetussa
+kuvassa näkyy. Yhtenäisiä alueita voi kuvailla värisävyn tai värihistogrammin
+avulla.
 
-Värikylläisyyttä voi käyttää kuvaamaan värisävyn epävarmuutta. Jos värikylläisyys on suuri, värisävykin on luultavasti lähellä oikeaa. Jos värikylläisyys on matala, värisävyssä voi olla epävarmuutta, jolloin siihen ei ehkä kannata luottaa niin paljon.
+Värikylläisyyttä voi käyttää kuvaamaan värisävyn epävarmuutta. Jos
+värikylläisyys on suuri, värisävykin on luultavasti lähellä oikeaa. Jos
+värikylläisyys on matala, värisävyssä voi olla epävarmuutta, jolloin siihen ei
+ehkä kannata luottaa niin paljon. Toisaalta matala värikylläisyys voi tarkoittaa
+myös sitä, että kohde on valkoinen (kun kirkkaus on korkea) tai musta (kun
+kirkkaus on matala).
 
-Lopuksi lienee syytä todeta, että kaikki tämä esitetty teoria pohjautuu viime kädessä ihmisen värinäköön, ja värien standardisointi pyrkii poistamaan epävarmuustekijät nimenomaan ihmishavainnoijan kannalta. Konenäköjärjestelmissä ei kuitenkaan välttämättä ole tarpeen pitäytyä ihmisen rajoittuneessa näkökyvyssä tai värinäössä. Nykyaikaiset kamerat pystyvät aistimaan ja erottelemaan värejä tarvittaessa huomattavasti ihmisiä tarkemmin ja laajemmalla spektrillä. Voidaan myös käyttää erityisiä spektrikameroita, jotka eivät tukeudu värin näytteistämiseen spektrivastefunktioiden avulla, vaan näytteistävät suoraan valon intensiteettiä lukuisilla kapeilla taajuuskaistoilla.
+Lopuksi lienee syytä todeta, että kaikki tämä esitetty teoria pohjautuu viime
+kädessä ihmisen värinäköön, ja värien standardisointi pyrkii poistamaan
+epävarmuustekijät nimenomaan ihmishavainnoijan kannalta. Konenäköjärjestelmissä
+ei kuitenkaan välttämättä ole tarpeen pitäytyä ihmisen rajoittuneessa
+näkökyvyssä tai värinäössä. Nykyaikaiset kamerat pystyvät aistimaan ja
+erottelemaan värejä tarvittaessa huomattavasti ihmisiä tarkemmin ja laajemmalla
+spektrillä. Voidaan myös käyttää erityisiä spektrikameroita, jotka eivät tukeudu
+värin näytteistämiseen spektrivastefunktioiden avulla, vaan näytteistävät
+suoraan valon intensiteettiä lukuisilla kapeilla taajuuskaistoilla.

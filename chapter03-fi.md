@@ -1,6 +1,11 @@
-% TIES411 - Kuvien taajuusanalyysi
-% Matti Eskelinen, Ville Tirronen, Tuomo Rossi
-% lang: fi-FI
+---
+title: Luku 4 - Kuvien taajuusanalyysi
+author: Matti Eskelinen
+date: 8.2.2018
+title-prefix: TIES411
+lang: fi
+css: style.css
+---
 
 # Kuvien taajuusanalyysi
 
@@ -36,13 +41,13 @@ integroituvana funktiona, joka on summa joukosta siirrettyjä $\delta$-olioita.
 ## Fourier-muunnos
 
 Aiemmin esitettiin tulkinta, jonka mukaan kuvat ovat vektoreita eli painotettuja
-summia *kantavektoreista* jotka puolestaan vastaavat yksittäisiä pikseleitä.
+summia *kantavektoreista*, jotka puolestaan vastaavat yksittäisiä pikseleitä.
 Lineaarialgebrasta on tuttua ajatus siitä, että vektoriavaruuksissa voidaan
-suorittaa *kannanvaihtoja* eli esittää samat vektorit joidenkin toisten
+suorittaa *kannanvaihtoja*, eli esittää samat vektorit joidenkin toisten
 kantavektoreiden avulla. Tällaiset kannanvaihdot voidaan myös kääntää ja
 palauttaa vektorit alkuperäisten kantavektorien mukaiseen muotoon. Kannanvaihdon
 tavoitteena on yleensä saada jotakin etua muuntamalla vektorit sellaiseen
-muotoon jolla on joitakin hyödyllisiä ominaisuuksia tutkittavan ongelman
+muotoon, jolla on joitakin hyödyllisiä ominaisuuksia tutkittavan ongelman
 kannalta.
 
 Aiemmalla luennolla havainnollistettiin, kuinka signaaleita voidaan koostaa
@@ -50,7 +55,7 @@ summaamalla yhteen *taajuuskomponentteja*, jotka ovat eri taajuisia
 *siniaaltoja*. Muuttamalla siniaaltojen amplitudia ja vaihetta saadaan
 taajuuskomponentit vahvistamaan ja kumoamaan toisiaan sopivasti. Mutta voiko
 tällä tavalla saada aikaan minkä tahansa signaalin? Käy ilmi, että vastaus on
-kyllä, ja että **Fourier-muunnos** on työkalu jolla minkä tahansa signaalin saa
+kyllä, ja että **Fourier-muunnos** on työkalu, jolla minkä tahansa signaalin saa
 purettua erillisiksi taajuuskomponenteikseen.
 
 Fourier-muunnos voidaan ymmärtää kannanvaihtona, jossa uudet kantavektorit ovat
@@ -61,10 +66,10 @@ nämä siniaaltokomponentit kuvaisivat kuvassa tapahtuvia tietyn suuntaisia ja
 taajuisia muutoksia. Seuraavassa kuvassa on muutamia esimerkkejä eri taajuisista
 sinitasoaalloista.
 
-![Fourier-kantavektoreita](images/fourier-components.png)
+![Fourier-kantavektoreita](images/fourier-components.png){ .centered }
 
 Voi tuntua kummalliselta ajatella siniaaltoja kantavektoreina, mutta on
-muistettava että tutkimme *vektorimuodossa* olevia kuvia. Kantavektorit ovat
+muistettava, että tutkimme *vektorimuodossa* olevia kuvia. Kantavektorit ovat
 hyvin korkeaulotteisia, ja ne ovat tulkittavissa kuviksi jos vektorien arvot
 järjestetään sopivalla tavalla riveiksi ja tulkitaan vektorin alkioiden arvot
 pikselien kirkkauksiksi. Normaalissa kuvakannassa kantavektorit ovat sellaisia,
@@ -91,9 +96,20 @@ $$e^{-i 2 \pi ux} = cos(2 \pi ux) - i sin(2 \pi ux).$$
 Huomataan, että tuloksena on *kompleksilukuja*. Fourier-muunnos tuottaa siis
 $x$:n suhteen määritellystä reaaliarvoisesta funktiosta $u$:n suhteen
 määritellyn kompleksiarvoisen funktion, jonka reaali- ja imaginaariosa ovat
-kumpikin siniaaltoja. Tarkennetaan vielä, että myös alkuperäinen funktio $g$ on
+kumpikin siniaaltoja, mutta vastakkaisessa vaiheessa. Lukuja $F(g(x))(u)$
+kutsutaan Fourier-kertoimiksi. Parametri $u$ määrittää siniaallon taajuuden, eli
+kokonaisten heilahdusten määrän aikayksikössä; tässä tapauksessa tarkoitetaan
+heilahduksia tutkittavan signaalin matkalla.
+
+Tarkennetaan vielä, että myös alkuperäinen funktio $g$ on
 itse asiassa kompleksiarvoinen funktio, jonka imaginaariosa vain on kaikkialla
 $0$.
+
+Kun $u=0$, eksponenttilauseke sievenee muotoon $e^0 = 1$. Fourier-kerroin $0$
+vastaa siis integraalia alkuperäisen kuvan yli, eli pikselien arvojen summaa.
+Kerroin $1$ vastaa sisätuloa siniaallon kanssa, joka tekee yhden heilahduksen
+koko signaalin matkalla, kerroin $2$ vastaavasti mutta kahdella heilahduksella,
+ja niin edelleen.
 
 Kaava $e^{ix}$ voidaan tulkita siten, että se piirtää yksikköympyröitä
 reaaliakselin ympäri kun $x$ liikkuu pitkin reaaliakselia. Tällöin reaalitasoon
@@ -173,7 +189,7 @@ käytettyjä amplitudi- ja vaihearvoja. Kokeile erilaisilla signaaleilla,
 kohinan tasoilla ja käänteismuunnoksessa käytettyjen komponenttien määrillä.
 Kuvaile Fourier-muunnoksien eroja ja käänteismuunnoksen tuloksia.
 
-![Fourier-kertoimista palautettu signaali](images/fourier-signal.png)
+![Fourier-kertoimista palautettu signaali](images/fourier-signal.png){ .centered }
 
 ## Kaksiulotteinen Fourier-muunnos
 
@@ -194,10 +210,10 @@ Eksponenttilauseke saadaan kirjoitettua jälleen auki
 $$e^{-i 2 \pi\left(ux+vy\right)} = \cos\left(2 \pi \left(ux + vy\right)\right)
   - i \sin\left(2 \pi \left(ux + vy\right)\right)$$
 
-ja tämän lausekkeen reaaliosaa- ja imaginaariosia tutkimalla havaitaan, että ne
+ja tämän lausekkeen reaali- ja imaginaariosia tutkimalla havaitaan, että ne
 tuottavat molemmat vakioarvoja, kun $(ux+vy)$ on vakio. Näin tapahtuu siis
 pitkin reaali- ja kompleksitason suoria, joiden suunnalle $\theta$ pätee
-$\tan\left(theta\right) = \frac{v}{u}$. Tuloksena on siis kohtisuoraan tätä
+$\tan\left(\theta\right) = \frac{v}{u}$. Tuloksena on siis kohtisuoraan tätä
 suoraa vastaan eteneviä siniaaltoja, joiden *taajuus* eli värähtelynopeus on
 $\sqrt{u^2 + v^2}$. Reaali- ja kompleksitason sinitasoaallot ovat muuten
 samanlaisia, mutta ne ovat vastakkaisessa vaiheessa.
@@ -239,7 +255,7 @@ Käänteismuunnos kuvalle on vastaavasti kuin aiemmin
 
 $$\begin{aligned}
   I\left(x,y\right)
-  &= \frac{1}{N*M} \sum_{u=0}^{W-1} \sum_{v=0}^{H-1}
+  &= \frac{1}{N * M} \sum_{u=0}^{W-1} \sum_{v=0}^{H-1}
   F\left(I\left(x,y\right)\right)\left(u,v\right) \cdot
   e^{+i 2 \pi \left(\frac{ux}{W}+\frac{vy}{H}\right)}.
   \end{aligned}$$
@@ -282,7 +298,7 @@ taajuuskomponenteista ei siis ole kovinkaan paljon apua kuvan analysoimisessa.
 Tutki erilaisten pikkukuvien Fourier-kantaa. Osaatko selittää, mistä erot kuvien
 välillä johtuvat?
 
-![Fourier-kanta](images/fourier-images.png)
+![Fourier-kanta](images/fourier-images.png){ .centered }
 
 Seuraavassa puolestaan havainnollistetaan sitä, että Fourier-kanta tuottaa melko
 *harvan* esityksen. Kuvan taajuuskomponentit on lajiteltu amplitudin mukaiseen
@@ -292,12 +308,12 @@ Huomaamme siis, että muutama tärkein taajuuskomponentti palauttaa kappaleen
 perusmuodon, ja sen jälkeen tulevat komponentit tuottavat vain pieniä
 korjauksia.
 
-![Taajuuskomponenttien vaikutus](images/fourier-invimages.png)
+![Taajuuskomponenttien vaikutus](images/fourier-invimages.png){ .centered }
 
 Seuraavassa esitetään vielä taajuuskomponentit siinä järjestyksessä kuin niitä
 yllä olevassa kuvassa käytetään.
 
-![Taajuuskomponenttien järjestys](images/fourier-simages.png)
+![Taajuuskomponenttien järjestys](images/fourier-simages.png){ .centered }
 
 ## Fast Fourier Transform
 
@@ -322,8 +338,8 @@ taajuuskomponentteja siirrellään eli mikä on kunkin komponentin vaihe.
 
 ## Konvoluutioteoreema
 
-Ymmärrämme nyt mitä Fourier-muunnos tekee ja kuinka se lasketaan. Meillä on myös
-tehokas työkalu sen laskemiseksi kuvista ja muista signaaleista. Mutta mitä
+Ymmärrämme nyt, mitä Fourier-muunnos tekee, ja kuinka se lasketaan. Meillä on
+myös tehokas työkalu sen laskemiseksi kuvista ja muista signaaleista. Mutta mitä
 käytännön hyötyä siitä on? Taajuustason intuitiivinen hahmottaminen auttaa
 ymmärtämään kuvasignaaleja, mutta koska Fourier-muunnos tuottaa *globaalia*
 tietoa koko kuvasta, sitä on hankalaa käyttää varsinaisessa kuvan
@@ -378,7 +394,7 @@ paljon Gabor-suotimia muistuttavia esitysmuotoja verkkokalvon tuottamasta
 informaatiosta. Vaikuttaakin siltä, että tällainen tieto on olennaista näkymien
 analysoinnin kannalta, ja palaamme tähän myöhemmillä luennoilla.
 
-![Gabor-maskit](images/gmaskit.png)
+![Gabor-maskit](images/gmaskit.png){ .centered }
 
 ## Spatial envelope
 

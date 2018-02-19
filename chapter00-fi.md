@@ -1,6 +1,11 @@
-% TIES411 - Konenäkö ja kuva-analyysi
-% Matti Eskelinen, Ville Tirronen, Tuomo Rossi
-% lang: fi-FI
+﻿---
+title: Luku 1 - Johdanto
+author: Matti Eskelinen
+date: 31.1.2018
+title-prefix: TIES411
+lang: fi
+css: style.css
+---
 
 # Johdanto {#johdanto}
 
@@ -11,15 +16,15 @@ näkeviä koneita soveltaen konenäkömenetelmiä.
 
 Lopullisena tavoitteena konenäkötutkimuksessa on ollut jo 1960-luvulta saakka
 rakentaa kone, joka ymmärtäisi näkemänsä yhtä hyvin kuin ihminen.
-Tutkijasukupolvi toisensa jälkeen on joutunut omakohtaisesti kokeilujen ja
-yritysten seurauksena huomaamaan, että tämä on paljon vaikeampaa kuin vaikuttaa.
-Ihminen havainnoi ympäristöään vaivattomasti, ja aivomme generoivat meille
-yhtenäisen mallin josta lähes kaikki epävarmuustekijät on häivytetty. Kun
-ryhdymme ohjelmoimaan algoritmeja joiden pitäisi tuottaa samanlainen tulos,
-joudumme huomaamaan, että kuvadata on oikeasti hyvin sotkuista ja epäselvää.
+Tutkijasukupolvi toisensa jälkeen on kuitenkin joutunut kokeilujen ja yritysten
+seurauksena huomaamaan, että tämä on paljon vaikeampaa kuin vaikuttaa. Ihminen
+havainnoi ympäristöään vaivattomasti, ja aivomme generoivat meille yhtenäisen
+mallin, josta on häivytetty lähes kaikki epävarmuustekijät. Kun ryhdymme
+ohjelmoimaan algoritmeja, joiden pitäisi tuottaa samanlainen tulos, joudumme
+huomaamaan, että kuvadata on oikeasti hyvin sotkuista ja vaikeaselkoista.
 
 Miksi ihminen sitten havainnoi niin vaivattomasti, mutta tietokoneilla on
-niin vaikeaa saada samanlaisia tuloksia? Pohdimme tätä asiaa kurssin mittaan ja
+niin vaikeaa saada samanlaisia tuloksia? Pohdimme tätä asiaa kurssin mittaan, ja
 lopussa esitämme joitakin ajatuksia siitä, millä tavalla tulevaisuudessa
 voitaisiin pyrkiä ihmisen tasoiseen näkymien havainnointiin. Todettakoon
 kuitenkin jo tässä vaiheessa, että suurin syy vaikeuksiin ei liene ihmisen
@@ -40,20 +45,20 @@ jonkinlaista mallia kajakista ja ihmisen ja kajakin vuorovaikutuksesta.
 Ylipäänsä on vaikea tunnistaa kuvasta ihminen, sillä kasvoista näkyy vain pieni
 osa profiilia, kypärä peittää pään ja mela peittää kädet. Teippaukset estävät
 hahmottamasta kajakkia yhtenäisenä pintana, ja veden kuohut ovat kirkkaan
-valkoisia joten ne tuottavat voimakkaimmat reunat kuvassa.
+valkoisia, joten ne tuottavat voimakkaimmat reunat kuvassa.
 
 ![Kuvien haasteita](images/rects.png)
 
 Myös paljon yksinkertaisempiinkin kuviin liittyy haasteita. Oheinen kuva
-neliöistä vihjaa, kuinka hankalaa näinkin yksinkertaisen kohteen tunnistaminen
-voi olla, jos kuvassa on kohinaa, valaistuksen vaihteluita tai voimakkaita
-varjoja. Lisäksi kohteet yleensä vääristyvät kuvissa näkökulman ja kohteen
-muodon muuttumisen seurauksena. Usein on tarpeen mallintaa kohde ja sen
+neliöistä havainnollistaa, kuinka hankalaa näinkin yksinkertaisen kohteen
+tunnistaminen voi olla, jos kuvassa on kohinaa, valaistuksen vaihteluita tai
+voimakkaita varjoja. Lisäksi kohteet yleensä vääristyvät kuvissa näkökulman ja
+kohteen muodon muuttumisen seurauksena. Usein on tarpeen mallintaa kohde ja sen
 muodossa ja rakenteessa tapahtuvat muutokset tilastollisesti. Tulemme käyttämään
 kurssilla tällaisia satunnaisesti generoituja kuvia yksinkertaisista muodoista,
 ja kurssin lopussa osaamme toivottavasti tunnistaa erilaiset muodot kuvista.
 
-Tällä kurssilla tutustumme kuvadataan ja erilaisiin menetelmiin joilla kuvia
+Tällä kurssilla tutustumme kuvadataan ja erilaisiin menetelmiin, joilla kuvia
 voi analysoida. Pyrimme ymmärtämään kuvadatan ominaispiirteitä sekä tärkeimpien
 analysointimenetelmien pääperiaatteita. Tutustumme myös erilaisiin tapoihin
 mallintaa ja ratkaista konenäkötehtäviä. Lyhyellä kurssilla ei ole mahdollista
@@ -62,7 +67,7 @@ riittävät tiedot, taidot ja työkalut kokeilujen tekemiseen ja lupaavien
 menetelmien tutkimiseen ja jatkokehittämiseen tietyn rajatun ongelman
 ratkaisemiseksi.
 
-Kurssilla käsitellään seuraavia asioita:
+Kurssilla käsitellään seuraavia aiheita:
 
 1. Kuvien eri esitysmuodot, yksinkertaiset matemaattiset operaatiot
 1. Kuvien tulkinta lineaarisina invariantteina systeemeinä, konvoluutio ja
@@ -89,11 +94,18 @@ Szeliskin kirja [-@Szeliski2011] kertaa konenäön historiaa ja painottuu
 käytännön algoritmeihin ja sovelluksiin. Princen kirja [-@Prince2012] painottuu
 malleihin ja niiden oppimiseen.
 
-Myös [kurssisivu](http://users.jyu.fi/~amjayee/TIES411/) sekä tämä [luentomoniste](
-http://http://users.jyu.fi/~amjayee/TIES411/ties411-luentomoniste.pdf) löytyvät verkosta.
-Materiaali tulee päivittymään kurssin aikana, joten vain jo pidettyjen luentojen
-materiaaliin kannattaa luottaa.
+Myös [kurssisivu](http://users.jyu.fi/~amjayee/TIES411/) sekä tämä 
+[luentomoniste](http://users.jyu.fi/~amjayee/TIES411/ties411-luentomoniste.pdf)
+löytyvät verkosta. Materiaali tulee päivittymään kurssin aikana, joten vain jo
+pidettyjen luentojen materiaaliin kannattaa luottaa.
 
 ## Kurssisivun koodiesimerkit
 
-Materiaalissa viitataan kurssisivun koodiesimerkkeihin. Tämä liittyy aiemman kurssin kokeiluun tarjota web-sovellus, jossa erilaisia esimerkkialgoritmeja pystyi kokeilemaan. Tämä käytännön osuus korvataan kurssin kuluessa Docker-ympäristössä suoritettavilla tutoriaalityyppisillä ohjelmointitehtävillä, ja materiaalin tekstiä päivitetään vähitellen, mutta siellä täällä esiintyy hämääviä viittauksia kurssisivuun ja koodiesimerkkeihin, joita ei enää ole entisessä muodossaan saatavilla.
+Materiaalissa viitataan kurssisivun koodiesimerkkeihin. Tämä liittyy aiemman
+kurssin kokeiluun tarjota web-sovellus, jossa erilaisia esimerkkialgoritmeja
+pystyi kokeilemaan. Tämä käytännön osuus korvataan kurssin kuluessa Docker-
+ympäristössä suoritettavilla tutoriaalityyppisillä ohjelmointitehtävillä, ja
+materiaalin tekstiä päivitetään vähitellen, mutta siellä täällä esiintyy
+hämääviä viittauksia kurssisivuun ja koodiesimerkkeihin, joita ei enää ole
+entisessä muodossaan saatavilla. Tarkoituksena on toteuttaa uudenlainen,
+interaktiivinen luentomoniste Jupyter Notebook -ympäristössä.
