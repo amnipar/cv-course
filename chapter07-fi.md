@@ -1,9 +1,9 @@
 ---
-title: Reunat ja nurkat
-author: Matti Eskelinen; Ville Tirronen; Tuomo Rossi
-date: 28.2.2017
+title: Luku 6 - Reunat ja nurkat
+author: Matti Eskelinen
+date: 24.2.2018
 title-prefix: TIES411
-lang: fi-FI
+lang: fi
 css: style.css
 ---
 
@@ -22,8 +22,8 @@ kertoo jo sekin, että evoluutio on saanut aikaan eliöiden aivoihin erityisesti
 reunoja havaitsevia neuronirakenteita. Ihmiset ymmärtävät hyvinkin monimutkaisia
 näkymiä pelkkien yksinkertaisten viivapiirrosten perusteella, ja jo pienet
 lapset osaavat piirtää näkymien ja esineiden olennaisia ominaisuuksia
-tunnistettavina kuvina. Tässä luvussa tutustumme erilaisiin tapoihin löytää
-kuvista reunoja ja jatkokäsitellä niitä.
+tunnistettavina viivapiirroksina. Tässä luvussa tutustumme erilaisiin tapoihin
+löytää kuvista reunoja ja jatkokäsitellä niitä.
 
 Reunat ovat kuvissa olevia epäjatkuvuuskohtia, jotka esiintyvät tyypillisesti
 erilaisten pintojen rajakohdissa. Pinnat voivat erota toisistaan syvyyden
@@ -38,9 +38,10 @@ Reunoja voidaan havaita periaatteessa ainakin seuraavalla neljällä eri tavalla
   sama.
 
 Tässä luvussa tutustumme pääpiirteissään kaikkiin näihin tapoihin, painottaen
-derivaattoihin perustuvia menetelmiä. Lisäksi pohdimme nurkkien, viivojen
-päätepisteiden ja pistemäisten kohteiden havaitsemista. Myöhemmässä luvussa
-laajennamme tarkastelut useihin skaaloihin yhtä aikaa.
+derivaattoihin perustuvia menetelmiä. (Huom. lähinnä derivaattoja koskevat osat
+ovat valmiina.) Lisäksi pohdimme nurkkien, viivojen päätepisteiden ja
+pistemäisten kohteiden havaitsemista. Myöhemmässä luvussa laajennamme
+tarkastelut useihin skaaloihin yhtä aikaa.
 
 ## Kuvien derivaatat
 
@@ -498,8 +499,8 @@ enemmän tietoa myöhemmässä luvussa.
 
 Alla olevassa kuvassa lasketaan DoH ja LoG ja verrataan tuloksia.
 
-Lisätietoa Mikolajczykin ja Schmidin [Harrisin affiinista] ja [Hessen affiinista]
-wikipediasta. Myös alkuperäiset paperit ovat selkeitä ja erittäin
+Lisätietoa Mikolajczykin ja Schmidin [Harrisin affiinista] ja [Hessen
+affiinista] wikipediasta. Myös alkuperäiset paperit ovat selkeitä ja erittäin
 mielenkiintoisia, ja niihin kannattaa tutustua jos pistepiirteet kiinnostavat.
 
 [Harrisin affiinista]: http://en.wikipedia.org/wiki/Harris_affine_region_detector
