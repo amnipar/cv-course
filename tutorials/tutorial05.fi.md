@@ -220,7 +220,7 @@ osittaisderivaata, tai käyttää suoraan funktiota `cv.Laplacian()`, joka käyt
 samoja derivaattaytimiä kuin me olemme käyttäneet yllä.
 
 ```{.python}
-log = cv.Laplacian(img, ddepth=cv.CV_32F, ksize=15)kernelY=kdxdyy)
+log = cv.Laplacian(img, ddepth=cv.CV_32F, ksize=15)
 ```
 
 Näemme kuvasta, että reunan ympärillä on selkeästi tummia pikseleitä toisella
