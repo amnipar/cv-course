@@ -489,7 +489,7 @@ Tämän tietorakenteen käsittelyä saadaan tehostettua kahdella yksinkertaisell
 tempulla, ja lopputuloksena sekä *union*- että *find*-operaatio saadaan
 suoritettua vakioajassa riippumatta joukkojen koosta. Ensimmäinen temppu on
 pitää kirjaa puiden syvyydestä ja asettaa *union*-operaatiossa juurisolmuksi
-aina matalampi puu. Toinen temppu on puun litistäminen siten, että aina kun
+aina syvempi puu. Toinen temppu on puun litistäminen siten, että aina kun
 juurisolmuja etsitään *find*-operaation avulla, jokainen hakupolun varrella
 kohdattu solmu liitetään suoraan juurisolmuun. Tällä tavoin puusta tulee lopulta
 ykkösen syvyinen.
@@ -603,19 +603,26 @@ mukaisessa järjestyksessä alkaen pienimmistä, jos lisätty kaari ei tuota puu
 syklejä. Kuvagraafien tapauksessa aloitetaan siis eniten toisiaan muistuttavia
 pikseleitä yhdistävistä kaarista. Kaaren lisääminen virittävään puuhun voidaan
 tulkita sen liittämien pikselien yhdistämisenä alueeksi, ja virittävän puun
-hallinnointiin voidaan käyttää *union-find*-menetelmää. Graafin syklit voidaan
-havaita ennakkoon siitä, että tutkittavan kaaren yhdistämät pikselit kuuluvat
-jo samaan joukkoon, eli *find*-komento palauttaa saman arvon. Tällaisia kaaria
-ei lisätä virittävään puuhun.
+hallinnointiin voidaan käyttää *union-find*-menetelmää.
+
+Graafin syklit voidaan havaita ennakkoon siitä, että tutkittavan kaaren
+yhdistämät pikselit kuuluvat jo samaan joukkoon, eli *find*-komento palauttaa
+saman arvon. Tällaisia kaaria ei lisätä virittävään puuhun. Jos halutaan
+säilyttää varsinainen puurakenne, *find*-komennon toteutus pitäisi parametroida
+siten, että solmujen liittämistä suoraan juurisolmuun ei tehdä. Tehokkuus kärsii
+jonkin verran, mutta muodostuvaa puuta voi käyttää hierarkiseen segmentointiin,
+jonka tulosta voi myöhemmin analysoida ja muokata.
 
 Jos käytetään kynnysarvoa yhdistettävien pikselien ja pikselijoukkojen väliselle
 samankaltaisuudelle ja jätetään tätä arvoa suuremmat kaaret lisäämättä
-virittävään puuhun, tuloksena on joukko virittäviä puita eli metsä, jonka
-puut vastaavat kuvan segmenttejä. Jos kynnysarvoa ei käytetä, tuloksena on koko
-kuvan hierarkinen segmentointi yhdeksi puuksi, ja poistamalla sen kaaria
-alkaen suurimmista saadaan pilkottua kuvaa pienemmiksi ja yhtenäisemmiksi
-alueiksi. Tapa, jolla pikseleitä vertaillaan, on luonnollisesti ratkaisevan
-tärkeä lopputuloksen kannalta.
+virittävään puuhun, tuloksena on joukko virittäviä puita eli metsä, jonka puut
+vastaavat kuvan segmenttejä. Jos kynnysarvoa ei käytetä, ja solmuja ei
+*find*-operaatiossa liitetä suoraan juurisolmuun, tuloksena on koko kuvan
+hierarkinen segmentointi yhdeksi puuksi. Poistamalla kaaria puusta, esimerkiksi
+alkaen suurimmista painokertoimista tai huomioiden muodostuvien alueiden
+kompaktiuden, saadaan pilkottua kuvaa pienemmiksi ja yhtenäisemmiksi alueiksi.
+Tapa, jolla pikseleitä vertaillaan, on luonnollisesti ratkaisevan tärkeä
+lopputuloksen kannalta.
 
 ### Tehtävä 8.3 {-}
 
