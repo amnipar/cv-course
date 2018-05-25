@@ -1,0 +1,85 @@
+﻿body {
+  max-width: 800px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  font: 14px Tahoma, Arial, sans serif;
+  color: Black;
+}
+
+p {
+  margin: 5px, 0px, 5px, 0px;
+}
+
+h1 {
+  margin: 5px, 0px, 10px, 0px;
+  font-size: 16px;
+  font-weight: bold;
+  color: Indigo;
+}
+
+h2 {
+  margin: 5px, 0px, 10px, 0px;
+  font-size: 14px;
+  font-weight: bold;
+  color: Indigo;
+}
+
+h3 {
+  margin: 5px, 0px, 10px, 0px;
+  font-size: 12px;
+  font-weight: bold;
+  color: Indigo;
+}
+
+a {
+  color: Purple;
+  text-decoration: underline;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0px;
+  width: 100%;
+}
+
+td {
+  border-left-style: none;
+  border-right-style: none; 
+  border-top-style: none;
+  border-bottom: 1px solid Indigo;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+th {
+  border-left-style: none;
+  border-right-style: none; 
+  border-top: 2px solid Indigo;
+  border-bottom: 2px solid Indigo;
+  padding-left: 4px;
+  padding-right: 4px;
+  color: Indigo;
+}
+
+.centered {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+}
+
+.centered90 {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+}
+
+.caption {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+}

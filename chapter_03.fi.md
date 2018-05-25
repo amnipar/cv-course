@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Kuvien suodatus ja muokkaus-->
+# Kuvien suodatus ja muokkaus
 
 Tässä luvussa tutustumme konvoluutioon ja kuvien suodattamiseen sen avulla.
 Tutustumme myös morfologisiin operaatioihin.
@@ -181,7 +181,7 @@ siirtokanavan puutteista, ja se voidaan mieltää ylimääräisinä, hyvin nopea
 vaihtelevina taajuuskomponentteina. Edellisessä luvussa tutkittavat signaalit
 saattaisivat näyttää esimerkiksi tältä, jos niihin lisätään kohinaa:
 
-![Kohinainen signaali](images/noisy-signal.png)
+![Kohinainen signaali](images/noisy-signal.png){ .centered }
 
 Kohinaa voi yrittää poistaa konvolvoimalla sopivalla suodinfunktiolla. Yritetään
 aluksi keskiarvosuodinta:
@@ -194,7 +194,7 @@ Konvoluutio tällaisella maskilla vastaa siis liukuvaa keskiarvoa, ja se
 siloittaa jonkin verran signaalin satunnaista vaihtelua, tosin myös osa
 signaalin oikeastakin vaihtelusta hukkuu kohinaan:
 
-![Keskiarvoistettu signaali](images/averaged-signal.png)
+![Keskiarvoistettu signaali](images/averaged-signal.png){ .centered }
 
 Keskiarvosuodin on toimiva ratkaisu tiettyihin tarkoituksiin, mutta se ei ole
 kovin hyvä valinta. Jos ajatellaan yksikköimpulssia, konvoluutio

@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Kuvien geometriset muunnokset {#geometria}-->
+# Kuvien geometriset muunnokset {#geometria}
 
 Monissa hyödyllisissä konenäkösovelluksissa ei tarvitse ottaa huomioon kuvan
 muodostumista projektiona tai kameran optisia ominaisuuksia. Jos kuitenkin pitää
@@ -112,7 +112,7 @@ kameroiden (myös ihmisen silmien) tuottamissa kuvissa on perspektiivivääristy
 yhdensuuntaiset viivat eivät pysy yhdensuuntaisina, vaan suuntautuvat yhteen
 pisteeseen, niinsanottuun pakopisteeseen.
 
-![Perspektiiviprojektion muodostuminen](images/perspective.jpg)
+![Perspektiiviprojektion muodostuminen](images/perspective.jpg){ .centered }
 
 Tämä ilmiö johtuu siitä, että perspektiiviprojektio muodostetaan vetämällä suora
 viiva kustakin kohteessa olevasta pisteestä yhteen kiinteään pisteeseen,

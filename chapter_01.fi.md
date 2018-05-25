@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Johdanto {#johdanto}-->
+# Johdanto {#johdanto}
 
 Konenäkö (engl. *computer vision*) on nopeasti kehittyvä ja laaja tieteenala,
 jolla on paljon käytännön sovelluksia. Termillä *machine vision* viitataan usein
@@ -36,7 +36,7 @@ toiminnasta, ja käyttävät tätä tietoa hyväkseen näkymien tulkitsemisessa 
 mallintamisessa. Tällaista *aiemman tiedon* (engl. *prior knowledge*) ja
 kokemuksen hyödyntämistä ei osata vielä kunnolla toteuttaa tietokoneohjelmissa.
 
-![Mitä kuvassa on? (Lähde: www.freeimages.co.uk)](images/sportcanoe1331.jpg)
+![Mitä kuvassa on? (Lähde: www.freeimages.co.uk)](images/sportcanoe1331.jpg){ .centered90 }
 
 Jos tuumitaan vaikkapa oheista kuvaa kajakista, huomataan monia asioita jotka
 tuottavat vaikeuksia tietokoneelle. On vaikea päätellä missä kajakin reunat
@@ -47,7 +47,7 @@ osa profiilia, kypärä peittää pään ja mela peittää kädet. Teippaukset e
 hahmottamasta kajakkia yhtenäisenä pintana, ja veden kuohut ovat kirkkaan
 valkoisia, joten ne tuottavat voimakkaimmat reunat kuvassa.
 
-![Kuvien haasteita](images/rects.png)
+![Kuvien haasteita](images/rects.png){ .centered }
 
 Myös paljon yksinkertaisempiinkin kuviin liittyy haasteita. Oheinen kuva
 neliöistä havainnollistaa, kuinka hankalaa näinkin yksinkertaisen kohteen

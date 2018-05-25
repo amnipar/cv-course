@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Reunat ja nurkat {#reunat}-->
+# Reunat ja nurkat {#reunat}
 
 Tässä luvussa opimme löytämään kuvista kappaleiden reunoja ja nurkkia.
 Tutustumme myös reunojen ketjutukseen. Käytännöllisiä asioita tällä kerralla:
@@ -160,7 +160,7 @@ $$\frac{\partial G(x,y,\sigma)}{\partial y} =
   -\frac{y}{2\pi\sigma^4}e^{-\frac{x^2+y^2}{2\sigma^2}}.$$
 
 ![Gaussin funktion ensimmäisen asteen osittaisderivaatat](
-images/gaussian-derivatives-1.png)
+images/gaussian-derivatives-1.png){ .centered }
 
 Kuvassa esitetään miltä Gaussin funktion ensimmäisen asteen osittaisderivaatat
 näyttävät harmaasävyarvoina piirrettyinä. Näistä voidaan muodostaa
@@ -306,7 +306,7 @@ $$\begin{aligned}
   \end{aligned}$$
 
 ![Gaussin funktion toisen asteen osittaisderivaatat](
-images/gaussian-derivatives-2.png)
+images/gaussian-derivatives-2.png){ .centered }
 
 Mistä tahansa Gaussin funktion osittaisderivaattojen asteesta saadaan tehtyä
 ohjattava filtteri. Toisen asteen derivaatoista se saadaan tehtyä näin:
@@ -365,7 +365,7 @@ korkeampia osittaisderivaattoja *skaala-avaruudessa*, mutta siihen emme mene
 tässä yhteydessä.
 
 ![Gaussin funktion kolmannen asteen osittaisderivaatat](
-images/gaussian-derivatives-3.png)
+images/gaussian-derivatives-3.png){ .centered }
 
 OpenCV:ssä on Cannyn menetelmän toteutus. Tätä voi käyttää alustavien
 reunakäyrien etsimiseen, mutta kokeilu osoittanee että useimmiten näin saadut
@@ -454,7 +454,7 @@ tietystä ympäristöstä vain lokaalit maksimiarvot. Samoin löydettyjä
 kulmapisteitä kannattaa kynnystää esimerkiksi ottamalla mukaan vain ne, joiden
 vaste on vaikkapa 0.1 kertaa suurimman vasteen arvo.
 
-![Parhaat Harrisin kulmat.](images/maximalharris.png)
+![Parhaat Harrisin kulmat.](images/maximalharris.png){ .centered }
 
 Lisätietoa Harrisin menetelmästä ja [kulmanhausta wikipediassa]. Menetelmä on
 edelleen suosittu, koska se löytää melko intuitiivisia kulmapisteitä, ja

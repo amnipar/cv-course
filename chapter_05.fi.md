@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Värit ja valon aistiminen {#värit}-->
+# Värit ja valon aistiminen {#värit}
 
 Tähän mennessä olemme puhuneet lähinnä harmaasävykuvista. Oikeissakin
 konenäkösovelluksissa tyydytään usein jättämään väri-informaatio huomioimatta,
@@ -48,7 +48,7 @@ aallonpituuksista, ja eri aallonpituuksien hallitsevuus valossa vaihtelee; juuri
 tämä aallonpituuksien yhdistelmä ja sen koostumuksen vaihtelu synnytää erilaiset
 väriaistimukset.
 
-![Ihmisen havaitsema sähkömagneettisen spektrin osa. Lähde: Wikimedia[^spectrum].\label{fig:spectrum}](images/640px-Linear_visible_spectrum.svg.png)
+![Ihmisen havaitsema sähkömagneettisen spektrin osa. Lähde: Wikimedia[^spectrum].\label{fig:spectrum}](images/640px-Linear_visible_spectrum.svg.png){ .centered }
 
 [^spectrum]: https://commons.wikimedia.org/wiki/File:Linear_visible_spectrum.svg
 
@@ -160,7 +160,7 @@ vähiten ja pitkän eniten. Lyhyen aallonpituuden tapit ovat kuitenkin
 huomattavasti herkempiä kuin pitkän aallonpituuden tapit. Kunkin tappijoukon
 vaikutus värinäössä onkin yhtä suuri, huolimatta lukumäärien suuresta erosta.
 
-![Tappisolujen herkkyysalueet. Lähde: Wikimedia[^conesens].\label{fig:conesens}](images/635px-Cones_SMJ2_E.svg.png)
+![Tappisolujen herkkyysalueet. Lähde: Wikimedia[^conesens].\label{fig:conesens}](images/635px-Cones_SMJ2_E.svg.png){ .centered }
 
 [^conesens]: <https://commons.wikimedia.org/wiki/File:Cones_SMJ2_E.svg>
 
@@ -364,7 +364,7 @@ vastekäyrää, eli siis periaatteessa vihreän värin vastetta. Toisinaan
 käytetäänkin yksinkertaisesti vihreää värikanavaa, kun halutaan yksinkertainen
 ja nopea muunnos RGB-kuvasta harmaasävykuvaksi. 
 
-![XYZ-sovitusfunktiot. Lähde: Wikipedia[^xyzcmf].\label{fig:xyzcmf}](images/640px-CIE_1931_XYZ_Color_Matching_Functions.svg.png)
+![XYZ-sovitusfunktiot. Lähde: Wikipedia[^xyzcmf].\label{fig:xyzcmf}](images/640px-CIE_1931_XYZ_Color_Matching_Functions.svg.png){ .centered }
 
 [^xyzcmf]: http://en.wikipedia.org/wiki/File:CIE_1931_XYZ_Color_Matching_Functions.svg
 
@@ -419,7 +419,7 @@ muodostuu hieman hevosenkengän muotoinen käyrä. Se muodostaa kuvassa
 reunakäyrän, joka siis esittää puhtaita spektrin värejä. Värin luminanssi $Y$ on
 kohtisuorassa tätä xy-tasoa vasten.
 
-![CIE:n xy-värikkyysdiagrammi. Lähde: Wikipedia[^xychrom].\label{fig:xychrom}](images/565px-CIE1931xy_blank.svg.png)
+![CIE:n xy-värikkyysdiagrammi. Lähde: Wikipedia[^xychrom].\label{fig:xychrom}](images/565px-CIE1931xy_blank.svg.png){ .centered }
 
 [^xychrom]: http://en.wikipedia.org/wiki/File:CIE1931xy_blank.svg
 
@@ -736,7 +736,7 @@ saavutettaisiin. L\*u\*v\*:n arvo on paitsi lineaarisuudessa, myös siinä, ett�
 se tarjoaa samanlaisen värikkyysdiagrammin kuin xyY, mutta sitä käytetään ehkä
 hiukan vähemmän kuin Labia. Värikkyysdiagrammi esitetään kuvassa
 
-![uv-värikkyysdiagrammi. Lähde: Wikipedia[^uvdiagram].\label{fig:uvdiagram}](images/480px-CIE_1976_UCS.png)
+![uv-värikkyysdiagrammi. Lähde: Wikipedia[^uvdiagram].\label{fig:uvdiagram}](images/480px-CIE_1976_UCS.png){ .centered }
 
 [^uvdiagram]: http://en.wikipedia.org/wiki/File:CIE_1976_UCS.png
 
@@ -748,7 +748,7 @@ näkee selvästi, että ellipsit ovat hyvin pitkänomaisia, eli värien eron
 havaitseminen vaihtelee hyvin paljon eri suunnissa. uv-värikkyysdiagrammissa
 vastaavat ellipsit olisivat huomattavasti ympyrämäisempiä.
 
-![xy-avaruuden skaala. Lähde: Wikipedia[^xyscale].\label{fig:xyscale}](images/543px-CIExy1931_MacAdam.png)
+![xy-avaruuden skaala. Lähde: Wikipedia[^xyscale].\label{fig:xyscale}](images/543px-CIExy1931_MacAdam.png){ .centered }
 
 [^xyscale]: http://en.wikipedia.org/wiki/File:CIExy1931_MacAdam.png
 

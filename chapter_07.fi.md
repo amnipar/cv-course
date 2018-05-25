@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Segmentointi ja klusterointi {#segmentointi}-->
+# Segmentointi ja klusterointi {#segmentointi}
 
 Tässä luvussa opimme jakamaan kuvia yhtenäisiin alueisiin.
 
@@ -349,7 +349,7 @@ Seuraavassa koodiesimerkissä esitetään kuvan *kvantisointi* käyttäen k-mean
 klusterointia pikselien arvoille. Kokeile eri kuvilla ja eri k:n arvoilla.
 Kuvaile ja selitä tuloksia.
 
-![K-means klusterit harmaasävykuvalle](images/gclusters-rect.png)
+![K-means klusterit harmaasävykuvalle](images/gclusters-rect.png){ .centered }
 
 ### Tehtävä 8.2 {-}
 
@@ -360,12 +360,12 @@ klusteroinnista? Millä tavalla tila-avaruuden skaalauskerroin vaikuttaa
 lopputulokseen?
 
 ![K-means klusterit tila-avaruudella varustetulle harmaasävykuvalle](
-images/gsclusters-rect.png)
+images/gsclusters-rect.png){ .centered }
 
-![K-means klusterit värikuvalle](images/kmeans-klusterit.png)
+![K-means klusterit värikuvalle](images/kmeans-klusterit.png){ .centered }
 
 ![K-means klusterit väärin mitoitetulle tila-avaruudelle](
-images/kmeans-klusterit-mittavirhe.png)
+images/kmeans-klusterit-mittavirhe.png){ .centered }
 
 Klusterointia on tutkittu erittäin paljon, kuten segmentointiakin, ja menetelmiä
 on monia. K-means pitää silti edelleen pintansa yleiskäyttöisenä
@@ -717,7 +717,7 @@ jollainen kuvagraafien Laplacen matriisi on. Yleisesti ottaen normalisoidut
 leikkaukset on hidas menetelmä käyttää, ja sen hyödyllisyyttä vähentää se,
 että leikkaus jakaa graafin aina kahteen osaan.
 
-![Kuvan normalisoituja leikkauksia](images/normalized-cuts.png)
+![Kuvan normalisoituja leikkauksia](images/normalized-cuts.png){ .centered }
 
 ## Ylisegmentointi ja superpikselit
 

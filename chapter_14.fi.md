@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Koneoppiminen ja luokittelu-->
+# Koneoppiminen ja luokittelu
 
 Tässä luvussa opimme perusasiat koneoppimisesta ja mallien kouluttamisesta.
 Opimme mitä tarkoittavat ylioppiminen ja alioppiminen ja miten analysoidaan
@@ -138,22 +138,22 @@ kolmioita. Kuviot voivat olla missä tahansa asennossa, joten ristikorrelaatio e
 auta tunnistamaan kohteita: kaikkien datajoukkojen keskiarvo on sumea pyöreä
 möykky.
 
-![Datan histogrammi](images/moments-histogram.png)
+![Datan histogrammi](images/moments-histogram.png){ .centered }
 
 Datan jakaumista nähdään, että datajoukot ovat jossakin määrin päällekkäisiä,
 mutta ensimmäinen ja kolmas piirre näyttäisivät tuovan eroja luokkien välille.
 
 ![Data projektio kahdelle tärkeimmälle pääkomponentille](
-images/moments-pcaplot.png)
+images/moments-pcaplot.png){ .centered }
 
 Datan osaprojektiot ja satunnaisprojektiot puolestaan viittaisivat siihen, että
 kutakin kohdetta edustavat pisteet sijoittuvat tiiviisiin ryppäisiin jotka ovat
 enimmäkseen erillisiä keskenään. Kohteet siis pitäisi pystyä erottelemaan
 toisistaan tässä piirreavaruudessa.
 
-![Datan osaprojektiot eri akselipareille](images/moments-crossplots.png)
+![Datan osaprojektiot eri akselipareille](images/moments-crossplots.png){ .centered }
 
-![Data satunnaisprojektio](images/moments-randplot.png)
+![Data satunnaisprojektio](images/moments-randplot.png){ .centered }
 
 ### kNN - luokittelija
 
@@ -198,7 +198,7 @@ tutkittava piirrevektori kuuluu. Samat rajoitukset tietysti pätevät kuin
 muillakin koneoppimisen menetelmillä: jos eri luokat ovat pahasti päällekkäin
 piirreavaruudessa, ei ole mahdollista saada kovin hyvää luokittelutulosta.
 
-![Yksinkertainen neuroverkko](images/network-weighted.png)
+![Yksinkertainen neuroverkko](images/network-weighted.png){ .centered }
 
 Neuroverkot rakentuvat solmuista, jotka organisoidaan kerroksiksi. Ensimmäinen
 kerros on syötekerros; siinä on yhtä monta solmua kuin piirrevektoreissa on

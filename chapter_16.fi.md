@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Yhteenveto-->
+# Yhteenveto
 
 Tämän kurssin tavoitteena on tuottaa yleiskäsitys konenäöstä sekä opettaa
 ymmärtämään kuvien analysoinnin tärkeimpiä periaatteita ja menetelmiä

@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Pistepiirteet-->
+# Pistepiirteet
 
 Tässä luvussa tutustumme kuvien analysointiin useissa eri skaaloissa sekä
 mielenkiintoisten kohtien etsimiseen ja kuvaamiseen pistepiirteiden avulla.

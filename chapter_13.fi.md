@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Hahmontunnistuksen perusteet-->
+# Hahmontunnistuksen perusteet
 
 Tässä luvussa opimme perusasiat hahmontunnistuksesta ja päätösteoriasta,
 pohdimme piirteytystä, ja kokeilemme soveltaa opittua yksinkertaisten
@@ -134,7 +134,7 @@ momentti eivät sopisi hyvin hahmontunnistukseen.
 Kuvamomentit voidaan jälleen nähdä projektioina kantavektoreille, jossa
 kantavektorit ovat pikselikoordinaattien muodostamia polynomeja.
 
-![Muutamia kuvapolynomeja](images/image-polynomials.png)
+![Muutamia kuvapolynomeja](images/image-polynomials.png){ .centered }
 
 ### Zernike-momentit*
 
@@ -149,7 +149,7 @@ polaarimuotoon ja skaalata ykkösen säteiseksi ympyräksi. Zerniken momentit
 muodostetaan laskemalla tällaisen kuvan sisätulo kuvassa esitetyn kaltaisten
 Zerniken polynomien kanssa.
 
-![Muutamia Zerniken polynomeja](images/zernike-polynomials.png)
+![Muutamia Zerniken polynomeja](images/zernike-polynomials.png){ .centered }
 
 ### Jakaumat
 
@@ -259,11 +259,11 @@ Gaussin ytimellä.
 Seuraavassa tutkitaan reunapiirteitä eri monikulmioille. Kulma on merkitty
 sinisellä ja kaarevuus punaisella. Muokattava koodiesimerkki tulee pian.
 
-![Reunapiirre kolmiolle](images/contour-triangle.png)
+![Reunapiirre kolmiolle](images/contour-triangle.png){ .centered }
 
-![Reunapiirre nelikulmiolle](images/contour-quad.png)
+![Reunapiirre nelikulmiolle](images/contour-quad.png){ .centered }
 
-![Reunapiirre ellipsille](images/contour-circle.png)
+![Reunapiirre ellipsille](images/contour-circle.png){ .centered }
 
 Helppo tapa tehdä reunasignaalista kääntöinvariantti on laskea sen
 Fourier-muunnos. Muistamme, että Fourier-muunnos on globaali ja periodinen,

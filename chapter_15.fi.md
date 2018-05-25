@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Tilastolliset rakennemallit-->
+# Tilastolliset rakennemallit
 
 Tässä luvussa tutustumme kohteiden rakenteen kuvaamiseen tilastollisesti sekä
 monimutkaisten rakenteisten kohteiden tunnistamiseen tilastollisten

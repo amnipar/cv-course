@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Kuvien tilastollinen analyysi-->
+# Kuvien tilastollinen analyysi
 
 Tässä luvussa tutustumme kuvien analysointiin tilastollisesti. Opimme
 ymmärtämään tunnuslukuja, jakaumia, korrelaatioita ja pääkomponentteja.
@@ -237,7 +237,7 @@ Määritellään **integraalikuva** $Int(I)$ kuvan $I$ suhteen seuraavasti:
 
 $$Int(I)(x,y) = \sum_{i=0}^{x}\sum_{j=0}^{y}I(i,j).$$
 
-![Pikselin integraali](images/integral.png)
+![Pikselin integraali](images/integral.png){ .centered }
 
 Integraalikuvan pikseli kohdassa $(x,y)$ sisältää siis summan kuvan $I$
 pikseleistä, jotka sijaitsevat kuvan vasemman ylänurkan ja kohdan $(x,y)$
@@ -250,7 +250,7 @@ seuraavasti:
 $$Int(I)(x,y) = I(x,y) + Int(I)(x-1,y) + Int(I)(x,y-1) - Int(I)(x-1,y-1), \\
   \;\text{siten, että}\; I(x,y) = 0 \;\text{kun}\; x,y < 0.$$
 
-![Integraalin laskeminen](images/integral_calculation.png)
+![Integraalin laskeminen](images/integral_calculation.png){ .centered }
 
 Kuvaa pitää siis laajentaa lisäämällä alkuun yksi sarake ja rivi joiden arvot
 ovat nollia. Integraalikuvan pikselin vinoittainen naapuri $Int(I)(x-1,y-1)$
@@ -269,7 +269,7 @@ $$\begin{aligned}
        Int(I)(x_a-1,y_a-1).
   \end{aligned}$$
 
-![Summan laskeminen integraalikuvan avulla](images/integral_sum.png)
+![Summan laskeminen integraalikuvan avulla](images/integral_sum.png){ .centered }
 
 Vasemman ylänurkan summa tulee vähennettyä kahteen kertaan, joten se täytyy
 lisätä summaan. Oheinen kuva selventää tilannetta. Tavoitteena on laskea
@@ -536,7 +536,7 @@ menestyksellisesti, on kasvojen tunnistaminen. Käytämme tässä esimerkissä
 datasettiä, joka on saatu Länsi-Australian Yliopiston tutkijan
 [Ajmal Mianin web-sivulta](http://www.csse.uwa.edu.au/~ajmal/databases.html):
 
-![Kasvodatassa esiintyvät henkilöt](images/faces.png)
+![Kasvodatassa esiintyvät henkilöt](images/faces.png){ .centered }
 
 Datajoukosta on valittu 16 eri henkilöä, ja kustakin henkilöstä on 20
 kasvokuvaa. On syytä huomata, että kuvat on esikäsitelty siten, että kaikki ovat
@@ -545,7 +545,7 @@ samassa kohdassa. Kuvia on myös rajattu siten, että hiukset ja vaatteet eivät
 näy. Kirkkautta ei kuitenkaan ole normalisoitu, ja kuvissa on suuria
 valaistuseroja. PCA löytää kuvista seuraavat pääkomponentit:
 
-![Kasvodatan pääkomponentit](images/eface.png)
+![Kasvodatan pääkomponentit](images/eface.png){ .centered }
 
 Vasemmassa ylänurkassa on kaikkien kuvien keskiarvo, ja muut ovat tärkeimpiä
 pääkomponentteja. Kuten taajuuskomponentit, myös pääkomponentit ovat siis kuvia.
@@ -561,7 +561,7 @@ kuvat ovat tämän kuvan 15 lähintä naapuria pääkomponenttien muodostamassa
 avaruudessa. Vaikuttaisi siis siltä, että tämä menetelmä tunnistaa melko
 luotettavasti oikean henkilön 16 henkilön joukosta.
 
-![Lähimmät naapurit kasvoavaruudessa](images/bestfit.png)
+![Lähimmät naapurit kasvoavaruudessa](images/bestfit.png){ .centered }
 
 On syytä huomata, että sovellus on hyvin rajoitettu. Jos muodostetaan 10000
 pääkomponenttia 320 kuvan perusteella, ei voida olettaa tuloksen olevan kovin

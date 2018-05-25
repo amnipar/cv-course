@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Liikkuva kuva ja optinen vuo {#liike}-->
+# Liikkuva kuva ja optinen vuo {#liike}
 
 Tähän asti olemme käsitelleet vain tilan suhteen näytteistettyjä kuvia, mutta
 kuvia voidaan tietysti näytteistää myös ajan suhteen. Tällä tavoin saadaan

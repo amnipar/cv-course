@@ -7,13 +7,18 @@ lang: fi
 css: style.css
 ---
 
-Ensimmäisen tutoriaalin jälkeen olemme saaneet Docker-ympäristön käyttöön ja saamme suoritettua siinä OpenCV-kirjastoa hyödyntävää koodia. Tällä kerralla ryhdymme opettelemaan erilaisten perusoperaatioiden käyttämistä kuvien suodattamiseen ja yksinkertaiseen muokkaamiseen.
+Ensimmäisen tutoriaalin jälkeen olemme saaneet Docker-ympäristön käyttöön ja
+saamme suoritettua siinä OpenCV-kirjastoa hyödyntävää koodia. Tällä kerralla
+ryhdymme opettelemaan erilaisten perusoperaatioiden käyttämistä kuvien
+suodattamiseen ja yksinkertaiseen muokkaamiseen.
 
-Tämä tutoriaali laajenee vielä muilla esimerkeillä ja myös kynnystysmenetelmillä.
+Tämä tutoriaali laajenee vielä muilla esimerkeillä ja myös
+kynnystysmenetelmillä.
 
 ## Python-esimerkki
 
-Luodaan kansioon *tutorial02* tiedosto *tutorial02.py* ja kokeillaan suodatusoperaatioiden käyttämistä:
+Luodaan kansioon *tutorial02* tiedosto *tutorial02.py* ja kokeillaan
+suodatusoperaatioiden käyttämistä:
 
 ```{.python}
 import cv2
@@ -30,7 +35,8 @@ cv2.imwrite("../images/blur.png", blur)
 
 ## Haskell-esimerkki
 
-Haskellilla saa tehtyä samantapaiset operaatiot kirjoittamalla seuraavan tiedostoon *tutorial02.hs*:
+Haskellilla saa tehtyä samantapaiset operaatiot kirjoittamalla seuraavan
+tiedostoon *tutorial02.hs*:
 
 ```{.haskell}
 {-# LANGUAGE ScopedTypeVariables #-}
@@ -54,13 +60,19 @@ main = do
   saveImage "../images/blur.png" $ gaussian (9,9) $ img
 ```
 
-Haskellilla on näppärää ketjuttaa operaatioita funktionaalisesti, mutta erittäin tiukan tyyppitarkistuksen takia täytyy toisinaan tehdä yksiselitteisiä tyyppimerkintöjä, kuten yllä arvon *center* kanssa.
+Haskellilla on näppärää ketjuttaa operaatioita funktionaalisesti, mutta erittäin
+tiukan tyyppitarkistuksen takia täytyy toisinaan tehdä yksiselitteisiä
+tyyppimerkintöjä, kuten yllä arvon *center* kanssa.
 
 ## Tehtäviä
 
-Muillakin kielillä saa tehtyä vastaavat operaatiot OpenCV:n imgproc-moduulin toiminnoilla.
+Muillakin kielillä saa tehtyä vastaavat operaatiot OpenCV:n imgproc-moduulin
+toiminnoilla.
 
-Kokeile erilaisia suodatus- ja kynnystysoperaatioita omilla kuvillasi. Kirjoita ylös havaintojasi. Kuinka paljon kuviasi pitää suodattaa, jotta kohinaa saadaan vähennettyä riittävästi? Saako kuvista erotettua mitään hyödyllistä kynnystämällä? Millä tavalla tulosta pitäisi jälkikäsitellä?
+Kokeile erilaisia suodatus- ja kynnystysoperaatioita omilla kuvillasi. Kirjoita
+ylös havaintojasi. Kuinka paljon kuviasi pitää suodattaa, jotta kohinaa saadaan
+vähennettyä riittävästi? Saako kuvista erotettua mitään hyödyllistä
+kynnystämällä? Millä tavalla tulosta pitäisi jälkikäsitellä?
 
 Dokumentteja:
 

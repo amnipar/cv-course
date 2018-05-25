@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Kuvien taajuusanalyysi-->
+# Kuvien taajuusanalyysi
 
 Tässä luvussa tutustumme taajuustasoon ja opimme analysoimaan kuvia ja muitakin
 signaaleja Fourier-muunnoksen avulla. Aiheina *Fourier-muunnos*, *DFT/FFT*,

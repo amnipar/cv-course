@@ -1,22 +1,26 @@
 #!/bin/bash
 
+mkdir -p ./site/tutorials
+cp style.css ./site/
+cp style.css ./site/tutorials/
+
 pandoc -s --template=./template.html --mathjax -o ./site/index.html ./index.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_01.fi.html ./chapter_01.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_02.fi.html ./chapter_02.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_03.fi.html ./chapter_03.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_04.fi.html ./chapter_04.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_05.fi.html ./chapter_05.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_06.fi.html ./chapter_06.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_07.fi.html ./chapter_07.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_08.fi.html ./chapter_08.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_09.fi.html ./chapter_09.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_10.fi.html ./chapter_10.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_11.fi.html ./chapter_11.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_12.fi.html ./chapter_12.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_13.fi.html ./chapter_13.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_14.fi.html ./chapter_14.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_15.fi.html ./chapter_15.fi.md
-pandoc -s --template=./template.html --mathjax -o ./site/chapter_16.fi.html ./chapter_16.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_01.fi.html ./chapter_01.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_02.fi.html ./chapter_02.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_03.fi.html ./chapter_03.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_04.fi.html ./chapter_04.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_05.fi.html ./chapter_05.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_06.fi.html ./chapter_06.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_07.fi.html ./chapter_07.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_08.fi.html ./chapter_08.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_09.fi.html ./chapter_09.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_10.fi.html ./chapter_10.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_11.fi.html ./chapter_11.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_12.fi.html ./chapter_12.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_13.fi.html ./chapter_13.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_14.fi.html ./chapter_14.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_15.fi.html ./chapter_15.fi.md
+pandoc -s --template=./template.html --filter=./striph1 --mathjax -o ./site/chapter_16.fi.html ./chapter_16.fi.md
 pandoc -s --template=./template.html --mathjax -o ./site/tutorials/index.html ./tutorials/index.fi.md
 pandoc -s --template=./template.html --mathjax -o ./site/tutorials/tutorial01.fi.html ./tutorials/tutorial01.fi.md
 pandoc -s --template=./template.html --mathjax -o ./site/tutorials/tutorial02.fi.html ./tutorials/tutorial02.fi.md

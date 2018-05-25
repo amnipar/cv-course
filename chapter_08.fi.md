@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Skaala-avaruus-->
+# Skaala-avaruus
 
 Tässä luvussa tutustumme kuvien analysointiin useissa eri skaaloissa sekä
 mielenkiintoisten kohtien etsimiseen ja kuvaamiseen pistepiirteiden avulla.
@@ -200,7 +200,7 @@ energian säästäminen: esitysmuodon *harvuus* tarkoittaa sitä, että suurin o
 signaalia välittävistä neuroneista voi olla lepotilassa. Mitä harvemmin neuronit
 laukeavat, sitä vähemmän energiaa kuluu.
 
-![Kuvapyramidit](images/pyramids.png)
+![Kuvapyramidit](images/pyramids.png){ .centered }
 
 ## Ohjattavat pyramidit*
 

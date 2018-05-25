@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-<!--# Kuvanmuodostus ja näytteistys {#kuvanmuodostus}-->
+# Kuvanmuodostus ja näytteistys {#kuvanmuodostus}
 
 Tässä luvussa tutustumme kuviin, niiden esitysmuotoihin ja matemaattisiin
 tulkintoihin. Opimme mitä signaalit ovat ja mitä näytteistys ja interpolointi
@@ -74,7 +74,7 @@ väliajoin. Kuvasignaali muuttuu sekä tilassa että ajassa, joten kuvasignaalia
 näytteistetään lukemalla valon kirkkautta yhtä aikaa useista näytepisteistä
 pinnalta, jolle kuva on projisoitu.
 
-![Signaalin näytteistys](images/sampling.png)
+![Signaalin näytteistys](images/sampling.png){ .centered }
 
 Niinsanottu *Nyquistin näytteistystaajuus* (engl. *Nyquist rate*) liittyy
 signaalin muutostaajuuteen. Jos signaalin nopeimmat muutokset tapahtuvat
@@ -83,7 +83,7 @@ sekunnissa saadaan signaalin muutokset talteen riittävällä tarkkuudella sen
 uudelleenrakentamista varten. Tällöin taajuus $2k$ on tämän signaalin Nyquistin
 näytteistystaajuus.
 
-![Näytteistetty signaali](images/sampled.png)
+![Näytteistetty signaali](images/sampled.png){ .centered }
 
 ## Aliasoituminen
 
@@ -101,7 +101,7 @@ kuin 50 kertaa sekunnissa; tämä on Nyquistin taajuus ja nimenomaan näytteiste
 signaalin ominaisuus. Nyquistin näytteistystaajuus puolestaan liittyi
 alkuperäisen näytteistettävän signaalin taajuusominaisuuksiin.
 
-![Aliasoitunut kuva](images/aliasing.png)
+![Aliasoitunut kuva](images/aliasing.png){ .centered }
 
 ## Interpolointi
 
@@ -132,7 +132,7 @@ jos näytteistystaajuus on riittävän suuri, mutta luonnollisestikaan lopputulo
 ei ole derivoituva näytepisteissä.
 
 ![Vertailu alkuperäiseen signaaliin suuremmalla näytteistystaajuudella](
-  images/linear-interpolated-comparison.png)
+  images/linear-interpolated-comparison.png){ .centered }
 
 Parempia interpolointituloksia saadaan sovittamalla näytepisteiden väliin
 polynomeja. Niinsanottu kuutiollinen interpolointi (engl. *cubic interpolation*)
@@ -170,14 +170,14 @@ sinifunktio.
 
 $$sinc(x) = \frac{\sin x}{x}$$
 
-![$sinc(x)$](images/sinc.png)
+![$sinc(x)$](images/sinc.png){ .centered }
 
 Oheisessa kuvassa signaali on interpoloitu tällä $sinc$-menetelmällä. Voidaan
 huomata, että keskiosassa tulos on melko tarkka. Reunalla tapahtuu poikkeamaa,
 mutta tämä johtuu siitä, että signaali loppuu reunassa äkillisesti. Tarkempi
 tulos saataisiin vaimentamalla signaali reunoilla tasaisesti nollaan.
 
-![Interpoloitu sinc-funktion avulla](images/sinc-interpolated-comparison.png)
+![Interpoloitu sinc-funktion avulla](images/sinc-interpolated-comparison.png){ .centered }
 
 ## Uudelleennäytteistys
 

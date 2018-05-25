@@ -1,5 +1,5 @@
 ﻿---
-title: Konenäkö ja kuva-analyysi - Kevät 2018
+title: Konenäkö ja kuva-analyysi
 author: Matti Eskelinen
 date: 25.5.2018
 title-prefix: TIES411
