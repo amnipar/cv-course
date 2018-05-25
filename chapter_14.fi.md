@@ -1,9 +1,9 @@
----
-title: Koneoppiminen ja luokittelu
+﻿---
+title: Luku 14 - Koneoppiminen ja luokittelu
 author: Matti Eskelinen
 date: 6.5.2018
 title-prefix: TIES411
-lang: fi-FI
+lang: fi
 css: style.css
 ---
 

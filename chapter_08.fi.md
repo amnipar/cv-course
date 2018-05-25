@@ -1,4 +1,4 @@
----
+﻿---
 title: Luku 8 - Skaala-avaruus
 author: Matti Eskelinen
 date: 8.3.2018
@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-# Skaala-avaruus
+<!--# Skaala-avaruus-->
 
 Tässä luvussa tutustumme kuvien analysointiin useissa eri skaaloissa sekä
 mielenkiintoisten kohtien etsimiseen ja kuvaamiseen pistepiirteiden avulla.

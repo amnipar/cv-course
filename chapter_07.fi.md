@@ -1,4 +1,4 @@
----
+﻿---
 title: Luku 7 - Segmentointi ja klusterointi
 author: Matti Eskelinen
 date: 8.3.2018
@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-# Segmentointi ja klusterointi {#segmentointi}
+<!--# Segmentointi ja klusterointi {#segmentointi}-->
 
 Tässä luvussa opimme jakamaan kuvia yhtenäisiin alueisiin.
 

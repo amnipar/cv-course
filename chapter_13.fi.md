@@ -1,9 +1,9 @@
----
-title: Hahmontunnistuksen perusteet
+﻿---
+title: Luku 13 - Hahmontunnistuksen perusteet
 author: Matti Eskelinen
 date: 29.4.2018
 title-prefix: TIES411
-lang: fi-FI
+lang: fi
 css: style.css
 ---
 

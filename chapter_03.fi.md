@@ -1,4 +1,4 @@
----
+﻿---
 title: Luku 3 - Kuvien suodatus ja muokkaus
 author: Matti Eskelinen
 date: 8.2.2018
@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-# Kuvien suodatus ja muokkaus
+<!--# Kuvien suodatus ja muokkaus-->
 
 Tässä luvussa tutustumme konvoluutioon ja kuvien suodattamiseen sen avulla.
 Tutustumme myös morfologisiin operaatioihin.

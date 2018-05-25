@@ -1,4 +1,4 @@
----
+﻿---
 title: Luku 9 - Pistepiirteet
 author: Matti Eskelinen
 date: 19.3.2018
@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-# Pistepiirteet
+<!--# Pistepiirteet-->
 
 Tässä luvussa tutustumme kuvien analysointiin useissa eri skaaloissa sekä
 mielenkiintoisten kohtien etsimiseen ja kuvaamiseen pistepiirteiden avulla.

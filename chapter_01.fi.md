@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-# Johdanto {#johdanto}
+<!--# Johdanto {#johdanto}-->
 
 Konenäkö (engl. *computer vision*) on nopeasti kehittyvä ja laaja tieteenala,
 jolla on paljon käytännön sovelluksia. Termillä *machine vision* viitataan usein

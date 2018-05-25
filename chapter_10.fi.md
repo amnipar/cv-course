@@ -1,13 +1,13 @@
----
-title: Kuvien geometriset muunnokset
+﻿---
+title: Luku 10 - Kuvien geometriset muunnokset
 author: Matti Eskelinen, Ville Tirronen, Tuomo Rossi
 date: 5.4.2018
 title-prefix: TIES411
-lang: fi-FI
+lang: fi
 css: style.css
 ---
 
-# Kuvien geometriset muunnokset {#geometria}
+<!--# Kuvien geometriset muunnokset {#geometria}-->
 
 Monissa hyödyllisissä konenäkösovelluksissa ei tarvitse ottaa huomioon kuvan
 muodostumista projektiona tai kameran optisia ominaisuuksia. Jos kuitenkin pitää

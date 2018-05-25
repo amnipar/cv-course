@@ -1,9 +1,9 @@
----
-title: Tilastolliset rakennemallit
+﻿---
+title: Luku 15 - Tilastolliset rakennemallit
 author: Matti Eskelinen
 date: 13.5.2018
 title-prefix: TIES411
-lang: fi-FI
+lang: fi
 css: style.css
 ---
 

@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-# Kuvanmuodostus ja näytteistys {#kuvanmuodostus}
+<!--# Kuvanmuodostus ja näytteistys {#kuvanmuodostus}-->
 
 Tässä luvussa tutustumme kuviin, niiden esitysmuotoihin ja matemaattisiin
 tulkintoihin. Opimme mitä signaalit ovat ja mitä näytteistys ja interpolointi

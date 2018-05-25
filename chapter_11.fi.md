@@ -1,13 +1,13 @@
----
-title: Liikkuva kuva ja optinen vuo
+﻿---
+title: Luku 11  - Liikkuva kuva ja optinen vuo
 author: Matti Eskelinen, Ville Tirronen, Tuomo Rossi
 date: 16.4.2018
 title-prefix: TIES411
-lang: fi-FI
+lang: fi
 css: style.css
 ---
 
-# Liikkuva kuva ja optinen vuo {#liike}
+<!--# Liikkuva kuva ja optinen vuo {#liike}-->
 
 Tähän asti olemme käsitelleet vain tilan suhteen näytteistettyjä kuvia, mutta
 kuvia voidaan tietysti näytteistää myös ajan suhteen. Tällä tavoin saadaan

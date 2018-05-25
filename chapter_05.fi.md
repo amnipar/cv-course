@@ -1,4 +1,4 @@
----
+﻿---
 title: Luku 5 - Värit ja valon aistiminen
 author: Matti Eskelinen
 date: 18.2.2018
@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-# Värit ja valon aistiminen {#värit}
+<!--# Värit ja valon aistiminen {#värit}-->
 
 Tähän mennessä olemme puhuneet lähinnä harmaasävykuvista. Oikeissakin
 konenäkösovelluksissa tyydytään usein jättämään väri-informaatio huomioimatta,

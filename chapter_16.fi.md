@@ -1,10 +1,13 @@
----
-code:   TIES411
-title:  Yhteenveto
-lang: fi-FI
+﻿---
+title: Luku 16 - Yhteenveto
+author: Matti Eskelinen
+date: 25.5.2018
+title-prefix: TIES411
+lang: fi
+css: style.css
 ---
 
-# Yhteenveto
+<!--# Yhteenveto-->
 
 Tämän kurssin tavoitteena on tuottaa yleiskäsitys konenäöstä sekä opettaa
 ymmärtämään kuvien analysoinnin tärkeimpiä periaatteita ja menetelmiä

@@ -1,4 +1,4 @@
----
+﻿---
 title: Luku 6 - Reunat ja nurkat
 author: Matti Eskelinen
 date: 24.2.2018
@@ -7,7 +7,7 @@ lang: fi
 css: style.css
 ---
 
-# Reunat ja nurkat {#reunat}
+<!--# Reunat ja nurkat {#reunat}-->
 
 Tässä luvussa opimme löytämään kuvista kappaleiden reunoja ja nurkkia.
 Tutustumme myös reunojen ketjutukseen. Käytännöllisiä asioita tällä kerralla:

@@ -1,9 +1,9 @@
----
-title: Kuvien tilastollinen analyysi
+﻿---
+title: Luku 12 - Kuvien tilastollinen analyysi
 author: Matti Eskelinen
 date: 29.4.2018
 title-prefix: TIES411
-lang: fi-FI
+lang: fi
 css: style.css
 ---
 
