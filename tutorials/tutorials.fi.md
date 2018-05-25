@@ -1,7 +1,7 @@
 ---
 title: Tutoriaalit
 author: Matti Eskelinen
-date: 29.3.2017
+date: 14.5.2018
 title-prefix: TIES411
 lang: fi
 css: style.css
@@ -18,4 +18,8 @@ Nämä ovat kurssiin sisältyviä käytännön harjoituksia, joissa kokeillaan t
 * [Tutoriaali 7](./tutorial07.fi): kuvapyramidit ja skaala-avaruus
 * [Tutoriaali 8](./tutorial08.fi): pistepiirteet
 * [Tutoriaali 9](./tutorial09.fi): geometriset muunnokset
-* [Tutoriaali 10](./tutorial10.fi): liikkeen analysointi ja optinen vuo
+* [Tutoriaali 10](./tutorial10.fi): videokuva ja optinen vuo
+* [Tutoriaali 11](./tutorial11.fi): tilastollinen analyysi
+* [Tutoriaali 12](./tutorial12.fi): hahmontunnistus
+* [Tutoriaali 13](./tutorial13.fi): koneoppiminen ja luokittelu
+* [Tutoriaali 14](./tutorial14.fi): tilastolliset rakennemallit

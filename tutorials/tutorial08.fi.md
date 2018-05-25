@@ -1,17 +1,23 @@
 ---
 title: Tutoriaali 8
 author: Matti Eskelinen
-date: 4.5.2017
+date: 19.3.2018
 title-prefix: TIES411
 lang: fi
 css: style.css
 ---
 
-Tämän viikon aiheena on pistepiirteet ja skaala-avaruuden soveltaminen pistepiirteiden etsimisessä.
+Tämän viikon aiheena on pistepiirteet ja skaala-avaruuden soveltaminen
+pistepiirteiden etsimisessä.
 
 ## Shi-Tomasin pistepiirteet
 
-Usein käytetty ja yksinkertainen, tosin jo vanha menetelmä pistemäisten kohteiden etsimiseksi on ja Shin ja Tomasin kehittämä menetelmä. Se on kehitetty nimenomaan kohteiden seuraamista varten, joten kriteerinä on ollut löytää pisteitä, jotka on helppo löytää uudestaan jostakin toisesta kuvasta, esimerkiksi videokuvan seuraavasta ruudusta. Tähän palataan vielä myöhemmässä luvussa.
+Usein käytetty ja yksinkertainen, tosin jo vanha menetelmä pistemäisten
+kohteiden etsimiseksi on ja Shin ja Tomasin kehittämä menetelmä. Se on kehitetty
+nimenomaan kohteiden seuraamista varten, joten kriteerinä on ollut löytää
+pisteitä, jotka on helppo löytää uudestaan jostakin toisesta kuvasta,
+esimerkiksi videokuvan seuraavasta ruudusta. Tähän palataan vielä myöhemmässä
+luvussa.
 
 ```{.python}
 blur = cv2.GaussianBlur(img, (7,7), 0)
@@ -24,11 +30,20 @@ for i in corners:
     x,y = i.ravel()
     cv2.circle(cornerimg,(x,y),3,255,-1)
 ```
-Kuvaa kannattaa suodattaa, jotta vältetään kohinan aiheuttamat ylimääräiset pisteet.
+
+Kuvaa kannattaa suodattaa, jotta vältetään kohinan aiheuttamat ylimääräiset
+pisteet.
 
 ## SIFT ja SURF
 
-Nykyaikaisempia menetelmiä pistepiirteiden etsimiseksi ovat SIFT ja SURF. SIFT on hyvin suosittu ja tuottaa hyviä tuloksia monien sovelluksien kannalta. Oma henkilökohtainen mielipiteeni on, että SURF tuottaa intuitiivisempia nurkkapisteitä, kun taas SIFT on ehkä enemmän 'möykkyjen' (*blob*) ja pistemäisten kohteiden etsimiseen suuntautuva menetelmä.
+Nykyaikaisempia menetelmiä pistepiirteiden etsimiseksi ovat SIFT ja SURF. SIFT
+on hyvin suosittu ja tuottaa hyviä tuloksia monien sovelluksien kannalta. Oma
+henkilökohtainen mielipiteeni on, että SURF tuottaa intuitiivisempia
+nurkkapisteitä, kun taas SIFT on ehkä enemmän 'möykkyjen' (*blob*) ja
+pistemäisten kohteiden etsimiseen suuntautuva menetelmä. Tämä johtuu siitä, että
+SIFT käyttää LoG:tä, joka löytää Laplacen operaattorin sisälle mahtuvia
+möykkymäisiä kohteita. SURF taas käyttää DoH:ta, joka löytää sellaisia pisteitä,
+joissa on gradientin kaarevuusmaksimi.
 
 ```{.python}
 sift = cv2.SIFT()
@@ -39,13 +54,21 @@ siftimg = cv2.drawKeypoints(blur, kp1, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KE
 surfimg = cv2.drawKeypoints(blur, kp2, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
 ```
 
-Molemmat menetelmät toimivat samaan tapaan. OpenCV:ssä on myös valmis funktio löydettyjen pisteiden visualisoimiseen. Lippu 'rich keypoints' piirtää monipuolisemman esityksen pisteistä, jossa esitetään pisteen skaala ympyrän koon avulla ja pisteympäristön pääasiallinen 'suunta' tai mahdollisesti suunnat viivoilla. Suunta määräytyy pisteen ympäristöstä lasketun gradienttihistogrammin vallitsevien suuntien mukaan.
+Molemmat menetelmät toimivat samaan tapaan. OpenCV:ssä on myös valmis funktio
+löydettyjen pisteiden visualisoimiseen. Lippu 'rich keypoints' piirtää
+monipuolisemman esityksen pisteistä, jossa esitetään pisteen skaala ympyrän koon
+avulla ja pisteympäristön pääasiallinen 'suunta' tai mahdollisesti suunnat
+viivoilla. Suunta määräytyy pisteen ympäristöstä lasketun gradienttihistogrammin
+vallitsevien suuntien mukaan.
 
 ## Determinant of Hessian
 
-Nurkkapisteiden etsimisen ymmärtämiseksi rakentelemme myös alusta lähtien Hessen matriisin determinanttiin perustuvan menetelmän. Skaalainvarianssin saavuttamiseksi käytetään kuvapyramidia. Affiini-invarianttiuttakin kokeillaan.
+Nurkkapisteiden etsimisen ymmärtämiseksi rakentelemme myös alusta lähtien Hessen
+matriisin determinanttiin perustuvan menetelmän. Skaalainvarianssin
+saavuttamiseksi käytetään kuvapyramidia. Affiini-invarianttiuttakin kokeillaan.
 
-Määritellään aluksi funktio, joka laskee Hessen matriisin determinantin pikseli pikseliltä kuvana.
+Määritellään aluksi funktio, joka laskee Hessen matriisin determinantin pikseli
+pikseliltä kuvana.
 
 ```{.python}
 def doh(img):
@@ -57,10 +80,16 @@ def doh(img):
     return detH
 ```
 
-Tässä hyödynnetään kuvamatematiikkaa. Derivaatat lasketaan Sobelin operaattorilla yksinkertaisuuden vuoksi.
+Tässä hyödynnetään kuvamatematiikkaa. Derivaatat lasketaan Sobelin
+operaattorilla yksinkertaisuuden vuoksi.
 
 Tämä on vielä kesken...
 
 ## Tehtäviä
 
-Pohdi, voitko hyödyntää pistepiirteitä omassa sovelluksessasi, ja millä tavalla. Kokeile valmiita menetelmiä ja arvioi tuloksia sovelluksesi kannalta. Vaikka et tarvitsikaan pistepiirteitä sovelluksessasi, voit kokeilla menetelmiä kuvillesi ja pohtia tuloksia.
+Pohdi, voitko hyödyntää pistepiirteitä omassa sovelluksessasi, ja millä tavalla.
+Kokeile valmiita menetelmiä ja arvioi tuloksia sovelluksesi kannalta. Kokeile,
+saisitko parempia tuloksia toteuttamalla menetelmän osittain itse. Vaikka et
+tarvitsikaan pistepiirteitä sovelluksessasi, voit kokeilla menetelmiä joko
+omille kuvillesi tai muille valitsemillesi kuville  ja pohtia tuloksia yleisesti
+erilaisten ongelmien ratkaiseisen kannalta.

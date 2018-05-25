@@ -1,7 +1,10 @@
 ---
-code:   TIES411
-title:  Segmentointi ja klusterointi
-lang: fi-FI
+title: Luku 7 - Segmentointi ja klusterointi
+author: Matti Eskelinen
+date: 8.3.2018
+title-prefix: TIES411
+lang: fi
+css: style.css
 ---
 
 # Segmentointi ja klusterointi {#segmentointi}
@@ -14,11 +17,11 @@ Käytännöllisiä asioita tällä kerralla:
 * parametrien kokeilua mahdollisimman hyvän tuloksen saamiseksi,
 * todetaan että myöskään segmentointi ei vain onnistu aina hyvin.
 
-## Segmentointi
+## Segmentoinnista yleisesti
 
 **Segmentointi** (engl. *segmentation*) tarkoittaa signaalin jakamista
 osiin siten, että toisaalta kukin osa on jollakin tavalla mitattuna sisäisesti
-yhtenäinen ja toisaalta jollakin tavalla mitattuna erilainen verrattuna
+yhtenäinen ja toisaalta samalla tavalla mitattuna erilainen verrattuna
 ympäröiviin osiin. Eräs tapa formuloida tämä tavoite on kuvailla osien välistä
 eroa $S$ (=*separation*) mukaillen *Fisherin lineaarista diskriminanttia*:
 
@@ -32,6 +35,9 @@ toisaalta joko minimoimaan kunkin osan sisäinen varianssi tai maksimoimaan
 kunkin osan *yhtenäisyys*, ja toisaalta maksimoimaan kaikkien osien välinen
 varianssi tai minimoimaan osien samankaltaisuus. Tyypillisesti osia on enemmän
 kuin kaksi, joten kyseessä on hankala monitavoitteinen optimointitehtävä.
+Naiivi ratkaisu olisi kokeilla kaikki mahdolliset kuvan ositukset erillisiin
+osiin ja valita paras, mutta tämä on ilmiselvästi mahdotonta, koska erilaisia
+osituksia on lukematon määrä.
 
 Kuvien segmentointi tarkoittaa kuvan jakamista erillisiin alueisiin visuaalisen
 samankaltaisuuden perusteella. Lopputuloksena on kuvan esitysmuodon
@@ -53,7 +59,7 @@ taustasta (engl. *figure-ground segmentation*) tai kuvan jakamista erillisiin
 kohteisiin tai merkityksen mukaisiin alueisiin (engl. *object class
 segmentation* tai *semantic labeling*). Nämä tehtävät ovat edistyneempiä ja
 vaativat usein monien erillisten alueiden vertailua ja yhdistelyä päättelemällä
-tilastollisesti mitkä alueet voisivat kuulua yhteen. Voidaan käyttää myös
+tilastollisesti, mitkä alueet voisivat kuulua yhteen. Voidaan käyttää myös
 objektimalleja ja näihin perustuvaa optimointia. Näihin palataan myöhemmissä
 luvuissa; tässä luvussa keskitytään kuva-alueiden visuaaliseen yhtenäisyyteen
 perustuvaan segmentointiin, joka on suhteellisen helposti määriteltävä tehtävä.
@@ -129,7 +135,7 @@ mahdollisuus on muodostaa valuma-alueista hierarkia sallimalla kokonaan veden
 alle joutuvien alueiden yhdistyä viereisten alueiden kanssa.
 
 Vedenjakajamenetelmästä on olemassa tehokas graafimuotoinen formulointi, johon
-palaamme myöhemmin tällä luennolla.
+palaamme myöhemmin täsä luvussa.
 
 ## Variaatiomenetelmät*
 
@@ -216,18 +222,19 @@ samaan joukkoon. Tämä on tärkeää siksi, että useat menetelmät ovat
 iteratiivisia, joten on voitava luottaa niiden konvergoituvan joukon sisälle
 kuuluviin pisteisiin.
 
-Avaruuden $\mathbb{R}^n$ suljetut osajoukot joihin liitetään jokin tunnettu
-seminormi täyttävät kaikki edellä luetellut ehdot, joten näiden kanssa emme
-joudu vaikeuksiin. Toisenlaisia piirreavaruuksia kehiteltäessä on syytä
-varmistua siitä, että ehdot ovat voimassa.
+Avaruuden $\mathbb{R}^n$ suljetut osajoukot, joihin liitetään jokin tunnettu
+seminormi (kuten tavallinen Euklidinen normi) täyttävät kaikki edellä luetellut
+ehdot, joten näiden kanssa emme joudu vaikeuksiin. Toisenlaisia piirreavaruuksia
+kehiteltäessä on syytä varmistua siitä, että ehdot ovat voimassa.
 
 Kuinka määrittelemme vektoriavaruuksia kuville? Yksinkertaisimmillaan voimme
 käyttää harmaasävykuvien pikselien kirkkautta yksiulotteisena piirrevektorina.
 Tällaisessa avaruudessa klusterit muodostuvat usein esiintyvien, histogrammien
 huippuja vastaavien kirkkausarvojen ympärille. Tätä voidaan ajatella
-kynnystyksenä, joka yleistetään useampaan kuin kahteen ryhmään. Tuloksena syntyy
-kuva, jossa pikseleillä voi olla esimerkiksi viisi eri arvoa kahden tai $256$:n
-sijaan. Tätä kutsutaan myös kuvan *kvantisoinniksi*.
+kynnystyksenä, joka yleistetään useampaan kuin kahteen luokkaan. Tuloksena
+syntyy kuva, jossa pikseleillä voi olla esimerkiksi viisi eri arvoa kahden tai
+$256$:n sijaan. Tätä kutsutaan myös kuvan *kvantisoinniksi*, ja se on vastaava
+operaation kuin gradientin suunnan kvantisointi edellisessä luvussa.
 
 Määritellään *piirrekuvaus* $F$, joka muuntaa kuvan pistejoukoksi valitussa
 piirreavaruudessa. Esimerkiksi harmaasävykuville voitaisiin muodostaa kuvaus
@@ -307,7 +314,7 @@ suodinjoukkojen vasteita.
 
 Piirreavaruuksissa on yleensä rakennetta: tietyillä alueilla on pisteitä
 tiheämmässä kuin muualla. Klusteroinnin tavoitteena on löytää automaattisesti
-tällaiset tihentymät. Tunnetussa *k-means klusteroinnissa* tavoitteena on jakaa
+tällaiset tihentymät. Tunnetussa *k-means -klusteroinnissa* tavoitteena on jakaa
 piirreavaruus $k$:hon osajoukkoon $S_i$ siten, että pisteiden etäisyydet
 joukkojen keskipisteisiin $\mu_i$ ovat keskimäärin mahdollisimman pieniä. Toisin
 sanoen, tavoitteena on minimoida
@@ -379,7 +386,7 @@ lasketun keskiarvon kohdalle. On osoitettu, että kun tätä toistetaan riittäv
 monta kertaa, kaikki pisteet kasaantuvat muutamien pisteiden ympärille. Nämä
 pisteet vastaavat pisteiden arvioidun tiheysfunktion *moodeja*, eli pisteiden
 todennäköisyysjakauman huippuja. Pisteet siis kerääntyvät klustereiksi sen
-mukaan, kuinka tiheässä ne esiintyvät ja mikä tihentymä sijaitsee lähinnä
+mukaan, kuinka tiheässä ne esiintyvät, ja mikä tihentymä sijaitsee lähinnä
 kutakin pikseliä.
 
 Mean shift -menetelmän idea voidaan hahmottaa stokastisen prosessin kautta.
@@ -489,7 +496,7 @@ Tämän tietorakenteen käsittelyä saadaan tehostettua kahdella yksinkertaisell
 tempulla, ja lopputuloksena sekä *union*- että *find*-operaatio saadaan
 suoritettua vakioajassa riippumatta joukkojen koosta. Ensimmäinen temppu on
 pitää kirjaa puiden syvyydestä ja asettaa *union*-operaatiossa juurisolmuksi
-aina syvempi puu. Toinen temppu on puun litistäminen siten, että aina kun
+aina matalampi puu. Toinen temppu on puun litistäminen siten, että aina kun
 juurisolmuja etsitään *find*-operaation avulla, jokainen hakupolun varrella
 kohdattu solmu liitetään suoraan juurisolmuun. Tällä tavoin puusta tulee lopulta
 ykkösen syvyinen.

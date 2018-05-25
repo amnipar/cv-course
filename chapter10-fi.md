@@ -1,10 +1,13 @@
 ---
-code:   TIES411
-title:  Hahmontunnistuksen perusteet
+title: Hahmontunnistuksen perusteet
+author: Matti Eskelinen
+date: 29.4.2018
+title-prefix: TIES411
 lang: fi-FI
+css: style.css
 ---
 
-# Hahmontunnistuksen perusteet
+<!--# Hahmontunnistuksen perusteet-->
 
 Tässä luvussa opimme perusasiat hahmontunnistuksesta ja päätösteoriasta,
 pohdimme piirteytystä, ja kokeilemme soveltaa opittua yksinkertaisten
@@ -50,7 +53,9 @@ Myöhemmin tässä luvussa opimme, kuinka saamme laskettua tarkan todennäköisy
 sille, että piilevät muuttujat saavat tietyn arvon. On pidettävä mielessä, että
 tulosten luotettavuus riippuu käytettävissä olevasta datasta: kuinka monia
 havaintoja on käytettävissä, ja kuinka tarkka vastaavuus havaintomuuttujien ja
-piilevien muuttujien välillä on tässä datajoukossa.
+piilevien muuttujien välillä on tässä datajoukossa. Laskennallinen
+todennäköisyys perustuu aina oletuksiin esimerkiksi valittujen muuttujien
+jakaumista, ja oletukset eivät välttämättä päde kovinkaan hyvin.
 
 Piirteytykseen perustuvan hahmontunnistuksen yhteydessä on syytä muistaa myös,
 että lopputulos riippuu oleellisesti siitä, kuinka hyvin piirteet kuvaavat
@@ -70,7 +75,8 @@ kohteita.
 Perinteinen ja yleissivistykseen kuuluva tapa kuvailla binäärikuvasta löytyviä
 kappaleita ovat niin sanotut kuvamomentit. Momentti on tietynlainen painotettu
 keskiarvo kuvan tai kappaleen pikseliarvoista. Momentit kuvailevat kappaleen
-muotoa tilastollisten tunnuslukujen tapaan.
+muotoa tilastollisten tunnuslukujen tapaan, eli ne kuvaavat pikselien
+jakautumista kappaleen sisällä.
 
 Määritellään momentit $M_{ij}$ kuvalle $I(x,y)$ seuraavasti:
 
@@ -81,8 +87,8 @@ Pohtimalla hetken yllä olevaa kaavaa huomaamme, että
 $$M_{00} = \sum_x \sum_y I(x,y)$$
 
 mikä binäärikuvan tapauksessa tarkoittaa pinta-alaa. Samoin huomaamme, että
-$M_{10}$ on kappaleen x-koordinaattien summa ja $M_{01}$ on y-koordinaattien summa.
-Siten
+$M_{10}$ on kappaleen muodostavien pikselien x-koordinaattien summa ja $M_{01}$
+on niiden y-koordinaattien summa. Siten
 
 $$(x_c,y_c) = (\frac{M_{10}}{M_{00}},\frac{M_{01}}{M_{00}})$$
 
@@ -297,12 +303,13 @@ On huomattava, että kNN-menetelmän tulos riippuu oleellisesti käytettäväst�
 etäisyysmitasta sekä siitä, kuinka hyvin eri luokat erottuvat toisistaan
 datajoukossa. Ongelmia voi seurata myös siitä, jos piirreavaruuden dimensio on
 kovin suuri. Hyvin korkeaulotteisessa avaruudessa euklidiset etäisyydet
-havaintopisteestä suureen osan datapisteitä saattavat olla lähellä toisiaan.
-Eri piirteiden välinen skaalaus saattaa muodostua ratkaisevaksi tekijäksi tässä
-tapauksessa. Sen takia voi olla suositeltavaa pienentää ensin avaruuden
-dimensiota esimerkiksi PCA:lla. Jälleen on muistettava PCA:n lineaarisuus. Jos
-on syytä epäillä, että data sijaitsee hyvin epälineaarisessa monistossa, voi
-olla tarpeen käyttää jotakin muuta menetelmää, kuten diffuusiokarttoja.
+havaintopisteestä suureen osan muista datapisteistä saattavat olla lähellä
+toisiaan. Eri piirteiden välinen skaalaus saattaa muodostua ratkaisevaksi
+tekijäksi tässä tapauksessa. Sen takia voi olla suositeltavaa pienentää ensin
+avaruuden dimensiota esimerkiksi PCA:lla. Jälleen on muistettava PCA:n
+lineaarisuus. Jos on syytä epäillä, että data sijaitsee hyvin epälineaarisessa
+monistossa, voi olla tarpeen käyttää jotakin muuta menetelmää, kuten
+diffuusiokarttoja.
 
 Menetelmän heikkous on myös lähimpien naapurien haku. Naiivissa toteutuksessa
 pitäisi käydä kaikki datapisteet läpi, laskea etäisyys tutkittavaan pisteeseen,
@@ -315,9 +322,10 @@ etsimisen tehokkaasti, kun suuri osa avaruudesta voidaan jättää huomiotta.
 
 Luokittelu voidaan nähdä avaruuden jakamisena osiin *päätöspintojen* avulla:
 pinnan toisella puolella olevat pisteet kuuluvat yhteen luokkaan ja
-vastakkaisella puolella olevat toiseen. Joissakin menetelmissä päätöspinta
-muodostetaan eksplisiittisesti, kun taas esimerkiksi kNN-menetelmässä
-päätöspinta muodostuu implisiittisesti valitun päätössäännön perusteella.
+vastakkaisella puolella olevat toiseen. Joissakin menetelmissä, kuten myöhemmin
+esiteltävissä tukivektorikoneissa, päätöspinta muodostetaan eksplisiittisesti,
+kun taas esimerkiksi kNN-menetelmässä päätöspinta muodostuu implisiittisesti
+valitun päätössäännön perusteella.
 
 ## Päätösteoria
 
@@ -398,7 +406,7 @@ Bayesilainen päätösteoria perustuu muuttujan posterioritodennäköisyyden
 maksimointiin Bayesin säännön avulla yllä olevan kaavan mukaan. Voidaan
 osoittaa, että valitsemalla tämä $w$ minimoidaan virheen todennäköisyys, toisin
 sanoen todennäköisyys sille, että valitaan $w_1$ kun oikea valinta olisi ollut
-$w_2$. Tämä yleistyy useammallekin kuin kahdelle vaihtoehdolle ja myös
+$w_2$, tai päinvastoin. Tämä yleistyy useammallekin kuin kahdelle vaihtoehdolle ja myös
 jatkuville suureille. Tämä on tietyssä mielessä optimaalinen tapa tehdä valinta.
 On kuitenkin muistettava, että optimaalisuus on määritelty suhteessa käytössä
 oleviin jakaumiin, eli siihen mitä tutkittavista muuttujista tiedetään tai

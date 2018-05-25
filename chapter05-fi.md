@@ -1,10 +1,13 @@
 ---
-code:   TIES411
-title:  Kuvien tilastollinen analyysi
+title: Kuvien tilastollinen analyysi
+author: Matti Eskelinen
+date: 29.4.2018
+title-prefix: TIES411
 lang: fi-FI
+css: style.css
 ---
 
-# Kuvien tilastollinen analyysi
+<!--# Kuvien tilastollinen analyysi-->
 
 Tässä luvussa tutustumme kuvien analysointiin tilastollisesti. Opimme
 ymmärtämään tunnuslukuja, jakaumia, korrelaatioita ja pääkomponentteja.
@@ -25,7 +28,7 @@ pikselien sijaan pikselijoukkoja, kokonaisia kuvia tai jopa suuria kuvajoukkoja
 
 Eräs tärkeä syy analysoida dataa tilastollisesti on oppia ymmärtämään, kuinka
 tunnistettavia kohteita pitäisi vertailla. Kaikki yleisesti käytetyt kohteiden
-luokitusmenetelmät perustuvat jonkinlaiseen *metriikkaan* jolla mitataan
+luokittelumenetelmät perustuvat jonkinlaiseen *metriikkaan*, jolla mitataan
 kohteiden välisiä etäisyyksiä. Kuvadatan tapauksessa kohteiden vertailu
 pikselien arvojen perusteella ei vaikuta hyvältä ajatukselta, sillä sama kohde
 saattaa tuottaa hyvin erilaisia pikselien kokoelmia riippuen kuvakulmasta ja
@@ -190,7 +193,7 @@ $$Corr(X,Y) = \frac{Cov(X,Y)}{\sigma_X \sigma_Y}.$$
 Tätä merkitään toisinaan myös symbolilla $\rho_{X,Y}$, ja tuloksena on arvoja
 väliltä $\left[-1,1\right]$. Kovarianssi ja korrelaatio kuvaavat muuttujien
 *lineaarista* suhdetta. Korrelaatio voidaan ajatella kertoimena, joka kertoo
-kuinka paljon muuttujan $B$ arvo muuttuu, kun muuttujan $A$ arvo muuttuu $x$:n
+kuinka paljon muuttujan $B$ arvo muuttuu, kun muuttujan $A$ arvo muuttuu $1$:n
 verran. Muuttujien välinen riippuvuus ei aina ole lineaarinen, joten toisinaan
 on turvauduttava toisenlaisiin keinoihin. Näihin palaamme myöhemmin.
 
@@ -430,12 +433,13 @@ $$D_{KL}(P_1 \parallel P_2) =
 
 Tämä luku mittaa kuinka paljon informaatiota menetetään, kun viestin koodaus
 perustuu jakaumaan $P_2$ oikean jakauman $P_1$ sijaan. Tämä voidaan ymmärtää
-niiden ylimääräisten bittien määränä jotka on siirrettävä sen takia kun
-käytetään *huonoa koodausta*; voidaan ajatella, että käytetty koodi on optimoitu
-jakauman $P_2$ mukaan, mutta todellinen jakauma onkin $P_1$. Jos jakaumat ovat
-lähellä toisiaan, syntyvä virhe on pieni. On huomattava, että $D_{KL}$ ei ole
-symmetrinen; $D_{KL}(P_1 \parallel P_2) \neq D_{KL}(P_2 \parallel P_1)$.
-Toisinaan tämä ongelma ohitetaan käyttämällä etäisyytenä näiden summaa.
+niiden ylimääräisten bittien määränä jotka on siirrettävä, koska käytetään
+*huonoa koodausta*; voidaan ajatella, että käytetty koodi on optimoitu jakauman
+$P_2$ mukaan, mutta todellinen jakauma onkin $P_1$. Jos jakaumat ovat lähellä
+toisiaan, syntyvä hukka on pieni. On huomattava, että $D_{KL}$ ei ole
+symmetrinen; $D_{KL}(P_1 \parallel P_2) \neq D_{KL}(P_2 \parallel P_1)$. Sitä ei
+siis voida käyttää metriikkana jakaumien vertailussa. Toisinaan tämä ongelma
+ohitetaan käyttämällä etäisyytenä mainitun kahden luvun summaa.
 
 Palaamme informaatioteorian käsitteisiin vielä myöhemmissä luvuissa.
 
@@ -478,6 +482,34 @@ nollaa suuremmat ja pienemmät arvot ovat suhteellisen harvinaisia. Tämä on
 intuitiivisesti järkevää, sillä tyypillisesti kuvissa on enemmän tasaista
 pintaa kuin reunoja. Ilmiötä voi havainnoida tutkimalla aiemmin muodostettuja
 histogrammeja Gaborin suotimen ja reunanhakusuotimen arvoille.
+
+## Kadir-Brady -menetelmä
+
+Aiemmassa luvussa mainittiin Kadirin ja Bradyn kehittämä visuaalisesti
+merkittävien alueiden etsimiseen tarkoitettu menetelmä. Keskeinen idea tässä
+menetelmässä on se, että suotimien ääriarvojen sijaan kuva-alueen merkitystä
+mitataan informaatioteoriasta tutun *entropian* avulla.
+
+Entropian voidaan ajatella mittaavan kohteen epäjärjestystä, ennustettavuutta ja
+yllättävyyttä sen jakauman perusteella. Mitä suurempi entropia, sitä enemmän
+epäjärjestystä, ja sitä vaikeampi kohteen edustamia arvoja on ennustaa. Aiemmin
+tässä luvussa määriteltiin, että jakauman $p$ entropia $H$ on $-p \log p$. Tässä
+symboli $H$ on kreikkalainen kirjain *eta*. Olkoon kuva-alueen $R$ normalisoitu
+histogrammi $P_D(R)$, jossa $D$ on diskreetti joukko kuvan arvoja; ne vastaavat
+siis histogrammin lokeroita. Tämän alueen entropia arvojen $D$ jakauman suhteen
+on siis
+
+$$H_D(R) = -\sum_{d \in D}P_D(R) \log P_D(R).$$
+
+Jos entropia on suuri, jakauma on monimutkainen eli vaikeasti ennustettava.
+Kadir ja Brady tutkivat entropiaa useissa skaaloissa, eli käytännössä
+muodostamalla suurempien ja suurempien alueiden histogrammeja pisteen ympäriltä.
+Kun skaalaa kasvatetaan ja löydetään entropian huippukohta, voidaan ajatella
+että on löytynyt pisteympäristö joka on jollakin lailla yllättävä ja vaikeasti
+ennustettava, eli sellainen joka erottuu hyvin ympäristöstään. Nämä ovat hyviä
+piirrepisteitä. Ongelmaksi muodostuu vain histogrammien muodostaminen suurista
+pisteympäristöistä, mikä on hidasta. Operaatiota saadaan nopeutettua käyttämällä
+*integraalihistogrammeja*, jotka kuvataan myöhemmässä luvussa.
 
 ## Pääkomponenttianalyysi
 

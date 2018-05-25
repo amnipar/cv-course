@@ -16,6 +16,8 @@ Tutustumme myös reunojen ketjutukseen. Käytännöllisiä asioita tällä kerra
 * etsitään sopivia operaatioita joilla saisi testikuvien reunat esille hyvin,
 * todetaan että reunanhaku ei kerta kaikkiaan vain aina onnistu hyvin.
 
+## Reunanhausta yleisesti
+
 Tähän mennessä olemme etsineet kuvista lähinnä tasavärisiä alueita käyttäen
 kynnystystä. Kuvien olennainen informaatio on kuitenkin *reunoissa*; tästä
 kertoo jo sekin, että evoluutio on saanut aikaan eliöiden aivoihin erityisesti

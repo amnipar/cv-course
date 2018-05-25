@@ -1,10 +1,13 @@
 ---
-code:   TIES411
-title:  Tilastolliset rakennemallit
+title: Tilastolliset rakennemallit
+author: Matti Eskelinen
+date: 13.5.2018
+title-prefix: TIES411
 lang: fi-FI
+css: style.css
 ---
 
-# Tilastolliset rakennemallit
+<!--# Tilastolliset rakennemallit-->
 
 Tässä luvussa tutustumme kohteiden rakenteen kuvaamiseen tilastollisesti sekä
 monimutkaisten rakenteisten kohteiden tunnistamiseen tilastollisten
@@ -22,7 +25,7 @@ millä tavoin kuvista voi saada esiin kiinnostavia asioita. Olemme oppineet
 löytämään kuvista yhtenäisiä alueita ja reunoja. Olemme myös oppineet, kuinka
 yksinkertaisia jäykkiä kappaleita voi tunnistaa kuvista luokittelumenetelmien
 avulla. Ymmärrämme kuitenkin, että luokittelumenetelmät eivät välttämättä toimi
-kovin hyvin kohteille joiden muoto, rakenne tai ulkonäkö vaihtelee paljon.
+kovin hyvin kohteille, joiden muoto, rakenne tai ulkonäkö vaihtelee paljon.
 Samoin ymmärrämme, että voi olla hankalaa luokitella kohteita käsitteellisiin
 luokkiin, kuten esimerkiksi autot, jos luokan edustajien ulkomuoto vaihtelee
 suuresti.
@@ -95,7 +98,7 @@ todennäköisyyksistä. Edellisen luvun Bayesilainen luokittelu *uskottavuuden*
 perusteella oli ensimmäinen askel tähän suuntaan.
 
 Keskeinen tilastollisten menetelmien kiistakysymys liittyy jakoon
-frekventatiiviseen (engl. *frequentist*) ja Bayesilaiseen tilastotieteeseen.
+frekventistiseen (engl. *frequentist*) ja Bayesilaiseen tilastotieteeseen.
 Frekventistit ovat sitä mieltä, että todennäköisyydestä voidaan puhua vain
 tietyn tapahtuman *esiintymistiheytenä* eli *frekvenssinä* (engl. *frequency*)
 tietyssä joukossa. Tämä on tuttua lehtien uutisoinneistakin: huolellisesti
@@ -359,14 +362,14 @@ operaatio muille paitsi yksinkertaisimmille kohteille. Näitä menetelmiä
 käytetäänkin usein jonkinlaisen alkuarvauksen kanssa. Esimerkiksi
 lääketieteellisissä sovelluksissa ihminen voi merkitä etsityn kohteen
 summittaisen paikan ja asennon, minkä jälkeen optimoidaan parametrit lähtien
-liikkeellä tästä alkuarvauksesta.
+liikkeelle tästä alkuarvauksesta.
 
 Muovattavia malleja voitaisiin yhdistää myös heuristisiin hakuihin edellisen
 luvun mallin mukaan. Voitaisiin generoida hypoteeseja löydettyjen
 reunafragmenttiparien tai -kolmikoiden perusteella, ja käyttää parhaita
 hypoteeseja alkuarvauksina tarkan tuloksen löytämiseksi.
 
-(tähän tulee yksinkertainen esimerkki elokuussa)
+(tähän tulee yksinkertainen esimerkki myöhemmin)
 
 ## Tunnistaminen rakenteen perusteella*
 
@@ -442,7 +445,7 @@ jäsentäminen on NP-täydellinen ongelma, koska tutkittavan konfiguraatioavaruu
 koko räjähtää eksponentiaalisesti. Kuvien jäsentämisessä onkin yleensä
 käytettävä erilaisia heuristisia hakuja.
 
-(tähän tulee enemmän asiaa ja esimerkkejä elokuussa)
+(tähän tulee enemmän asiaa ja esimerkkejä myöhemmin)
 
 ## Tehtäviä
 

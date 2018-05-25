@@ -1,10 +1,13 @@
 ---
-code:   TIES411
-title:  Koneoppimisen perusteet
+title: Koneoppiminen ja luokittelu
+author: Matti Eskelinen
+date: 6.5.2018
+title-prefix: TIES411
 lang: fi-FI
+css: style.css
 ---
 
-# Koneoppiminen ja luokittelu
+<!--# Koneoppiminen ja luokittelu-->
 
 Tässä luvussa opimme perusasiat koneoppimisesta ja mallien kouluttamisesta.
 Opimme mitä tarkoittavat ylioppiminen ja alioppiminen ja miten analysoidaan
@@ -54,7 +57,7 @@ varmistetaan että parametrivalinta on järkevä, ja kolmannella varmistetaan
 opityn mallin yleistävyys. Näihin vaiheisiin palaamme vielä myöhemmin.
 
 Malleja voidaan kouluttaa useilla eri tavoilla, joiden tärkein ero liittyy
-siihen, millä tavalla niiden suoriutumisesta annetaan palautetta. Niin sanottu
+siihen, millä tavalla mallien suoriutumisesta annetaan palautetta. Niin sanottu
 *valvottu* tai *ohjattu* oppiminen (engl. *supervised learning*) tarkoittaa
 sitä, että oikeat vastaukset ovat tiedossa ja oppimisprosessin ohjaamisessa
 käytetään etäisyysmittauksia mallin tuottaman vastauksen ja oikean vastauksen
@@ -75,11 +78,12 @@ ja *ylioppimisesta*.
 **Alioppiminen** eli *bias* tarkoittaa sitä, että malli ei kuvaa riittävän hyvin
 koulutusdatassa olevaa vaihtelua, joten se ei myöskään pysty ennustamaan uusien
 näytteiden käyttäytymistä. Usein *bias* on *systemaattinen* poikkeama odotetusta
-tuloksesta, joka johtuu liian yksinkertaisesta mallista. Alioppimisen syynä
-voi olla malli jolla on liian vähän tai huonosti tutkittavaa ilmiötä kuvaavat
-piirteet. Alioppimisen tunnistaa siitä, että virhe on suhteellisen suuri sekä
-koulutusdatalla että validointidatalla. Alioppimista ei voida korjata lisäämällä
-datan määrää, vaan on parannettava mallia tai sen perustana olevia piirteitä.
+tuloksesta, joka johtuu liian yksinkertaisesta mallista. Alioppimisen syynä voi
+olla malli jossa on liian vähän parametreja, tai mallin pohjana olevat piirteet
+kuvaavat tutkittavaa ilmiötä huonosti. Alioppimisen tunnistaa siitä, että virhe
+on suhteellisen suuri sekä koulutusdatalla että validointidatalla. Alioppimista
+ei voida korjata lisäämällä datan määrää, vaan on parannettava mallia tai sen
+perustana olevia piirteitä.
 
 **Ylioppiminen** eli *variance* puolestaan tarkoittaa sitä, että malli kuvaa
 liian tarkasti koulutusdatassa olevaa vaihtelua, joten se ei *yleisty* riittävän
@@ -241,10 +245,12 @@ alkuarvauksina. Lokaalien minimien vuoksi on syytä suorittaa optimointi useita
 kertoja eri alkuarvauksilla ja valita lopputuloksista paras. Verkon
 painokertoimien lisäksi täytyy optimoida välikerroksen solmujen määrä sekä
 käytetty regularisointitermi; nämä vaikuttavat siihen, kuinka monimutkaisia
-funktioita verkko tuottaa, ja huonosti valitut arvot johtavat helposti
-yli- tai alioppimiseen. Tämä optimointi tehdään tyypillisesti kouluttamalla
-verkkoa useilla eri arvoilla ja valitsemalla se vaihtoehto, joka tuottaa
-pienimmän virheen validointijoukolla.
+funktioita verkko tuottaa, ja huonosti valitut arvot johtavat helposti yli- tai
+alioppimiseen. Tämä optimointi tehdään tyypillisesti kouluttamalla verkkoa
+useilla eri arvoilla ja valitsemalla se vaihtoehto, joka tuottaa pienimmän
+virheen validointijoukolla. Näitä itse luokittelijaa kuvaavia parametreja
+kutsutaan usein *hyperparametreiksi* erotukseksi tuloksena olevan mallin
+parametreista, jotka neuroverkkojen tapauksessa ovat verkon painokertoimia.
 
 Edellä kuvatut momenttipiirteet osoittautuvat odotettua haastavammiksi
 neuroverkolle: ilmeisesti datajoukot ovat sen verran lähellä toisiaan ja
@@ -379,11 +385,11 @@ Jaotellaan aluksi luokittelutulokset neljään eri luokkaan. Oikeat positiiviset
 (engl. *true positive*) eli $tp_1$ ovat niitä näytteitä jotka on luokiteltu
 luokkaan $1$ ja jotka oikeasti kuuluvat tähän luokkaan. Oikeat negatiiviset
 (engl. *true negative*) eli $tn_1$ ovat niitä näytteitä jotka on luokiteltu
-johonkin muuhun kuin luokkaan $1$ ja jotka oikeasti eivät kuulu tähän luokkaan.
+johonkin muuhun luokkaan kuin $1$ ja jotka oikeasti eivät kuulu tähän luokkaan.
 Väärät positiiviset (engl. *false positive*) eli $fp_1$ ovat niitä näytteitä
 jotka on luokiteltu luokkaan $1$ mutta jotka eivät oikeasti kuulu tähän
 luokkaan. Lopuksi väärät negatiiviset (engl. *false negative*) eli $fn_1$ ovat
-näytteitä jotka on luokiteltu johonkin muuhun kuin luokkaan $1$ mutta jotka
+näytteitä jotka on luokiteltu johonkin muuhun luokkaan kuin $1$ mutta jotka
 oikeasti kuuluisivat tähän luokkaan.
 
 ### Tarkkuus ja herkkyys
@@ -394,8 +400,8 @@ luokittelutuloksen hyvyydelle. Yksinkertaisimmat näistä ovat tarkkuus (engl.
 
 $$\text{precision} = p = \frac{tp}{tp + fp}$$
 
-Tarkkuus tarkoittaa siis sitä, kuinka suuri osuus positiivisista tuloksista on
-oikeasti positiivisia.
+Tarkkuus tarkoittaa siis sitä, kuinka suuri osuus positiivisista
+luokittelutuloksista on oikeasti positiivisia.
 
 $$\text{recall} = r = \frac{tp}{tp + fn}$$
 
@@ -436,6 +442,7 @@ moninkertainen määrä. Monien mittarien tulos vääristyy tällaisesta epäsuh
 Esimerkiksi jos positiivisia näytteitä on vain 5% kaikista näytteistä,
 luokittelemalla kaikki näytteet negatiivisiksi saadaan luokitin jonka
 täsmällisyys (*accuracy*) on $0.95$, joka äkkiseltään vaikuttaisi aika hyvältä.
+Tällaisesta luokittelijasta ei kuitenkaan ole mitään käytännön hyötyä.
 
 Tällaisiin epäsuhtaisiin tilanteisiin soveltuu Matthewsin korrelaatiokerroin
 (*Matthews Correlation Coefficient*) eli MCC.
